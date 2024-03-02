@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1709396157355,
+      "tag": "0000_serious_speed",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1709406675619,
+      "tag": "0001_warm_green_goblin",
+      "breakpoints": true
+    }
+  ]
+}
