@@ -1,13 +1,14 @@
-import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
 import { OAuth2RequestError, generateState } from 'arctic';
-import { github, lucia } from './auth';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { eq } from 'drizzle-orm';
+import express, { NextFunction, Request, Response } from 'express';
+import { generateId } from 'lucia';
 import { parseCookies, serializeCookie } from 'oslo/cookie';
+import { github, lucia } from './auth';
 import { db } from './db';
 import { userTable } from './db/schema';
-import { eq } from 'drizzle-orm';
-import { generateId, verifyRequestOrigin } from 'lucia';
-import cors from 'cors';
+import { Argon2id } from 'oslo/password';
 
 dotenv.config();
 
@@ -65,6 +66,30 @@ const protectRoute = async (
 
 app.get('/', protectRoute, (req: Request, res: Response) => {
 	res.json({ message: 'Express + TS Server', user: res.locals.user });
+});
+
+app.post('/signup', async (req: Request, res: Response) => {
+	const email: string | null = req.body.email ?? null;
+	const password: string | null = req.body.password ?? null;
+
+	if (!email || !password) {
+		res.status(400).json({ message: 'Invalid credentials' });
+		return;
+	}
+
+	const hashedPassword = await new Argon2id().hash(password);
+	const userId = generateId(15);
+
+	try {
+		db.insert(userTable).values({
+			id: userId,
+			email,
+			password: hashedPassword,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: 'Server error' });
+	}
 });
 
 app.get('/login/github', async (_, res) => {

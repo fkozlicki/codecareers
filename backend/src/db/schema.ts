@@ -2,8 +2,12 @@ import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const userTable = pgTable('user', {
 	id: text('id').primaryKey(),
+	firstName: text('first_name'),
+	lastName: text('last_name'),
 	githubId: integer('github_id'),
-	username: text('username').notNull(),
+	username: text('username'),
+	email: text('email').unique(),
+	password: text('password'),
 });
 
 export type User = typeof userTable.$inferSelect;
