@@ -71,8 +71,10 @@ app.get('/', protectRoute, (req: Request, res: Response) => {
 app.post('/signup', async (req: Request, res: Response) => {
 	const email: string | null = req.body.email ?? null;
 	const password: string | null = req.body.password ?? null;
+	const firstName: string | null = req.body.password ?? null;
+	const lastName: string | null = req.body.password ?? null;
 
-	if (!email || !password) {
+	if (!email || !password || !firstName || !lastName) {
 		res.status(400).json({ message: 'Invalid credentials' });
 		return;
 	}
@@ -81,11 +83,15 @@ app.post('/signup', async (req: Request, res: Response) => {
 	const userId = generateId(15);
 
 	try {
-		db.insert(userTable).values({
+		await db.insert(userTable).values({
 			id: userId,
 			email,
 			password: hashedPassword,
+			firstName,
+			lastName,
 		});
+
+		res.status(201).json({ message: 'Signed up successfully' });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ message: 'Server error' });

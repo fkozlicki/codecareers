@@ -15,6 +15,13 @@
       "when": 1709406675619,
       "tag": "0001_warm_green_goblin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709496705599,
+      "tag": "0002_stormy_captain_britain",
+      "breakpoints": true
     }
   ]
 }
