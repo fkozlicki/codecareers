@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import express, { NextFunction, Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { parseCookies, serializeCookie } from 'oslo/cookie';
-import { github, lucia } from './auth';
+import { github, lucia } from './lib/lucia';
 import { db } from './db';
 import { userTable } from './db/schema';
 import { Argon2id } from 'oslo/password';

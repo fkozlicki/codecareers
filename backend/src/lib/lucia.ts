@@ -1,6 +1,6 @@
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
-import { db } from './db';
-import { User, sessionTable, userTable } from './db/schema';
+import { db } from '../db';
+import { User, sessionTable, userTable } from '../db/schema';
 import { Lucia } from 'lucia';
 import { GitHub } from 'arctic';
 import dotenv from 'dotenv';
