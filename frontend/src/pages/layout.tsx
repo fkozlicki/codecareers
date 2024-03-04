@@ -18,9 +18,7 @@ const Layout = () => {
 				</div>
 			</div>
 			<main>
-				<div className="max-w-lg m-auto">
-					<Outlet />
-				</div>
+				<Outlet />
 			</main>
 		</>
 	);

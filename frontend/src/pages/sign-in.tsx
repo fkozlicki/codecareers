@@ -41,7 +41,9 @@ const SignIn = () => {
 				</h1>
 				<div>
 					<div className="flex flex-col gap-2">
-						<Button>Sign In with Github</Button>
+						<a href="http://localhost:3000/login/github">
+							<Button className="w-full">Sign In with Github</Button>
+						</a>
 						<Button>Sign In with Google</Button>
 					</div>
 					<div className="flex items-center gap-4 my-4">
