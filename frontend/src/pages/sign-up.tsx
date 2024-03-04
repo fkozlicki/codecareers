@@ -1,3 +1,4 @@
+import { useSignUpMutation } from '@/app/services/auth';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -11,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const signUpSchema = z.object({
@@ -32,9 +34,18 @@ const SignUp = () => {
 			password: '',
 		},
 	});
+	const [signUp, { isLoading }] = useSignUpMutation();
 
 	const onSubmit = (values: SignUpValues) => {
-		console.log(values);
+		signUp(values)
+			.unwrap()
+			.then(() => {
+				toast.success('Successfully signed up');
+				form.reset();
+			})
+			.catch(() => {
+				toast.error("Couldn't sign up");
+			});
 	};
 
 	return (
@@ -62,7 +73,12 @@ const SignUp = () => {
 									<FormItem>
 										<FormLabel>First name</FormLabel>
 										<FormControl>
-											<Input placeholder="John" type="text" {...field} />
+											<Input
+												placeholder="John"
+												type="text"
+												disabled={isLoading}
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -75,7 +91,12 @@ const SignUp = () => {
 									<FormItem>
 										<FormLabel>Last name</FormLabel>
 										<FormControl>
-											<Input placeholder="Smith" type="text" {...field} />
+											<Input
+												placeholder="Smith"
+												type="text"
+												disabled={isLoading}
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -91,6 +112,7 @@ const SignUp = () => {
 											<Input
 												placeholder="example@email.com"
 												type="email"
+												disabled={isLoading}
 												{...field}
 											/>
 										</FormControl>
@@ -105,13 +127,18 @@ const SignUp = () => {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input placeholder="•••••" type="password" {...field} />
+											<Input
+												placeholder="•••••"
+												type="password"
+												disabled={isLoading}
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							<Button type="submit" className="w-full">
+							<Button type="submit" disabled={isLoading} className="w-full">
 								Sign In
 							</Button>
 						</form>
