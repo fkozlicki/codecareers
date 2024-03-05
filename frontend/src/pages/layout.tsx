@@ -1,22 +1,12 @@
-import { Button } from '@/components/ui/button';
+import Header from '@/components/header';
 import { Toaster } from '@/components/ui/sonner';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
 	return (
 		<>
 			<Toaster />
-			<div className="p-2 border border-b flex justify-between items-center">
-				<div>logo</div>
-				<div className="flex gap-2">
-					<Link to="/signin">
-						<Button>Sign In</Button>
-					</Link>
-					<Link to="/signup">
-						<Button>Sign Up</Button>
-					</Link>
-				</div>
-			</div>
+			<Header />
 			<main>
 				<Outlet />
 			</main>
