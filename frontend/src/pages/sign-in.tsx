@@ -1,3 +1,4 @@
+import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -10,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -28,10 +29,15 @@ const SignIn = () => {
 			password: '',
 		},
 	});
+	const { user } = useAppSelector((state) => state.auth);
 
 	const onSubmit = (values: SignInValues) => {
 		console.log(values);
 	};
+
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<div className="w-screen h-screen grid place-items-center">

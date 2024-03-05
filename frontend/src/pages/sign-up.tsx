@@ -1,3 +1,4 @@
+import { useAppSelector } from '@/app/hooks';
 import { useSignUpMutation } from '@/app/services/auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -35,6 +36,7 @@ const SignUp = () => {
 		},
 	});
 	const [signUp, { isLoading }] = useSignUpMutation();
+	const { user } = useAppSelector((state) => state.auth);
 
 	const onSubmit = (values: SignUpValues) => {
 		signUp(values)
@@ -47,6 +49,10 @@ const SignUp = () => {
 				toast.error("Couldn't sign up");
 			});
 	};
+
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<div className="w-screen h-screen grid place-items-center">
