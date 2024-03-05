@@ -1,12 +1,14 @@
-import { User, signIn } from '@/app/services/auth';
+import { User, session } from '@/app/services/auth';
 import { createSlice } from '@reduxjs/toolkit';
 
-interface UserState {
-	user?: User;
+interface AuthState {
+	user: User | null;
+	status: 'loading' | 'authenticated' | 'unauthenticated';
 }
 
-const initialState: UserState = {
-	user: undefined,
+const initialState: AuthState = {
+	user: null,
+	status: 'loading',
 };
 
 const { reducer, actions } = createSlice({
@@ -17,15 +19,16 @@ const { reducer, actions } = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addMatcher(signIn.matchPending, (_, action) => {
-				console.log('pending', action);
+			.addMatcher(session.matchPending, (state) => {
+				state.status = 'loading';
 			})
-			.addMatcher(signIn.matchFulfilled, (state, action) => {
-				console.log('fulfilled', action);
-				state.user = action.payload.user;
-			})
-			.addMatcher(signIn.matchRejected, (_, action) => {
-				console.log('rejected', action);
+			.addMatcher(session.matchFulfilled, (state, action) => {
+				if (action.payload.user) {
+					state.status = 'authenticated';
+					state.user = action.payload.user;
+				} else {
+					state.status = 'unauthenticated';
+				}
 			});
 	},
 });
