@@ -64,8 +64,28 @@ const protectRoute = async (
 	next();
 };
 
-app.get('/', protectRoute, (req: Request, res: Response) => {
-	res.json({ message: 'Express + TS Server', user: res.locals.user });
+app.get('/', (req: Request, res: Response) => {
+	res.json({ message: 'Express + TS Server' });
+});
+
+app.get('/session', async (req: Request, res: Response) => {
+	if (!res.locals.user) {
+		res.status(200).json({});
+		return;
+	}
+
+	const user = (
+		await db
+			.select({
+				id: userTable.id,
+				firstName: userTable.firstName,
+				lastName: userTable.lastName,
+				username: userTable.username,
+			})
+			.from(userTable)
+			.where(eq(userTable.id, res.locals.user.id))
+	)[0];
+	res.status(200).json({ user });
 });
 
 app.post('/signup', async (req: Request, res: Response) => {
@@ -179,16 +199,14 @@ app.get('/login/github/callback', async (req, res) => {
 	}
 });
 
-app.post('/logout', async (_, res) => {
+app.get('/logout', async (_, res) => {
 	if (!res.locals.session) {
 		return res.status(401).end();
 	}
 	await lucia.invalidateSession(res.locals.session.id);
 	return res
 		.setHeader('Set-Cookie', lucia.createBlankSessionCookie().serialize())
-		.json({
-			message: 'Logged out successfully',
-		});
+		.redirect('http://localhost:5173');
 });
 
 app.listen(port, () => {
