@@ -22,6 +22,13 @@
       "when": 1709496705599,
       "tag": "0002_stormy_captain_britain",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1709754788222,
+      "tag": "0003_lowly_paladin",
+      "breakpoints": true
     }
   ]
 }
