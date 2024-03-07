@@ -1,13 +1,13 @@
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { db } from '../db';
-import { User, sessionTable, userTable } from '../db/schema';
+import { User, sessions, users } from '../db/schema';
 import { Lucia } from 'lucia';
 import { GitHub } from 'arctic';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
+const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {

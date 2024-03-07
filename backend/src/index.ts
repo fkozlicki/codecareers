@@ -2,9 +2,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { corsOptions } from './config/corsOptions';
-import { requireSession, verifySession } from './middleware/session';
+import { verifySession } from './middleware/session';
 import { authRouter } from './routes/auth';
-import { companiesRouter } from './controllers/companiesController';
+import { companiesRouter } from './routes/companies';
 
 dotenv.config();
 
