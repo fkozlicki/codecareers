@@ -15,6 +15,10 @@ import ProtectedRoute from './components/protected-route.tsx';
 import Jobs from './pages/jobs.tsx';
 import Companies from './pages/companies.tsx';
 import CreateCompany from './pages/create-company.tsx';
+import Company from './pages/company.tsx';
+import CompanyLayout from './pages/company-layout.tsx';
+import JobOffers from './pages/job-offers.tsx';
+import Recruitments from './pages/recruitments.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -57,6 +61,36 @@ const router = createBrowserRouter([
 						<CreateCompany />
 					</ProtectedRoute>
 				),
+			},
+			{
+				path: '/my-companies/:id',
+				element: <CompanyLayout />,
+				children: [
+					{
+						path: '',
+						element: (
+							<ProtectedRoute>
+								<Company />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: 'job-offers',
+						element: (
+							<ProtectedRoute>
+								<JobOffers />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: 'recruitments',
+						element: (
+							<ProtectedRoute>
+								<Recruitments />
+							</ProtectedRoute>
+						),
+					},
+				],
 			},
 		],
 	},

@@ -1,11 +1,18 @@
 import { api } from './api';
 
+export interface Company {
+	id: string;
+	name: string;
+	description: string;
+	phoneNumber: string;
+}
+
 export const companiesApi = api.injectEndpoints({
 	endpoints: (builder) => ({
-		getCompanies: builder.query({
-			query: () => 'companies',
+		getCompanies: builder.query<{ companies: Company[] }, string | undefined>({
+			query: (id) => `companies${id ? `?userId=${id}` : ''}`,
 		}),
-		getCompany: builder.query({
+		getCompany: builder.query<{ company: Company }, string>({
 			query: (id) => `companies/${id}`,
 		}),
 		createCompany: builder.mutation({
@@ -25,7 +32,7 @@ export const companiesApi = api.injectEndpoints({
 				};
 			},
 		}),
-		deleteCompany: builder.mutation({
+		deleteCompany: builder.mutation<void, string>({
 			query: (id) => ({
 				url: `companies/${id}`,
 				method: 'DELETE',
@@ -34,4 +41,8 @@ export const companiesApi = api.injectEndpoints({
 	}),
 });
 
-export const { useGetCompaniesQuery, useCreateCompanyMutation } = companiesApi;
+export const {
+	useGetCompaniesQuery,
+	useCreateCompanyMutation,
+	useGetCompanyQuery,
+} = companiesApi;

@@ -1,6 +1,7 @@
 import { api } from './api';
 
 export interface User {
+	id: string;
 	firstName?: string;
 	lastName?: string;
 	username?: string;
@@ -21,14 +22,14 @@ interface SignInCredentials {
 
 export const authApi = api.injectEndpoints({
 	endpoints: (builder) => ({
-		signUp: builder.mutation<null, SignUpCredentials>({
+		signUp: builder.mutation<void, SignUpCredentials>({
 			query: (credentials) => ({
 				url: 'signup',
 				method: 'POST',
 				body: credentials,
 			}),
 		}),
-		signIn: builder.mutation<null, SignInCredentials>({
+		signIn: builder.mutation<void, SignInCredentials>({
 			query: (credentials) => ({
 				url: 'signin',
 				method: 'POST',

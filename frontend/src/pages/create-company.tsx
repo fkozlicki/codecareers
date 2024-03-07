@@ -1,3 +1,4 @@
+import { useCreateCompanyMutation } from '@/app/services/companies';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -12,7 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+import { Loader } from 'lucide-react';
 
 const formSchema = z.object({
 	name: z.string().min(1),
@@ -31,9 +34,18 @@ const CreateCompany = () => {
 			phoneNumber: '',
 		},
 	});
+	const [createCompany, { isLoading }] = useCreateCompanyMutation();
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+		createCompany(values)
+			.unwrap()
+			.then(() => {
+				form.reset();
+				toast.success('Successfully created a company');
+			})
+			.catch(() => {
+				toast.error('Could not create company');
+			});
 	}
 
 	return (
@@ -45,6 +57,7 @@ const CreateCompany = () => {
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<FormField
+							disabled={isLoading}
 							control={form.control}
 							name="name"
 							render={({ field }) => (
@@ -59,6 +72,7 @@ const CreateCompany = () => {
 							)}
 						/>
 						<FormField
+							disabled={isLoading}
 							control={form.control}
 							name="description"
 							render={({ field }) => (
@@ -76,8 +90,9 @@ const CreateCompany = () => {
 							)}
 						/>
 						<FormField
+							disabled={isLoading}
 							control={form.control}
-							name="name"
+							name="phoneNumber"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Phone number</FormLabel>
@@ -89,8 +104,8 @@ const CreateCompany = () => {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" className="w-full">
-							Save
+						<Button disabled={isLoading} type="submit" className="w-full">
+							{isLoading ? <Loader className="w-4 h-4 animate-spin" /> : 'Save'}
 						</Button>
 					</form>
 				</Form>
