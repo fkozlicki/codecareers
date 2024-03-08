@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1709396157355,
-      "tag": "0000_serious_speed",
+      "when": 1709929975275,
+      "tag": "0000_regular_iceman",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1709406675619,
-      "tag": "0001_warm_green_goblin",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1709496705599,
-      "tag": "0002_stormy_captain_britain",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1709754788222,
-      "tag": "0003_lowly_paladin",
+      "when": 1709930732686,
+      "tag": "0001_slimy_nighthawk",
       "breakpoints": true
     }
   ]
