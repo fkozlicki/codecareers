@@ -19,6 +19,7 @@ import Company from './pages/company.tsx';
 import CompanyLayout from './pages/company-layout.tsx';
 import JobOffers from './pages/job-offers.tsx';
 import Recruitments from './pages/recruitments.tsx';
+import CreateJobOffer from './pages/create-job-offer.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -76,11 +77,20 @@ const router = createBrowserRouter([
 					},
 					{
 						path: 'job-offers',
-						element: (
-							<ProtectedRoute>
-								<JobOffers />
-							</ProtectedRoute>
-						),
+						children: [
+							{
+								path: '',
+								element: (
+									<ProtectedRoute>
+										<JobOffers />
+									</ProtectedRoute>
+								),
+							},
+							{
+								path: 'create',
+								element: <CreateJobOffer />,
+							},
+						],
 					},
 					{
 						path: 'recruitments',
