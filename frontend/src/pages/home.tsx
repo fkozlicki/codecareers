@@ -3,11 +3,11 @@ import { Input } from '@/components/ui/input';
 
 const Home = () => {
 	return (
-		<div className="py-8 min-h-[calc(100vh-54px)] flex flex-col">
-			<div className="pb-8 border border-b border-t-0">
+		<div className="min-h-[calc(100vh-54px)] flex flex-col">
+			<div className="py-8 border border-b border-t-0">
 				<div className="max-w-2xl m-auto">
 					<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8 text-center">
-						CodeCarrers
+						CodeCareers
 					</h1>
 					<div className="flex items-center gap-4">
 						<Input
