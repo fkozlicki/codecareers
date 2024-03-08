@@ -2,7 +2,7 @@ import { useGetCompanyQuery } from '@/app/services/companies';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { Menu } from 'lucide-react';
+import { Briefcase, Building2, Menu, Users } from 'lucide-react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 
 const CompanyLayout = () => {
@@ -59,18 +59,21 @@ const CompanyLayout = () => {
 					</SheetContent>
 				</Sheet>
 			</div>
-			<div className="p-4 sticky w-full top-[53px] bg-background">
-				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
-					{data?.company.name}
-				</h1>
-				<h2>{data?.company.description}</h2>
+			<div className="px-4 py-8 sticky w-full top-[53px] bg-background border-b mb-4 z-10">
+				<div className="max-w-4xl m-auto">
+					<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
+						{data?.company.name}
+					</h1>
+					<h2>{data?.company.description}</h2>
+				</div>
 			</div>
-			<div className="flex">
-				<div className="h-[calc(100vh-173px)] flex-col w-72 hidden md:flex px-4 sticky top-[173px] self-start">
+			<div className="flex max-w-4xl m-auto">
+				<div className="h-[calc(100vh-222px)] flex-col w-48 hidden md:flex pr-4 sticky top-[222px] self-start border-r mr-4">
 					<Link
 						to={`/my-companies/${id}`}
 						className={navLinkClassNames(pathname === `/my-companies/${id}`)}
 					>
+						<Building2 className="w-5 h-5 mr-2" />
 						General
 					</Link>
 					<Link
@@ -79,6 +82,7 @@ const CompanyLayout = () => {
 							pathname === `/my-companies/${id}/job-offers`
 						)}
 					>
+						<Briefcase className="w-5 h-5 mr-2" />
 						Job offers
 					</Link>
 					<Link
@@ -87,6 +91,7 @@ const CompanyLayout = () => {
 							pathname === `/my-companies/${id}/recruitments`
 						)}
 					>
+						<Users className="w-5 h-5 mr-2" />
 						Recruitments
 					</Link>
 				</div>
