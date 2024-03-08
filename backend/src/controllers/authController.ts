@@ -20,11 +20,9 @@ export const handleCredentialsSignUp = async (req: Request, res: Response) => {
 	}
 
 	const hashedPassword = await new Argon2id().hash(password);
-	const userId = generateId(15);
 
 	try {
 		await db.insert(users).values({
-			id: userId,
 			email,
 			password: hashedPassword,
 			firstName,
@@ -90,13 +88,14 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 				)
 				.redirect('http://localhost:5173');
 		}
-		const userId = generateId(15);
-		await db.insert(users).values({
-			id: userId,
-			username: githubUser.login,
-			githubId: githubUser.id,
-		});
-		const session = await lucia.createSession(userId, {});
+		const [user] = await db
+			.insert(users)
+			.values({
+				username: githubUser.login,
+				githubId: githubUser.id,
+			})
+			.returning();
+		const session = await lucia.createSession(user.id, {});
 
 		return res
 			.appendHeader(
