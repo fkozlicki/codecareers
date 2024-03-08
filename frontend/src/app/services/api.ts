@@ -11,4 +11,5 @@ export const api = createApi({
 	reducerPath: 'splitApi',
 	baseQuery: baseQueryWithRetry,
 	endpoints: () => ({}),
+	tagTypes: ['Company', 'JobOffer'],
 });
