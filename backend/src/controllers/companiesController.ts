@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
-import { companies } from '../db/schema';
+import { companies, jobOffers } from '../db/schema';
 import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 
@@ -12,7 +12,7 @@ export const getCompany = async (req: Request, res: Response) => {
 	}
 
 	const company = await db.query.companies.findFirst({
-		where: eq(companies.id, req.params.id),
+		where: eq(companies.id, id),
 	});
 
 	if (!company) {
@@ -45,7 +45,7 @@ export const getCompanies = async (req: Request, res: Response) => {
 export const createCompany = async (req: Request, res: Response) => {
 	const [newCompany] = await db
 		.insert(companies)
-		.values({ id: generateId(15), ownerId: res.locals.user.id, ...req.body })
+		.values({ ownerId: res.locals.user.id, ...req.body })
 		.returning();
 
 	res.status(201).json({ company: newCompany });
@@ -104,4 +104,31 @@ export const deleteCompany = async (req: Request, res: Response) => {
 
 	await db.delete(companies).where(eq(companies.id, id)).returning();
 	res.status(204).json({ message: 'Company deleted successfully' });
+};
+
+export const createJobOffer = async (req: Request, res: Response) => {
+	const companyId = req.params.id;
+
+	if (!companyId) {
+		return res.status(400).json({ message: 'Company ID required' });
+	}
+
+	const { technologies, skills, ...rest } = req.body;
+
+	const [jobOffer] = await db
+		.insert(jobOffers)
+		.values({ companyId, ...rest })
+		.returning();
+
+	res.status(201).json({ jobOffer });
+};
+
+export const getJobOffers = async (req: Request, res: Response) => {
+	const companyId = req.params.id;
+
+	const result = await db.query.jobOffers.findMany({
+		where: eq(jobOffers.companyId, companyId),
+	});
+
+	res.status(200).json({ jobOffers: result });
 };
