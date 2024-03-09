@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import MultiSelect from '@/components/ui/multi-select';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 import {
 	Select,
 	SelectContent,
@@ -24,7 +25,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -70,6 +70,8 @@ const CreateJobOffer = () => {
 		createJobOffer({ ...values, companyId: id });
 	};
 
+	console.log(form.watch('description'));
+
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pb-4">
@@ -79,11 +81,11 @@ const CreateJobOffer = () => {
 					name="position"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Name</FormLabel>
+							<FormLabel>Position</FormLabel>
 							<FormControl>
 								<Input placeholder="Amazon" {...field} />
 							</FormControl>
-							<FormDescription>Your company name.</FormDescription>
+							<FormDescription>Position of your job offer.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -140,7 +142,7 @@ const CreateJobOffer = () => {
 										</SelectContent>
 									</Select>
 								</FormControl>
-								<FormDescription>Position experience level.</FormDescription>
+								<FormDescription>Type of employment.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -168,7 +170,7 @@ const CreateJobOffer = () => {
 										</SelectContent>
 									</Select>
 								</FormControl>
-								<FormDescription>Position experience level.</FormDescription>
+								<FormDescription>Type of work.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -188,7 +190,7 @@ const CreateJobOffer = () => {
 										onChange={field.onChange}
 									/>
 								</FormControl>
-								<FormDescription>Position experience level.</FormDescription>
+								<FormDescription>Preffered technologies.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -203,7 +205,7 @@ const CreateJobOffer = () => {
 								<FormControl>
 									<MultiSelect options={skills} onChange={field.onChange} />
 								</FormControl>
-								<FormDescription>Position experience level.</FormDescription>
+								<FormDescription>Preffered skills.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -217,12 +219,9 @@ const CreateJobOffer = () => {
 						<FormItem>
 							<FormLabel>Description</FormLabel>
 							<FormControl>
-								<Textarea
-									placeholder="We are multinational corporation and technology company focusing on e-commerce, cloud computing, online advertising..."
-									{...field}
-								/>
+								<RichTextEditor value={field.value} onChange={field.onChange} />
 							</FormControl>
-							<FormDescription>Your company description.</FormDescription>
+							<FormDescription>Your job offer description.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -247,7 +246,7 @@ const CreateJobOffer = () => {
 											{...field}
 										/>
 									</FormControl>
-									<FormDescription>Your company name.</FormDescription>
+									<FormDescription>Minimal salary.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -267,7 +266,7 @@ const CreateJobOffer = () => {
 											{...field}
 										/>
 									</FormControl>
-									<FormDescription>Your company name.</FormDescription>
+									<FormDescription>Maximal salary.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -295,7 +294,7 @@ const CreateJobOffer = () => {
 											</SelectContent>
 										</Select>
 									</FormControl>
-									<FormDescription>Position experience level.</FormDescription>
+									<FormDescription>Salary currency.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
