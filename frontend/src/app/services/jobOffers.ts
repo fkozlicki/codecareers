@@ -10,7 +10,7 @@ export interface JobOffer {
 	workType: string;
 	salaryFrom: number;
 	salaryTo: number;
-	salaryCurrency: number;
+	salaryCurrency: string;
 	createdAt: string;
 }
 
@@ -21,8 +21,10 @@ export interface SkillItem {
 
 export interface JobOfferDetailed extends JobOffer {
 	company: Company;
-	skills: SkillItem[];
-	technologies: SkillItem[];
+	jobOfferSkills: {
+		skill: SkillItem;
+	}[];
+	jobOfferTechnologies: { technology: SkillItem }[];
 }
 
 export const jobOffersApi = api.injectEndpoints({
