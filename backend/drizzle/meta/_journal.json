@@ -15,6 +15,13 @@
       "when": 1709930732686,
       "tag": "0001_slimy_nighthawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709984481294,
+      "tag": "0002_mean_wild_pack",
+      "breakpoints": true
     }
   ]
 }

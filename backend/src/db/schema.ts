@@ -72,7 +72,7 @@ export const workTypeEnum = pgEnum('work_type', [
 export const currency = pgEnum('currency', ['pln', 'gbp', 'eur', 'usd']);
 
 export const technologies = pgTable('technology', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
 });
 
@@ -133,6 +133,20 @@ export const jobOfferTechnologies = pgTable(
 	})
 );
 
+export const jobOfferTechnologiesRelations = relations(
+	jobOfferTechnologies,
+	({ one }) => ({
+		jobOffer: one(jobOffers, {
+			fields: [jobOfferTechnologies.jobOfferId],
+			references: [jobOffers.id],
+		}),
+		technology: one(technologies, {
+			fields: [jobOfferTechnologies.technologyId],
+			references: [technologies.id],
+		}),
+	})
+);
+
 export const jobOfferSkills = pgTable(
 	'job_offer_skill',
 	{
@@ -147,6 +161,17 @@ export const jobOfferSkills = pgTable(
 		pk: primaryKey({ columns: [t.jobOfferId, t.skillId] }),
 	})
 );
+
+export const jobOfferSkillsRelations = relations(jobOfferSkills, ({ one }) => ({
+	jobOffer: one(jobOffers, {
+		fields: [jobOfferSkills.jobOfferId],
+		references: [jobOffers.id],
+	}),
+	skill: one(skills, {
+		fields: [jobOfferSkills.skillId],
+		references: [skills.id],
+	}),
+}));
 
 export const applications = pgTable('application', {
 	id: uuid('id').primaryKey().defaultRandom(),
