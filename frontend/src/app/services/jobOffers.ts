@@ -1,4 +1,5 @@
 import { api } from './api';
+import { Company } from './companies';
 
 export interface JobOffer {
 	id: string;
@@ -13,10 +14,25 @@ export interface JobOffer {
 	createdAt: string;
 }
 
+export interface SkillItem {
+	id: string;
+	name: string;
+}
+
+export interface JobOfferDetailed extends JobOffer {
+	company: Company;
+	skills: SkillItem[];
+	technologies: SkillItem[];
+}
+
 export const jobOffersApi = api.injectEndpoints({
 	endpoints: (builder) => ({
-		getJobOffer: builder.query<{ jobOffer: JobOffer }, string>({
+		getJobOffer: builder.query<{ jobOffer: JobOfferDetailed }, string>({
 			query: (id) => `job-offers/${id}`,
+			providesTags: ['JobOffer'],
+		}),
+		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, void>({
+			query: () => `job-offers`,
 			providesTags: ['JobOffer'],
 		}),
 		updateJobOffer: builder.mutation<JobOffer, JobOffer>({
@@ -50,4 +66,4 @@ export const jobOffersApi = api.injectEndpoints({
 	}),
 });
 
-export const { useDeleteJobOfferMutation } = jobOffersApi;
+export const { useGetJobOffersQuery, useLazyGetJobOfferQuery } = jobOffersApi;
