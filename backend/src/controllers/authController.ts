@@ -31,7 +31,6 @@ export const handleCredentialsSignUp = async (req: Request, res: Response) => {
 
 		res.status(201).json({ message: 'Signed up successfully' });
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: 'Server error' });
 	}
 };
@@ -60,7 +59,6 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 		parseCookies(req.headers.cookie ?? '').get('github_oauth_state') ?? null;
 
 	if (!code || !state || !storedState || state !== storedState) {
-		console.log(code, state, storedState);
 		res.status(400).end();
 		return;
 	}
