@@ -5,6 +5,9 @@ import { corsOptions } from './config/corsOptions';
 import { verifySession } from './middleware/session';
 import { authRouter } from './routes/auth';
 import { companiesRouter } from './routes/companies';
+import { jobOffersRouter } from './routes/jobOffers';
+import { technologiesRouter } from './routes/technologies';
+import { skillsRouter } from './routes/skills';
 
 dotenv.config();
 
@@ -23,6 +26,9 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/', authRouter);
 app.use('/companies', companiesRouter);
+app.use('/job-offers', jobOffersRouter);
+app.use('/technologies', technologiesRouter);
+app.use('/skills', skillsRouter);
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
