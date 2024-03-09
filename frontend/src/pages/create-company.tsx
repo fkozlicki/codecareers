@@ -1,4 +1,8 @@
-import { useCreateCompanyMutation } from '@/app/services/companies';
+import {
+	CompanyValues,
+	createCompanySchema,
+	useCreateCompanyMutation,
+} from '@/app/services/companies';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -12,22 +16,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
-import { Loader } from 'lucide-react';
-
-const formSchema = z.object({
-	name: z.string().min(1),
-	description: z.string(),
-	phoneNumber: z
-		.string()
-		.regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/),
-});
 
 const CreateCompany = () => {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<CompanyValues>({
+		resolver: zodResolver(createCompanySchema),
 		defaultValues: {
 			name: '',
 			description: '',
@@ -36,7 +31,7 @@ const CreateCompany = () => {
 	});
 	const [createCompany, { isLoading }] = useCreateCompanyMutation();
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: CompanyValues) {
 		createCompany(values)
 			.unwrap()
 			.then(() => {

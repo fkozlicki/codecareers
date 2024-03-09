@@ -1,4 +1,8 @@
-import { useCreateJobOfferMutation } from '@/app/services/companies';
+import {
+	JobOfferValues,
+	createJobOfferSchema,
+	useCreateJobOfferMutation,
+} from '@/app/services/companies';
 import { useGetSkillsQuery } from '@/app/services/skills';
 import { useGetTechnologiesQuery } from '@/app/services/technologies';
 import { Button } from '@/components/ui/button';
@@ -25,36 +29,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { z } from 'zod';
-
-const arrayItem = z.object({
-	label: z.string(),
-	value: z.string(),
-	__isNew__: z.boolean().optional(),
-});
-
-const formSchema = z.object({
-	position: z.string().min(1),
-	description: z.string().min(1),
-	level: z.string(),
-	skills: z.array(arrayItem),
-	technologies: z.array(arrayItem),
-	salaryFrom: z.coerce.number(),
-	salaryTo: z.coerce.number(),
-	salaryCurrency: z.string(),
-	employmentType: z.string(),
-	workType: z.string(),
-});
 
 const CreateJobOffer = () => {
 	const { id } = useParams();
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<JobOfferValues>({
+		resolver: zodResolver(createJobOfferSchema),
 		defaultValues: {
 			position: '',
 			description: '',
+			level: '',
 			employmentType: '',
+			workType: '',
 			technologies: [],
+			skills: [],
+			salaryFrom: 0,
+			salaryTo: 0,
+			salaryCurrency: '',
 		},
 	});
 	const [createJobOffer, { isLoading }] = useCreateJobOfferMutation();
@@ -73,7 +63,10 @@ const CreateJobOffer = () => {
 			value: technology.id,
 		})) ?? [];
 
-	const onSubmit = (values: z.infer<typeof formSchema>) => {
+	const onSubmit = (values: JobOfferValues) => {
+		if (!id) {
+			return;
+		}
 		createJobOffer({ ...values, companyId: id });
 	};
 
@@ -91,24 +84,6 @@ const CreateJobOffer = () => {
 								<Input placeholder="Amazon" {...field} />
 							</FormControl>
 							<FormDescription>Your company name.</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					disabled={isLoading}
-					control={form.control}
-					name="description"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Description (optional)</FormLabel>
-							<FormControl>
-								<Textarea
-									placeholder="We are multinational corporation and technology company focusing on e-commerce, cloud computing, online advertising..."
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>Your company description.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -234,6 +209,24 @@ const CreateJobOffer = () => {
 						)}
 					/>
 				</div>
+				<FormField
+					disabled={isLoading}
+					control={form.control}
+					name="description"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Description</FormLabel>
+							<FormControl>
+								<Textarea
+									placeholder="We are multinational corporation and technology company focusing on e-commerce, cloud computing, online advertising..."
+									{...field}
+								/>
+							</FormControl>
+							<FormDescription>Your company description.</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<div>
 					<div className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2">
 						Salary
@@ -247,7 +240,12 @@ const CreateJobOffer = () => {
 								<FormItem className="flex-1">
 									<FormLabel className="text-xs">From</FormLabel>
 									<FormControl>
-										<Input placeholder="Amazon" type="number" {...field} />
+										<Input
+											placeholder="Amazon"
+											type="number"
+											min={0}
+											{...field}
+										/>
 									</FormControl>
 									<FormDescription>Your company name.</FormDescription>
 									<FormMessage />
@@ -262,7 +260,12 @@ const CreateJobOffer = () => {
 								<FormItem className="flex-1">
 									<FormLabel className="text-xs">To</FormLabel>
 									<FormControl>
-										<Input placeholder="Amazon" type="number" {...field} />
+										<Input
+											placeholder="Amazon"
+											type="number"
+											min={0}
+											{...field}
+										/>
 									</FormControl>
 									<FormDescription>Your company name.</FormDescription>
 									<FormMessage />

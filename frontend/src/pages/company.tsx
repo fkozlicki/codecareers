@@ -1,4 +1,6 @@
 import {
+	CompanyValues,
+	createCompanySchema,
 	useGetCompanyQuery,
 	useUpdateCompanyMutation,
 } from '@/app/services/companies';
@@ -19,21 +21,12 @@ import { Loader } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { z } from 'zod';
-
-const formSchema = z.object({
-	name: z.string().min(1),
-	description: z.string(),
-	phoneNumber: z
-		.string()
-		.regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/),
-});
 
 const Company = () => {
 	const { id } = useParams();
 	const { data } = useGetCompanyQuery(id!);
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<CompanyValues>({
+		resolver: zodResolver(createCompanySchema),
 		defaultValues: {
 			name: '',
 			description: '',
@@ -48,10 +41,11 @@ const Company = () => {
 		}
 	}, [data]);
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		if (data?.company) {
-			updateCompany({ id: data.company.id, ...values });
+	function onSubmit(values: CompanyValues) {
+		if (!id) {
+			return;
 		}
+		updateCompany({ id, ...values });
 	}
 
 	return (
