@@ -20,9 +20,17 @@ export const getJobOffer = async (req: Request, res: Response) => {
 	const jobOffer = await db.query.jobOffers.findFirst({
 		where: eq(jobOffers.id, id),
 		with: {
-			jobOfferSkills: true,
-			jobOfferTechnologies: true,
 			company: true,
+			jobOfferSkills: {
+				with: {
+					skill: true,
+				},
+			},
+			jobOfferTechnologies: {
+				with: {
+					technology: true,
+				},
+			},
 		},
 	});
 

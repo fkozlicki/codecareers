@@ -169,10 +169,13 @@ export const createJobOffer = async (req: Request, res: Response) => {
 		(technology) => !technology.__isNew__
 	);
 
-	const createdTechnologies = await db
-		.insert(technologies)
-		.values(newTechnologies.map((tech) => ({ name: tech.value })))
-		.returning();
+	const createdTechnologies =
+		newTechnologies.length > 0
+			? await db
+					.insert(technologies)
+					.values(newTechnologies.map((tech) => ({ name: tech.value })))
+					.returning()
+			: [];
 
 	await db.insert(jobOfferTechnologies).values(
 		existingTechnologies
@@ -191,10 +194,13 @@ export const createJobOffer = async (req: Request, res: Response) => {
 	const newSkills = _skills.filter((skill) => skill.__isNew__);
 	const existingSkills = _skills.filter((skill) => !skill.__isNew__);
 
-	const createdSkills = await db
-		.insert(skills)
-		.values(newSkills.map((skill) => ({ name: skill.value })))
-		.returning();
+	const createdSkills =
+		newSkills.length > 0
+			? await db
+					.insert(skills)
+					.values(newSkills.map((skill) => ({ name: skill.value })))
+					.returning()
+			: [];
 
 	await db.insert(jobOfferSkills).values(
 		existingSkills
