@@ -15,7 +15,7 @@ const Header = () => {
 	const { user } = useAppSelector((state) => state.auth);
 
 	return (
-		<header className="p-2 border-b flex justify-between items-center sticky top-0 bg-background">
+		<header className="p-2 border-b flex justify-between items-center sticky top-0 bg-background z-10">
 			<Link to="/">
 				<div>logo</div>
 			</Link>
