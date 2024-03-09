@@ -4,6 +4,12 @@ import { generateId } from 'lucia';
 import { db } from '../db';
 import { jobOffers } from '../db/schema';
 
+export const getJobOffers = async (req: Request, res: Response) => {
+	const result = await db.query.jobOffers.findMany();
+
+	res.status(200).json({ jobOffers: result });
+};
+
 export const getJobOffer = async (req: Request, res: Response) => {
 	const id = req.params.id;
 
@@ -16,6 +22,7 @@ export const getJobOffer = async (req: Request, res: Response) => {
 		with: {
 			jobOfferSkills: true,
 			jobOfferTechnologies: true,
+			company: true,
 		},
 	});
 
