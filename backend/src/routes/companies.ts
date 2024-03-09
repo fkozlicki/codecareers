@@ -6,9 +6,11 @@ import {
 	getCompanies,
 	getCompany,
 	getJobOffers,
+	jobOfferSchema,
 	updateCompany,
 } from '../controllers/companiesController';
 import { requireSession } from '../middleware/session';
+import { validate } from '../middleware/validate';
 
 export const companiesRouter = Router();
 
@@ -26,4 +28,4 @@ companiesRouter
 companiesRouter
 	.route('/:id/job-offers')
 	.get(requireSession, getJobOffers)
-	.post(requireSession, createJobOffer);
+	.post(requireSession, validate(jobOfferSchema), createJobOffer);

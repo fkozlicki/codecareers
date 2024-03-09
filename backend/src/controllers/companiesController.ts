@@ -1,8 +1,15 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
-import { companies, jobOffers } from '../db/schema';
+import {
+	companies,
+	jobOfferSkills,
+	jobOfferTechnologies,
+	jobOffers,
+	skills,
+	technologies,
+} from '../db/schema';
 import { Request, Response } from 'express';
-import { generateId } from 'lucia';
+import { z } from 'zod';
 
 export const getCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
@@ -106,19 +113,102 @@ export const deleteCompany = async (req: Request, res: Response) => {
 	res.status(204).json({ message: 'Company deleted successfully' });
 };
 
+const skillItem = z.object({
+	label: z.string(),
+	value: z.string(),
+	__isNew__: z.boolean().optional(),
+});
+
+export const jobOfferSchema = z.object({
+	body: z.object({
+		position: z.string(),
+		description: z.string(),
+		level: z.enum(['junior', 'mid', 'senior']),
+		employmentType: z.enum([
+			'b2b',
+			'permanent',
+			'mandate',
+			'internship',
+			'task',
+		]),
+		workType: z.enum(['full_time', 'part_time', 'internship', 'freelance']),
+		salaryFrom: z.number().int(),
+		salaryTo: z.number().int(),
+		salaryCurrency: z.enum(['pln', 'gbp', 'eur', 'usd']),
+		skills: z.array(skillItem),
+		technologies: z.array(skillItem),
+	}),
+	params: z.object({
+		id: z.string(),
+	}),
+});
+type CreateJobOfferSchema = z.infer<typeof jobOfferSchema>;
+
 export const createJobOffer = async (req: Request, res: Response) => {
-	const companyId = req.params.id;
+	const { id: companyId } = req.params as CreateJobOfferSchema['params'];
 
 	if (!companyId) {
 		return res.status(400).json({ message: 'Company ID required' });
 	}
 
-	const { technologies, skills, ...rest } = req.body;
+	const {
+		technologies: _technologies,
+		skills: _skills,
+		...rest
+	} = req.body as CreateJobOfferSchema['body'];
 
 	const [jobOffer] = await db
 		.insert(jobOffers)
 		.values({ companyId, ...rest })
 		.returning();
+
+	const newTechnologies = _technologies.filter(
+		(technology) => technology.__isNew__
+	);
+	const existingTechnologies = _technologies.filter(
+		(technology) => !technology.__isNew__
+	);
+
+	const createdTechnologies = await db
+		.insert(technologies)
+		.values(newTechnologies.map((tech) => ({ name: tech.value })))
+		.returning();
+
+	await db.insert(jobOfferTechnologies).values(
+		existingTechnologies
+			.map((tech) => ({
+				jobOfferId: jobOffer.id,
+				technologyId: tech.value,
+			}))
+			.concat(
+				createdTechnologies.map((tech) => ({
+					jobOfferId: jobOffer.id,
+					technologyId: tech.id,
+				}))
+			)
+	);
+
+	const newSkills = _skills.filter((skill) => skill.__isNew__);
+	const existingSkills = _skills.filter((skill) => !skill.__isNew__);
+
+	const createdSkills = await db
+		.insert(skills)
+		.values(newSkills.map((skill) => ({ name: skill.value })))
+		.returning();
+
+	await db.insert(jobOfferSkills).values(
+		existingSkills
+			.map((skill) => ({
+				jobOfferId: jobOffer.id,
+				skillId: skill.value,
+			}))
+			.concat(
+				createdSkills.map((skill) => ({
+					jobOfferId: jobOffer.id,
+					skillId: skill.id,
+				}))
+			)
+	);
 
 	res.status(201).json({ jobOffer });
 };
