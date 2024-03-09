@@ -1,4 +1,6 @@
 import { useCreateJobOfferMutation } from '@/app/services/companies';
+import { useGetSkillsQuery } from '@/app/services/skills';
+import { useGetTechnologiesQuery } from '@/app/services/technologies';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -28,6 +30,7 @@ import { z } from 'zod';
 const arrayItem = z.object({
 	label: z.string(),
 	value: z.string(),
+	__isNew__: z.boolean().optional(),
 });
 
 const formSchema = z.object({
@@ -43,21 +46,6 @@ const formSchema = z.object({
 	workType: z.string(),
 });
 
-const technologies = [
-	{ label: 'C++', value: 'cpp' },
-	{ label: 'JavaScript', value: 'js' },
-	{ label: 'Ruby', value: 'ruby' },
-	{ label: 'Java', value: 'java' },
-	{ label: 'C#', value: 'cs' },
-];
-
-const skills = [
-	{ label: 'React', value: 'react' },
-	{ label: 'Spring Boot', value: 'spring-boot' },
-	{ label: 'Django', value: 'django' },
-	{ label: 'Ruby on Rails', value: 'ruby-on-rails' },
-];
-
 const CreateJobOffer = () => {
 	const { id } = useParams();
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -70,6 +58,20 @@ const CreateJobOffer = () => {
 		},
 	});
 	const [createJobOffer, { isLoading }] = useCreateJobOfferMutation();
+	const { data: skillsData } = useGetSkillsQuery();
+	const { data: techonologiesData } = useGetTechnologiesQuery();
+
+	const skills =
+		skillsData?.skills?.map((skill) => ({
+			label: skill.name,
+			value: skill.id,
+		})) ?? [];
+
+	const technologies =
+		techonologiesData?.technologies?.map((technology) => ({
+			label: technology.name,
+			value: technology.id,
+		})) ?? [];
 
 	const onSubmit = (values: z.infer<typeof formSchema>) => {
 		createJobOffer({ ...values, companyId: id });
