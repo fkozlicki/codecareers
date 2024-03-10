@@ -33,9 +33,9 @@ const Header = () => {
 						<DropdownMenuContent align="end">
 							<DropdownMenuLabel>{user.username}</DropdownMenuLabel>
 							<DropdownMenuSeparator />
-							<Link to="/my-jobs">
+							<Link to="/my-applications">
 								<DropdownMenuItem className="cursor-pointer">
-									Jobs offers
+									Applications
 								</DropdownMenuItem>
 							</Link>
 							<Link to="/my-companies">

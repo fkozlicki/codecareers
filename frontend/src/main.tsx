@@ -1,25 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Home from './pages/home.tsx';
+import { store } from './app/store.ts';
+import ProtectedRoute from './components/protected-route.tsx';
+import SessionProvider from './components/session-provider.tsx';
+import './index.css';
 import NotFound from './pages/404.tsx';
+import Applications from './pages/applications.tsx';
+import Companies from './pages/companies.tsx';
+import CompanyLayout from './pages/company-layout.tsx';
+import Company from './pages/company.tsx';
+import CreateCompany from './pages/create-company.tsx';
+import CreateJobOffer from './pages/create-job-offer.tsx';
+import Home from './pages/home.tsx';
+import JobOffers from './pages/job-offers.tsx';
 import Layout from './pages/layout.tsx';
+import Recruitments from './pages/recruitments.tsx';
+import Settings from './pages/settings.tsx';
 import SignIn from './pages/sign-in.tsx';
 import SignUp from './pages/sign-up.tsx';
-import { Provider } from 'react-redux';
-import { store } from './app/store.ts';
-import SessionProvider from './components/session-provider.tsx';
-import Settings from './pages/settings.tsx';
-import ProtectedRoute from './components/protected-route.tsx';
-import Jobs from './pages/jobs.tsx';
-import Companies from './pages/companies.tsx';
-import CreateCompany from './pages/create-company.tsx';
-import Company from './pages/company.tsx';
-import CompanyLayout from './pages/company-layout.tsx';
-import JobOffers from './pages/job-offers.tsx';
-import Recruitments from './pages/recruitments.tsx';
-import CreateJobOffer from './pages/create-job-offer.tsx';
+import ApplicationsLayout from './pages/applications-layout.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -40,12 +41,18 @@ const router = createBrowserRouter([
 				),
 			},
 			{
-				path: '/my-jobs',
+				path: '/my-applications',
 				element: (
 					<ProtectedRoute>
-						<Jobs />
+						<ApplicationsLayout />
 					</ProtectedRoute>
 				),
+				children: [
+					{
+						path: '',
+						element: <Applications />,
+					},
+				],
 			},
 			{
 				path: '/my-companies',
