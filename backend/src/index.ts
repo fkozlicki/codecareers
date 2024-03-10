@@ -8,6 +8,7 @@ import { companiesRouter } from './routes/companies';
 import { jobOffersRouter } from './routes/jobOffers';
 import { technologiesRouter } from './routes/technologies';
 import { skillsRouter } from './routes/skills';
+import { applicationsRouter } from './routes/applications';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/companies', companiesRouter);
 app.use('/job-offers', jobOffersRouter);
 app.use('/technologies', technologiesRouter);
 app.use('/skills', skillsRouter);
+app.use('/applications', applicationsRouter);
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);

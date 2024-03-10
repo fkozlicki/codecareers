@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { db } from '../db';
-import { jobOffers } from '../db/schema';
+import { applications, jobOffers } from '../db/schema';
 
 export const getJobOffers = async (req: Request, res: Response) => {
 	const result = await db.query.jobOffers.findMany();
@@ -45,3 +45,15 @@ export const getJobOffer = async (req: Request, res: Response) => {
 
 export const updateJobOffer = () => {};
 export const deleteJobOffer = () => {};
+
+export const createApplication = async (req: Request, res: Response) => {
+	const id = req.params.id;
+
+	const application = await db.insert(applications).values({
+		userId: res.locals.user.id,
+		jobOfferId: id,
+		...req.body,
+	});
+
+	res.status(201).json({ application });
+};
