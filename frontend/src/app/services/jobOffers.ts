@@ -1,5 +1,13 @@
 import { api } from './api';
 import { Company } from './companies';
+import { z } from 'zod';
+
+export const createApplicationSchema = z.object({
+	cv: z.string().optional(),
+	introduction: z.string().min(1),
+});
+
+export type ApplicationValues = z.infer<typeof createApplicationSchema>;
 
 export interface JobOffer {
 	id: string;
@@ -65,7 +73,24 @@ export const jobOffersApi = api.injectEndpoints({
 				method: 'DELETE',
 			}),
 		}),
+		createApplication: builder.mutation<
+			void,
+			ApplicationValues & { id: string }
+		>({
+			query: (data) => {
+				const { id, ...body } = data;
+				return {
+					url: `job-offers/${id}/applications`,
+					method: 'POST',
+					body,
+				};
+			},
+		}),
 	}),
 });
 
-export const { useGetJobOffersQuery, useLazyGetJobOfferQuery } = jobOffersApi;
+export const {
+	useGetJobOffersQuery,
+	useLazyGetJobOfferQuery,
+	useCreateApplicationMutation,
+} = jobOffersApi;
