@@ -5,7 +5,9 @@ import { db } from '../db';
 import { applications, jobOffers } from '../db/schema';
 
 export const getJobOffers = async (req: Request, res: Response) => {
-	const result = await db.query.jobOffers.findMany();
+	const result = await db.query.jobOffers.findMany({
+		where: eq(jobOffers.published, true),
+	});
 
 	res.status(200).json({ jobOffers: result });
 };
@@ -43,7 +45,17 @@ export const getJobOffer = async (req: Request, res: Response) => {
 	res.status(200).json({ jobOffer });
 };
 
-export const updateJobOffer = () => {};
+export const updateJobOffer = async (req: Request, res: Response) => {
+	const id = req.params.id;
+
+	const [updatedJobOffer] = await db
+		.update(jobOffers)
+		.set(req.body)
+		.where(eq(jobOffers.id, id))
+		.returning();
+
+	res.status(200).json({ jobOffer: updatedJobOffer });
+};
 export const deleteJobOffer = () => {};
 
 export const createApplication = async (req: Request, res: Response) => {

@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '../db';
 import {
 	companies,
@@ -221,9 +221,13 @@ export const createJobOffer = async (req: Request, res: Response) => {
 
 export const getJobOffers = async (req: Request, res: Response) => {
 	const companyId = req.params.id;
+	const sort = req.query.sort;
 
 	const result = await db.query.jobOffers.findMany({
-		where: eq(jobOffers.companyId, companyId),
+		where: and(
+			eq(jobOffers.companyId, companyId),
+			sort ? eq(jobOffers.published, sort === 'public') : undefined
+		),
 	});
 
 	res.status(200).json({ jobOffers: result });

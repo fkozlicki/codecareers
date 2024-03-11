@@ -1,5 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
 import {
+	boolean,
 	integer,
 	pgEnum,
 	pgTable,
@@ -106,6 +107,7 @@ export const jobOffers = pgTable('job_offer', {
 	})
 		.notNull()
 		.defaultNow(),
+	published: boolean('published').notNull().default(false),
 });
 
 export const jobOffersRelations = relations(jobOffers, ({ many, one }) => ({
