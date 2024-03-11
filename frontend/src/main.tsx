@@ -21,6 +21,8 @@ import Settings from './pages/settings.tsx';
 import SignIn from './pages/sign-in.tsx';
 import SignUp from './pages/sign-up.tsx';
 import ApplicationsLayout from './pages/applications-layout.tsx';
+import CompanyJobOffer from './pages/company-job-offer.tsx';
+import EditJobOffer from './pages/edit-job-offer.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -96,6 +98,19 @@ const router = createBrowserRouter([
 							{
 								path: 'create',
 								element: <CreateJobOffer />,
+							},
+							{
+								path: ':jobOfferId',
+								children: [
+									{
+										path: '',
+										element: <CompanyJobOffer />,
+									},
+									{
+										path: 'edit',
+										element: <EditJobOffer />,
+									},
+								],
 							},
 						],
 					},
