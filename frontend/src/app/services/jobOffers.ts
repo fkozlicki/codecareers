@@ -20,6 +20,7 @@ export interface JobOffer {
 	salaryTo: number;
 	salaryCurrency: string;
 	createdAt: string;
+	published: boolean;
 }
 
 export interface SkillItem {
@@ -45,7 +46,10 @@ export const jobOffersApi = api.injectEndpoints({
 			query: () => `job-offers`,
 			providesTags: ['JobOffer'],
 		}),
-		updateJobOffer: builder.mutation<JobOffer, JobOffer>({
+		updateJobOffer: builder.mutation<
+			JobOffer,
+			Partial<JobOffer> & { id: string }
+		>({
 			query: (data) => {
 				const { id, ...body } = data;
 				return {
@@ -93,4 +97,6 @@ export const {
 	useGetJobOffersQuery,
 	useLazyGetJobOfferQuery,
 	useCreateApplicationMutation,
+	useGetJobOfferQuery,
+	useUpdateJobOfferMutation,
 } = jobOffersApi;

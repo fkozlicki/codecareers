@@ -71,7 +71,7 @@ const JobOfferDetails = () => {
 	useEffect(() => {
 		if (jobOfferId) {
 			queryJobOffer(jobOfferId);
-		} else if (jobOffersData) {
+		} else if (jobOffersData && jobOffersData.jobOffers[0]) {
 			queryJobOffer(jobOffersData.jobOffers[0].id);
 		}
 	}, [jobOfferId, queryJobOffer, jobOffersData]);
@@ -85,8 +85,6 @@ const JobOfferDetails = () => {
 			.then(() => toast.success('Successfully sent an application'))
 			.catch(() => toast.warning("Couldn't sent an application"));
 	};
-
-	console.log(form.watch('cv'));
 
 	if (isLoading) {
 		return <div>Loading...</div>;

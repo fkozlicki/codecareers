@@ -101,8 +101,12 @@ export const companiesApi = api.injectEndpoints({
 				};
 			},
 		}),
-		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, string>({
-			query: (id) => `companies/${id}/job-offers`,
+		getCompanyJobOffers: builder.query<
+			{ jobOffers: JobOffer[] },
+			{ id: string; sort?: string }
+		>({
+			query: ({ id, sort }) =>
+				`companies/${id}/job-offers${sort ? `?sort=${sort}` : ''}`,
 			providesTags: ['JobOffer'],
 		}),
 	}),
@@ -114,5 +118,6 @@ export const {
 	useGetCompanyQuery,
 	useUpdateCompanyMutation,
 	useCreateJobOfferMutation,
-	useGetJobOffersQuery,
+	useGetCompanyJobOffersQuery,
+	useLazyGetCompanyJobOffersQuery,
 } = companiesApi;
