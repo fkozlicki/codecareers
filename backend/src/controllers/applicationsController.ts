@@ -17,3 +17,15 @@ export const getApplications = async (req: Request, res: Response) => {
 
 	res.status(200).json({ applications: result });
 };
+
+export const updateApplication = async (req: Request, res: Response) => {
+	const id = req.params.id;
+
+	const [updatedApplication] = await db
+		.update(applications)
+		.set(req.body)
+		.where(eq(applications.id, id))
+		.returning();
+
+	res.status(200).json({ application: updatedApplication });
+};
