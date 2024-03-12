@@ -12,7 +12,7 @@ const Home = () => {
 			<Hero />
 			<div className="flex flex-1">
 				{data && data.jobOffers.length === 0 ? (
-					<div>
+					<div className="flex-1 p-4 grid place-items-center">
 						<Empty message="There are no jobs you are looking for" />
 					</div>
 				) : (

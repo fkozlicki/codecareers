@@ -1,5 +1,4 @@
 import { useAppSelector } from '@/app/hooks';
-import { Button } from '@/components/ui/button';
 import {
 	Form,
 	FormControl,
@@ -11,7 +10,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -25,29 +23,20 @@ const Settings = () => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstName: '',
-			lastName: '',
+			firstName: user?.firstName ?? '',
+			lastName: user?.lastName ?? '',
 		},
 	});
-	const [step, setStep] = useState<'info' | 'images' | 'other'>('info');
 
 	const onSubmit = (values: z.infer<typeof formSchema>) => {
 		console.log(values);
-	};
-
-	const changeStep = () => {
-		if (step === 'info') {
-			setStep('images');
-		} else if (step === 'images') {
-			setStep('other');
-		}
 	};
 
 	return (
 		<div className="py-8">
 			<div className="max-w-xl m-auto">
 				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8 text-center">
-					Hi, {user?.username}
+					Hi, {user?.username || `${user?.firstName} ${user?.lastName}`}
 				</h1>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -83,13 +72,6 @@ const Settings = () => {
 								</FormItem>
 							)}
 						/>
-						{step === 'other' ? (
-							<Button type="submit" className="w-full">
-								Save
-							</Button>
-						) : (
-							<Button onClick={changeStep}>Next</Button>
-						)}
 					</form>
 				</Form>
 			</div>

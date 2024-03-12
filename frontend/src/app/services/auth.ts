@@ -6,6 +6,7 @@ export interface User {
 	lastName?: string;
 	username?: string;
 	image: string | null;
+	avatar: string | null;
 }
 
 interface SignUpCredentials {
@@ -31,7 +32,7 @@ export const authApi = api.injectEndpoints({
 		}),
 		signIn: builder.mutation<void, SignInCredentials>({
 			query: (credentials) => ({
-				url: 'signin',
+				url: 'login/credentials',
 				method: 'POST',
 				body: credentials,
 			}),

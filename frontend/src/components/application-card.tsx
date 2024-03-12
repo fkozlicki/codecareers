@@ -12,7 +12,7 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -23,7 +23,7 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 	const {
 		id,
 		cv,
-		user: { firstName, lastName, username },
+		user: { firstName, lastName, username, avatar },
 		introduction,
 		createdAt,
 		accepted,
@@ -63,8 +63,11 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 				<DialogHeader>
 					<div className="flex items-center gap-3">
 						<Avatar>
-							<img src="" alt="" />
-							<AvatarFallback>EL</AvatarFallback>
+							{avatar && <AvatarImage src={avatar} alt="user avatar" />}
+							<AvatarFallback>
+								{firstName?.at(0)}
+								{lastName?.at(0)}
+							</AvatarFallback>
 						</Avatar>
 						<span>{username || `${firstName} ${lastName}`}</span>
 					</div>

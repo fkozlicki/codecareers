@@ -1,4 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
+import { useSignInMutation } from '@/app/services/auth';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -11,7 +12,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -30,9 +32,20 @@ const SignIn = () => {
 		},
 	});
 	const { user } = useAppSelector((state) => state.auth);
+	const [signIn] = useSignInMutation();
+	const navigate = useNavigate();
 
 	const onSubmit = (values: SignInValues) => {
-		console.log(values);
+		signIn(values)
+			.unwrap()
+			.then(() => {
+				toast.success('Successfully signed in');
+				form.reset();
+				navigate('/');
+			})
+			.catch(() => {
+				toast.error("Couldn't sign in");
+			});
 	};
 
 	if (user) {
@@ -50,7 +63,9 @@ const SignIn = () => {
 						<a href="http://localhost:3000/login/github">
 							<Button className="w-full">Sign In with Github</Button>
 						</a>
-						<Button>Sign In with Google</Button>
+						<a href="http://localhost:3000/login/google">
+							<Button className="w-full">Sign In with Google</Button>
+						</a>
 					</div>
 					<div className="flex items-center gap-4 my-4">
 						<div className="flex-1 h-px bg-gray-200"></div>

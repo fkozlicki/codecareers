@@ -1,6 +1,5 @@
 import { and, eq, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
-import { generateId } from 'lucia';
 import { db } from '../db';
 import { applications, jobOffers } from '../db/schema';
 

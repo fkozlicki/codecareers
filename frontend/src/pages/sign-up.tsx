@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -37,6 +37,7 @@ const SignUp = () => {
 	});
 	const [signUp, { isLoading }] = useSignUpMutation();
 	const { user } = useAppSelector((state) => state.auth);
+	const navigate = useNavigate();
 
 	const onSubmit = (values: SignUpValues) => {
 		signUp(values)
@@ -44,6 +45,7 @@ const SignUp = () => {
 			.then(() => {
 				toast.success('Successfully signed up');
 				form.reset();
+				navigate('/signin');
 			})
 			.catch(() => {
 				toast.error("Couldn't sign up");
@@ -145,7 +147,7 @@ const SignUp = () => {
 								)}
 							/>
 							<Button type="submit" disabled={isLoading} className="w-full">
-								Sign In
+								Sign Up
 							</Button>
 						</form>
 					</Form>

@@ -24,14 +24,16 @@ const Header = () => {
 					<DropdownMenu>
 						<DropdownMenuTrigger className="outline-none">
 							<Avatar className="w-9 h-9">
-								<AvatarImage src="https://github.com/fkozlicki.png" />
+								{user.avatar && <AvatarImage src={user.avatar} alt="avatar" />}
 								<AvatarFallback>
 									{user.username?.substring(0, 2)}
 								</AvatarFallback>
 							</Avatar>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>{user.username}</DropdownMenuLabel>
+							<DropdownMenuLabel>
+								{user.username || `${user.firstName} ${user.lastName}`}
+							</DropdownMenuLabel>
 							<DropdownMenuSeparator />
 							<Link to="/my-applications">
 								<DropdownMenuItem className="cursor-pointer">
