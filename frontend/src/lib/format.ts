@@ -27,3 +27,7 @@ export const formatEmploymentType = (type: string) => {
 			throw new Error('Invalid employment type');
 	}
 };
+
+export const formatCurrency = (value: number) => {
+	return value.toLocaleString('en-US').replace(/,/g, ' ');
+};

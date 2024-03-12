@@ -1,7 +1,11 @@
 import { JobOffer, JobOfferDetailed } from '@/app/services/jobOffers';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle } from '@/components/ui/card';
-import { formatEmploymentType, formatWorkType } from '@/lib/format';
+import {
+	formatCurrency,
+	formatEmploymentType,
+	formatWorkType,
+} from '@/lib/format';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -45,7 +49,8 @@ const JobOfferCard = ({
 					)}
 				</div>
 				<span>
-					{salaryFrom} - {salaryTo} {salaryCurrency}
+					{formatCurrency(salaryFrom)} - {formatCurrency(salaryTo)}{' '}
+					{salaryCurrency.toUpperCase()}
 				</span>
 			</div>
 			<div className="flex justify-between items-center">

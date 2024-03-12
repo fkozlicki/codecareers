@@ -28,7 +28,11 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { formatEmploymentType, formatWorkType } from '@/lib/format';
+import {
+	formatCurrency,
+	formatEmploymentType,
+	formatWorkType,
+} from '@/lib/format';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { Building2, FileText, History, Star } from 'lucide-react';
@@ -164,7 +168,8 @@ const JobOfferDetails = () => {
 								{position}
 							</h2>
 							<span className="text-xl font-medium text-gray-700">
-								{salaryFrom} - {salaryTo} {salaryCurrency.toUpperCase()}
+								{formatCurrency(salaryFrom)} - {formatCurrency(salaryTo)}{' '}
+								{salaryCurrency.toUpperCase()}
 							</span>
 						</div>
 						<span className="text-sm text-slate-600">
