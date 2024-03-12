@@ -1,8 +1,8 @@
 import { useAppSelector } from '@/app/hooks';
 import { useGetCompaniesQuery } from '@/app/services/companies';
 import CompanyCard from '@/components/company-card';
+import CompanySkeleton from '@/components/company-skeleton';
 import { Button } from '@/components/ui/button';
-import { Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Companies = () => {
@@ -23,14 +23,21 @@ const Companies = () => {
 					</Link>
 				</div>
 				<div>
-					{isLoading && <Loader className="animate-spin" />}
-					{data && (
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-							{data.companies.map((company) => (
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+						{isLoading && (
+							<>
+								<CompanySkeleton />
+								<CompanySkeleton />
+								<CompanySkeleton />
+								<CompanySkeleton />
+								<CompanySkeleton />
+							</>
+						)}
+						{data &&
+							data.companies.map((company) => (
 								<CompanyCard key={company.id} company={company} />
 							))}
-						</div>
-					)}
+					</div>
 				</div>
 			</div>
 		</div>

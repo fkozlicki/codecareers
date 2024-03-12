@@ -1,12 +1,25 @@
 import { Link } from 'react-router-dom';
 import JobOfferCard from './job-offer-card';
 import { useGetJobOffersQuery } from '@/app/services/jobOffers';
+import JobOfferSkeleton from './job-offer-skeleton';
 
 const JobOfferList = () => {
-	const { data } = useGetJobOffersQuery();
+	const { data, isLoading } = useGetJobOffersQuery();
+
+	if (isLoading) {
+		return (
+			<div className="flex flex-col gap-4">
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+			</div>
+		);
+	}
 
 	return (
-		<div className="flex-1 p-4 flex flex-col gap-4 min-h-[calc(100vh-53px)]">
+		<div className="flex flex-col gap-4">
 			{data?.jobOffers.map((jobOffer) => (
 				<Link key={jobOffer.id} to={`/?joid=${jobOffer.id}`}>
 					<JobOfferCard jobOffer={jobOffer} />

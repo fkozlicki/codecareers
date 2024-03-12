@@ -8,13 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
+import { Loader } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const CompanyJobOffer = () => {
 	const { id, jobOfferId } = useParams();
-	const { data } = useGetJobOfferQuery(jobOfferId!);
+	const { data, isLoading } = useGetJobOfferQuery(jobOfferId!);
 	const [updateJobOffer] = useUpdateJobOfferMutation();
 	const [searchParams] = useSearchParams();
 	const sort = searchParams.get('sort');
@@ -43,8 +44,16 @@ const CompanyJobOffer = () => {
 			});
 	};
 
+	if (isLoading) {
+		return (
+			<div className="grid place-items-center h-full">
+				<Loader className="animate-spin w-8 h-8" />
+			</div>
+		);
+	}
+
 	if (!data) {
-		return null;
+		return <div>Couldn't load data</div>;
 	}
 
 	const { position, published } = data.jobOffer;

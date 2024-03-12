@@ -8,13 +8,13 @@ const ApplicationsLayout = () => {
 	return (
 		<div className="max-w-2xl m-auto py-8">
 			<Tabs
-				value={sort ?? 'applied'}
-				defaultValue="applied"
+				value={sort ?? 'pending'}
+				defaultValue="pending"
 				className="flex justify-center mb-6"
 			>
 				<TabsList className="">
 					<Link to="/my-applications">
-						<TabsTrigger value="applied">Applied</TabsTrigger>
+						<TabsTrigger value="pending">Pending</TabsTrigger>
 					</Link>
 					<Link to={`/my-applications?sort=accepted`}>
 						<TabsTrigger value="accepted">Accepted</TabsTrigger>

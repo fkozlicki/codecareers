@@ -36,11 +36,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
 	const { data: jobOffersData } = useGetJobOffersQuery();
-	const [queryJobOffer, { data, isLoading }] = useLazyGetJobOfferQuery();
+	const [queryJobOffer, { data, isLoading, isFetching }] =
+		useLazyGetJobOfferQuery();
 	const jobOfferId = searchParams.get('joid');
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
@@ -86,12 +88,37 @@ const JobOfferDetails = () => {
 			.catch(() => toast.warning("Couldn't sent an application"));
 	};
 
-	if (isLoading) {
-		return <div>Loading...</div>;
+	if (isLoading || isFetching) {
+		return (
+			<div className="p-4  top-[53px] min-h-[calc(100vh-246px)] overflow-hidden">
+				<div className="border rounded-md overflow-hidden h-full flex flex-col">
+					<div>
+						<AspectRatio
+							ratio={6 / 1}
+							className="overflow-hidden bg-slate-300"
+						></AspectRatio>
+						<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16">
+							<Skeleton className="w-full h-full bg-primary/50" />
+						</Avatar>
+					</div>
+					<div className="px-4 border-b">
+						<Skeleton className="h-4 mb-4 w-64" />
+						<Skeleton className="h-4 mb-4 w-64" />
+					</div>
+					<div className="p-4 flex flex-col gap-8">
+						<Skeleton className="h-4 mb-4 w-full" />
+						<Skeleton className="h-6 mb-4 w-full" />
+						<Skeleton className="h-6 mb-4 w-full" />
+						<Skeleton className="h-6 mb-4 w-full" />
+						<Skeleton className="h-4 w-full" />
+					</div>
+				</div>
+			</div>
+		);
 	}
 
 	if (!data) {
-		return <div>Couldn't load data</div>;
+		return null;
 	}
 
 	const {
@@ -112,7 +139,7 @@ const JobOfferDetails = () => {
 	return (
 		<div
 			ref={ref}
-			className="flex-1 p-4 sticky top-[53px] min-h-[calc(100vh-246px)] overflow-hidden"
+			className="p-4 sticky top-[53px] min-h-[calc(100vh-246px)] overflow-hidden"
 			style={{
 				height,
 			}}

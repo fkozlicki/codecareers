@@ -8,7 +8,7 @@ const CompanyCard = ({ company }: { company: Company }) => {
 	return (
 		<Link to={`/my-companies/${id}`} className="">
 			<Card className="p-4 h-full hover:shadow-md">
-				<CardTitle>{name}</CardTitle>
+				<CardTitle className="mb-2">{name}</CardTitle>
 				<CardDescription className="line-clamp-2">
 					{description}
 				</CardDescription>

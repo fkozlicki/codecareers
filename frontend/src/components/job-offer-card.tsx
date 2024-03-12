@@ -1,6 +1,7 @@
 import { JobOffer, JobOfferDetailed } from '@/app/services/jobOffers';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle } from '@/components/ui/card';
+import { formatEmploymentType, formatWorkType } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -49,9 +50,13 @@ const JobOfferCard = ({
 			</div>
 			<div className="flex justify-between items-center">
 				<div className="flex gap-2">
-					<Badge variant="outline">{level}</Badge>
-					<Badge variant="outline">{workType}</Badge>
-					<Badge variant="outline">{employmentType}</Badge>
+					<Badge variant="outline" className="capitalize">
+						{level}
+					</Badge>
+					<Badge variant="outline">{formatWorkType(workType)}</Badge>
+					<Badge variant="outline">
+						{formatEmploymentType(employmentType)}
+					</Badge>
 				</div>
 				<span className="text-xs opacity-50">{dayjs(createdAt).fromNow()}</span>
 			</div>
