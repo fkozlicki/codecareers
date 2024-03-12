@@ -29,6 +29,13 @@
       "when": 1710156466227,
       "tag": "0003_quiet_hammerhead",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1710256070608,
+      "tag": "0004_secret_supernaut",
+      "breakpoints": true
     }
   ]
 }

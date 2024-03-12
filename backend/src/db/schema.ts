@@ -187,6 +187,7 @@ export const applications = pgTable('application', {
 	jobOfferId: uuid('job_offer_id').notNull(),
 	cv: text('cv'),
 	introduction: text('introduction'),
+	accepted: boolean('accepted'),
 });
 
 export const applicationsRelations = relations(applications, ({ one }) => ({
