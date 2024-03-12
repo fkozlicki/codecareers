@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { db } from '../db';
@@ -72,9 +72,15 @@ export const createApplication = async (req: Request, res: Response) => {
 
 export const getApplications = async (req: Request, res: Response) => {
 	const id = req.params.id;
+	const sort = req.query.sort;
 
 	const jobOfferApplications = await db.query.applications.findMany({
-		where: eq(applications.jobOfferId, id),
+		where: and(
+			eq(applications.jobOfferId, id),
+			sort
+				? eq(applications.accepted, sort === 'accepted')
+				: isNull(applications.accepted)
+		),
 		with: {
 			user: true,
 		},

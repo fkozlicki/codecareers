@@ -1,11 +1,18 @@
 import { Request, Response } from 'express';
 import { db } from '../db';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { applications } from '../db/schema';
 
 export const getApplications = async (req: Request, res: Response) => {
+	const sort = req.query.sort;
+
 	const result = await db.query.applications.findMany({
-		where: eq(applications.userId, res.locals.user.id),
+		where: and(
+			eq(applications.userId, res.locals.user.id),
+			sort
+				? eq(applications.accepted, sort === 'accepted')
+				: isNull(applications.accepted)
+		),
 		with: {
 			jobOffer: {
 				with: {
