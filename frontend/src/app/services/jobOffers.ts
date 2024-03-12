@@ -1,4 +1,5 @@
 import { api } from './api';
+import { Application } from './applications';
 import { Company } from './companies';
 import { z } from 'zod';
 
@@ -90,6 +91,14 @@ export const jobOffersApi = api.injectEndpoints({
 				};
 			},
 		}),
+		getJobOfferApplications: builder.query<
+			{ applications: Application[] },
+			{ id: string; sort: string | null }
+		>({
+			query: ({ id, sort }) => ({
+				url: `job-offers/${id}/applications${sort ? `?sort=${sort}` : ''}`,
+			}),
+		}),
 	}),
 });
 
@@ -99,4 +108,5 @@ export const {
 	useCreateApplicationMutation,
 	useGetJobOfferQuery,
 	useUpdateJobOfferMutation,
+	useLazyGetJobOfferApplicationsQuery,
 } = jobOffersApi;
