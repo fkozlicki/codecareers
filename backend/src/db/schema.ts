@@ -18,6 +18,7 @@ export const users = pgTable('user', {
 	username: text('username'),
 	email: text('email').unique(),
 	password: text('password'),
+	avatar: text('avatar'),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
