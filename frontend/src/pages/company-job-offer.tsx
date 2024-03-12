@@ -88,11 +88,6 @@ const CompanyJobOffer = () => {
 						<TabsTrigger value="accepted">Accepted</TabsTrigger>
 					</Link>
 					<Link
-						to={`/my-companies/${id}/job-offers/${jobOfferId}?sort=appointed`}
-					>
-						<TabsTrigger value="appointed">Appointed</TabsTrigger>
-					</Link>
-					<Link
 						to={`/my-companies/${id}/job-offers/${jobOfferId}?sort=rejected`}
 					>
 						<TabsTrigger value="rejected">Rejected</TabsTrigger>

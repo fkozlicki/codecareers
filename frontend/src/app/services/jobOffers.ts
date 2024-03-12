@@ -98,6 +98,7 @@ export const jobOffersApi = api.injectEndpoints({
 			query: ({ id, sort }) => ({
 				url: `job-offers/${id}/applications${sort ? `?sort=${sort}` : ''}`,
 			}),
+			providesTags: ['Application'],
 		}),
 	}),
 });

@@ -1,15 +1,27 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet, useSearchParams } from 'react-router-dom';
 
 const ApplicationsLayout = () => {
+	const [searchParams] = useSearchParams();
+	const sort = searchParams.get('sort');
+
 	return (
 		<div className="max-w-2xl m-auto py-8">
-			<Tabs defaultValue="account" className="mb-4 max-w-md m-auto">
-				<TabsList className="grid w-full grid-cols-4">
-					<TabsTrigger value="applied">Applied</TabsTrigger>
-					<TabsTrigger value="accepted">Accepted</TabsTrigger>
-					<TabsTrigger value="rejected">Rejected</TabsTrigger>
-					<TabsTrigger value="appointed">Appointed</TabsTrigger>
+			<Tabs
+				value={sort ?? 'applied'}
+				defaultValue="applied"
+				className="flex justify-center mb-6"
+			>
+				<TabsList className="">
+					<Link to="/my-applications">
+						<TabsTrigger value="applied">Applied</TabsTrigger>
+					</Link>
+					<Link to={`/my-applications?sort=accepted`}>
+						<TabsTrigger value="accepted">Accepted</TabsTrigger>
+					</Link>
+					<Link to={`/my-applications?sort=rejected`}>
+						<TabsTrigger value="rejected">Rejected</TabsTrigger>
+					</Link>
 				</TabsList>
 			</Tabs>
 			<Outlet />
