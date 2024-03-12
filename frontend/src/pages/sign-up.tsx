@@ -58,7 +58,7 @@ const SignUp = () => {
 		<div className="w-screen h-screen grid place-items-center">
 			<div>
 				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8">
-					Sign In to CodeCarrers
+					Sign Up to CodeCarrers
 				</h1>
 				<div>
 					<div className="flex flex-col gap-2">
@@ -150,12 +150,11 @@ const SignUp = () => {
 						</form>
 					</Form>
 				</div>
-				<div className="text-center mt-4 text-sm">
-					Back to{' '}
-					<Link to="/" className="hover:underline">
-						Home
-					</Link>
-				</div>
+				<Link to="/">
+					<Button variant="link" className="block m-auto mt-2">
+						Back to Home
+					</Button>
+				</Link>
 			</div>
 		</div>
 	);

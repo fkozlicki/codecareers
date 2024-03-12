@@ -95,12 +95,11 @@ const SignIn = () => {
 						</form>
 					</Form>
 				</div>
-				<div className="text-center mt-4 text-sm">
-					Back to{' '}
-					<Link to="/" className="hover:underline">
-						Home
-					</Link>
-				</div>
+				<Link to="/">
+					<Button variant="link" className="block m-auto mt-2">
+						Back to Home
+					</Button>
+				</Link>
 			</div>
 		</div>
 	);
