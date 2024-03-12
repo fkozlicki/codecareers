@@ -69,3 +69,16 @@ export const createApplication = async (req: Request, res: Response) => {
 
 	res.status(201).json({ application });
 };
+
+export const getApplications = async (req: Request, res: Response) => {
+	const id = req.params.id;
+
+	const jobOfferApplications = await db.query.applications.findMany({
+		where: eq(applications.jobOfferId, id),
+		with: {
+			user: true,
+		},
+	});
+
+	res.status(200).json({ applications: jobOfferApplications });
+};
