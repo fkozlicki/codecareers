@@ -1,46 +1,21 @@
 import {
-	ApplicationValues,
-	createApplicationSchema,
-	useCreateApplicationMutation,
 	useGetJobOffersQuery,
 	useLazyGetJobOfferQuery,
 } from '@/app/services/jobOffers';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from '@/components/ui/dialog';
-import { Dropzone } from '@/components/ui/dropzone';
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
 	formatCurrency,
 	formatEmploymentType,
 	formatWorkType,
 } from '@/lib/format';
-import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { Building2, FileText, History, Star } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
-import { Skeleton } from '@/components/ui/skeleton';
+import ApplyDialog from './apply-dialog';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
@@ -50,14 +25,6 @@ const JobOfferDetails = () => {
 	const jobOfferId = searchParams.get('joid');
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
-	const [createApplication] = useCreateApplicationMutation();
-	const form = useForm<ApplicationValues>({
-		resolver: zodResolver(createApplicationSchema),
-		defaultValues: {
-			introduction: '',
-			cv: '',
-		},
-	});
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -81,16 +48,6 @@ const JobOfferDetails = () => {
 			queryJobOffer(jobOffersData.jobOffers[0].id);
 		}
 	}, [jobOfferId, queryJobOffer, jobOffersData]);
-
-	const onSubmit = (values: ApplicationValues) => {
-		if (!jobOfferId) {
-			return;
-		}
-		createApplication({ id: jobOfferId, ...values })
-			.unwrap()
-			.then(() => toast.success('Successfully sent an application'))
-			.catch(() => toast.warning("Couldn't sent an application"));
-	};
 
 	if (isLoading || isFetching) {
 		return (
@@ -126,6 +83,7 @@ const JobOfferDetails = () => {
 	}
 
 	const {
+		id,
 		position,
 		company,
 		salaryFrom,
@@ -220,69 +178,7 @@ const JobOfferDetails = () => {
 					className="overflow-y-auto p-4 overscroll-y-auto h-screen flex-1"
 				></div>
 				<div className="p-2 text-center border-t">
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button className="w-64">Apply now</Button>
-						</DialogTrigger>
-						<DialogContent className="sm:max-w-2xl">
-							<DialogHeader>
-								<DialogTitle>Apply for {position}</DialogTitle>
-								<DialogDescription>
-									Introduce yourself to the employer
-								</DialogDescription>
-							</DialogHeader>
-							<div className="">
-								<Form {...form}>
-									<form
-										onSubmit={form.handleSubmit(onSubmit)}
-										className="space-y-8"
-									>
-										<FormField
-											control={form.control}
-											name="introduction"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Introduction</FormLabel>
-													<FormControl>
-														<Textarea
-															placeholder="Introduce yourself"
-															{...field}
-														/>
-													</FormControl>
-													<FormDescription>
-														This is your public display name.
-													</FormDescription>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<FormField
-											control={form.control}
-											name="cv"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>CV</FormLabel>
-													<FormControl>
-														<Dropzone
-															onChange={field.onChange}
-															fileExtension="pdf"
-														/>
-													</FormControl>
-													<FormDescription>
-														This is your public display name.
-													</FormDescription>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<Button type="submit" className="w-full">
-											Apply
-										</Button>
-									</form>
-								</Form>
-							</div>
-						</DialogContent>
-					</Dialog>
+					<ApplyDialog position={position} jobOfferId={id} />
 				</div>
 			</div>
 		</div>
