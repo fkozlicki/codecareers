@@ -204,6 +204,7 @@ const JobOfferForm = ({
 								<FormLabel>Technologies</FormLabel>
 								<FormControl>
 									<MultiSelect
+										defaultValue={defaultValues?.technologies}
 										options={technologies}
 										onChange={field.onChange}
 									/>
@@ -221,7 +222,11 @@ const JobOfferForm = ({
 							<FormItem className="flex-1">
 								<FormLabel>Skill</FormLabel>
 								<FormControl>
-									<MultiSelect options={skills} onChange={field.onChange} />
+									<MultiSelect
+										defaultValue={defaultValues?.skills}
+										options={skills}
+										onChange={field.onChange}
+									/>
 								</FormControl>
 								<FormDescription>Preffered skills.</FormDescription>
 								<FormMessage />
