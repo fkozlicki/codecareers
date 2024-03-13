@@ -4,8 +4,10 @@ import {
 	useUpdateJobOfferMutation,
 } from '@/app/services/jobOffers';
 import ApplicationCard from '@/components/application-card';
+import JobOfferSkeleton from '@/components/job-offer-skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Empty from '@/components/ui/empty';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { Loader } from 'lucide-react';
@@ -19,7 +21,7 @@ const CompanyJobOffer = () => {
 	const [updateJobOffer] = useUpdateJobOfferMutation();
 	const [searchParams] = useSearchParams();
 	const sort = searchParams.get('sort');
-	const [fetchApplications, { data: applications }] =
+	const [fetchApplications, { data: applications, isFetching }] =
 		useLazyGetJobOfferApplicationsQuery();
 
 	useEffect(() => {
@@ -59,7 +61,7 @@ const CompanyJobOffer = () => {
 	const { position, published } = data.jobOffer;
 
 	return (
-		<div>
+		<>
 			<div className="flex justify-between items-center mb-8">
 				<div className="flex items-center gap-4">
 					<h2 className="text-3xl font-semibold tracking-tight">{position}</h2>
@@ -103,12 +105,34 @@ const CompanyJobOffer = () => {
 					</Link>
 				</TabsList>
 			</Tabs>
-			<div className="flex flex-col gap-4">
-				{applications?.applications.map((application) => (
-					<ApplicationCard key={application.id} application={application} />
-				))}
-			</div>
-		</div>
+			{isFetching && (
+				<div className="flex flex-col gap-4">
+					<JobOfferSkeleton />
+					<JobOfferSkeleton />
+					<JobOfferSkeleton />
+				</div>
+			)}
+			{applications && (
+				<>
+					{applications.applications.length > 0 ? (
+						<div className="flex flex-col gap-4">
+							{applications.applications.map((application) => (
+								<ApplicationCard
+									key={application.id}
+									application={application}
+								/>
+							))}
+						</div>
+					) : (
+						<Empty
+							message={`Your job offer has 0 ${
+								sort ? sort.toLowerCase() : 'new'
+							} applications`}
+						/>
+					)}
+				</>
+			)}
+		</>
 	);
 };
 
