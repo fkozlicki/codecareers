@@ -101,6 +101,7 @@ export const companiesApi = api.injectEndpoints({
 					body,
 				};
 			},
+			invalidatesTags: [{ type: 'JobOffer', id: 'LIST' }],
 		}),
 		getCompanyJobOffers: builder.query<
 			{ jobOffers: JobOffer[] },

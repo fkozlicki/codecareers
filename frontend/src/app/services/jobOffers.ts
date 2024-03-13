@@ -71,6 +71,7 @@ export const jobOffersApi = api.injectEndpoints({
 					result.undo();
 				}
 			},
+			invalidatesTags: [{ type: 'JobOffer', id: 'LIST' }],
 		}),
 		deleteJobOffer: builder.mutation<void, string>({
 			query: (id) => ({
