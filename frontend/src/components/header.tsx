@@ -16,9 +16,14 @@ const Header = () => {
 
 	return (
 		<header className="p-2 border-b flex justify-between items-center sticky top-0 bg-background z-10">
-			<Link to="/">
-				<div>logo</div>
-			</Link>
+			<div className="flex items-center gap-4">
+				<Link to="/">
+					<div>logo</div>
+				</Link>
+				<Link to="/">
+					<Button variant="link">Home</Button>
+				</Link>
+			</div>
 			<div className="flex gap-2">
 				{user ? (
 					<DropdownMenu>
