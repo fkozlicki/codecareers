@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const CreateCompany = () => {
@@ -30,6 +31,7 @@ const CreateCompany = () => {
 		},
 	});
 	const [createCompany, { isLoading }] = useCreateCompanyMutation();
+	const navigate = useNavigate();
 
 	function onSubmit(values: CompanyValues) {
 		createCompany(values)
@@ -37,6 +39,7 @@ const CreateCompany = () => {
 			.then(() => {
 				form.reset();
 				toast.success('Successfully created a company');
+				navigate('/my-companies');
 			})
 			.catch(() => {
 				toast.error('Could not create company');

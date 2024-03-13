@@ -28,7 +28,8 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const JobOfferForm = ({
 	defaultValues,
@@ -54,6 +55,7 @@ const JobOfferForm = ({
 	const [createJobOffer, { isLoading }] = useCreateJobOfferMutation();
 	const { data: skillsData } = useGetSkillsQuery();
 	const { data: techonologiesData } = useGetTechnologiesQuery();
+	const navigate = useNavigate();
 
 	const skills =
 		skillsData?.skills?.map((skill) => ({
@@ -71,7 +73,21 @@ const JobOfferForm = ({
 		if (!id) {
 			return;
 		}
-		createJobOffer({ ...values, companyId: id });
+		createJobOffer({ ...values, companyId: id })
+			.unwrap()
+			.then(() => {
+				if (!defaultValues) {
+					navigate(`/my-companies/${id}/job-offers`);
+				}
+				toast.success(
+					`Successfuly ${defaultValues ? 'updated' : 'created'} company`
+				);
+			})
+			.catch(() => {
+				toast.success(
+					`Couldn't ${defaultValues ? 'update' : 'create'} company`
+				);
+			});
 	};
 
 	return (
@@ -85,7 +101,7 @@ const JobOfferForm = ({
 						<FormItem>
 							<FormLabel>Position</FormLabel>
 							<FormControl>
-								<Input placeholder="Amazon" {...field} />
+								<Input placeholder="DevOps Engineer" {...field} />
 							</FormControl>
 							<FormDescription>Position of your job offer.</FormDescription>
 							<FormMessage />
