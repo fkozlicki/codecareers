@@ -44,11 +44,11 @@ export const companiesApi = api.injectEndpoints({
 	endpoints: (builder) => ({
 		getCompanies: builder.query<{ companies: Company[] }, string | undefined>({
 			query: (id) => `companies${id ? `?userId=${id}` : ''}`,
-			providesTags: ['Company'],
+			providesTags: [{ type: 'Company', id: 'LIST' }],
 		}),
 		getCompany: builder.query<{ company: Company }, string>({
 			query: (id) => `companies/${id}`,
-			providesTags: ['Company'],
+			providesTags: (_result, _err, id) => [{ type: 'Company', id }],
 		}),
 		createCompany: builder.mutation<{ company: Company }, CompanyValues>({
 			query: (data) => ({
@@ -56,6 +56,7 @@ export const companiesApi = api.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
+			invalidatesTags: ['Company'],
 		}),
 		updateCompany: builder.mutation<
 			{ company: Company },
@@ -107,7 +108,7 @@ export const companiesApi = api.injectEndpoints({
 		>({
 			query: ({ id, sort }) =>
 				`companies/${id}/job-offers${sort ? `?sort=${sort}` : ''}`,
-			providesTags: ['JobOffer'],
+			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
 		}),
 	}),
 });

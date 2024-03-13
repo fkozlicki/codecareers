@@ -41,11 +41,11 @@ export const jobOffersApi = api.injectEndpoints({
 	endpoints: (builder) => ({
 		getJobOffer: builder.query<{ jobOffer: JobOfferDetailed }, string>({
 			query: (id) => `job-offers/${id}`,
-			providesTags: ['JobOffer'],
+			providesTags: (_result, _err, id) => [{ type: 'JobOffer', id }],
 		}),
 		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, void>({
 			query: () => `job-offers`,
-			providesTags: ['JobOffer'],
+			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
 		}),
 		updateJobOffer: builder.mutation<
 			JobOffer,
@@ -90,6 +90,7 @@ export const jobOffersApi = api.injectEndpoints({
 					body,
 				};
 			},
+			invalidatesTags: [{ type: 'Application', id: 'LIST' }],
 		}),
 		getJobOfferApplications: builder.query<
 			{ applications: Application[] },
@@ -98,7 +99,7 @@ export const jobOffersApi = api.injectEndpoints({
 			query: ({ id, sort }) => ({
 				url: `job-offers/${id}/applications${sort ? `?sort=${sort}` : ''}`,
 			}),
-			providesTags: ['Application'],
+			providesTags: [{ type: 'Application', id: 'LIST' }],
 		}),
 	}),
 });
