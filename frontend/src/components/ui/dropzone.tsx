@@ -13,12 +13,14 @@ interface DropzoneProps {
 	onChange: Dispatch<SetStateAction<string>>;
 	className?: string;
 	fileExtension?: string;
+	disabled?: boolean;
 }
 
 export const Dropzone = ({
 	onChange,
 	className,
 	fileExtension,
+	disabled,
 	...props
 }: DropzoneProps) => {
 	const fileInputRef = useRef<HTMLInputElement | null>(null); // Reference to file input element
@@ -87,6 +89,7 @@ export const Dropzone = ({
 				<div className="flex items-center justify-center text-muted-foreground">
 					<span className="font-medium">Drag Files to Upload or</span>
 					<Button
+						disabled={disabled}
 						type="button"
 						variant="ghost"
 						size="sm"
@@ -96,6 +99,7 @@ export const Dropzone = ({
 						Click Here
 					</Button>
 					<input
+						disabled={disabled}
 						ref={fileInputRef}
 						type="file"
 						accept={`.${fileExtension}`} // Set accepted file type
