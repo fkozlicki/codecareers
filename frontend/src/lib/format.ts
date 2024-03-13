@@ -23,6 +23,8 @@ export const formatEmploymentType = (type: string) => {
 			return 'Internship';
 		case 'mandate':
 			return 'Mandate contract';
+		case 'task':
+			return 'Task contract';
 		default:
 			throw new Error('Invalid employment type');
 	}
