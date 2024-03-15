@@ -2,6 +2,8 @@ import { and, eq, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { db } from '../db';
 import { applications, jobOffers } from '../db/schema';
+import { uploadFileToS3 } from '../lib/s3';
+import { generateId } from 'lucia';
 
 export const getJobOffers = async (req: Request, res: Response) => {
 	const result = await db.query.jobOffers.findMany({
@@ -59,11 +61,24 @@ export const deleteJobOffer = () => {};
 
 export const createApplication = async (req: Request, res: Response) => {
 	const id = req.params.id;
+	const file = req.file;
+
+	const filename = generateId(15);
+
+	if (file) {
+		try {
+			await uploadFileToS3(`cvs/${filename}`, file.buffer);
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ message: 'Server error' });
+		}
+	}
 
 	const application = await db.insert(applications).values({
 		userId: res.locals.user.id,
 		jobOfferId: id,
 		...req.body,
+		...(file ? { cv: filename } : {}),
 	});
 
 	res.status(201).json({ application });
