@@ -4,8 +4,8 @@ import { Company } from './companies';
 import { z } from 'zod';
 
 export const createApplicationSchema = z.object({
-	cv: z.string().optional(),
 	introduction: z.string().min(1),
+	cv: z.instanceof(File).optional(),
 });
 
 export type ApplicationValues = z.infer<typeof createApplicationSchema>;
@@ -85,10 +85,15 @@ export const jobOffersApi = api.injectEndpoints({
 		>({
 			query: (data) => {
 				const { id, ...body } = data;
+				const formData = new FormData();
+				formData.append('introduction', body.introduction);
+				if (body.cv) {
+					formData.append('cv', body.cv);
+				}
 				return {
 					url: `job-offers/${id}/applications`,
 					method: 'POST',
-					body,
+					body: formData,
 				};
 			},
 			invalidatesTags: [{ type: 'Application', id: 'LIST' }],

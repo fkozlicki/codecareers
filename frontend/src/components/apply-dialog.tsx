@@ -32,15 +32,17 @@ import { toast } from 'sonner';
 const ApplyDialog = ({
 	position,
 	jobOfferId,
+	companyName,
 }: {
 	position: string;
 	jobOfferId: string;
+	companyName: string;
 }) => {
 	const form = useForm<ApplicationValues>({
 		resolver: zodResolver(createApplicationSchema),
 		defaultValues: {
 			introduction: '',
-			cv: '',
+			cv: undefined,
 		},
 	});
 	const [createApplication, { isLoading }] = useCreateApplicationMutation();
@@ -50,6 +52,7 @@ const ApplyDialog = ({
 		if (!jobOfferId) {
 			return;
 		}
+
 		createApplication({ id: jobOfferId, ...values })
 			.unwrap()
 			.then(() => {
@@ -68,12 +71,14 @@ const ApplyDialog = ({
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle>Apply for {position}</DialogTitle>
-					<DialogDescription>
-						Introduce yourself to the employer
-					</DialogDescription>
+					<DialogDescription>{companyName}</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						encType="multipart/form-data"
+						className="space-y-8"
+					>
 						<FormField
 							control={form.control}
 							name="introduction"
@@ -88,7 +93,7 @@ const ApplyDialog = ({
 										/>
 									</FormControl>
 									<FormDescription>
-										This is your public display name.
+										Introduce yourself or paste links to your socials.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -99,16 +104,12 @@ const ApplyDialog = ({
 							name="cv"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>CV</FormLabel>
+									<FormLabel>CV (PDF only)</FormLabel>
 									<FormControl>
-										<Dropzone
-											disabled={isLoading}
-											onChange={field.onChange}
-											fileExtension="pdf"
-										/>
+										<Dropzone onChange={field.onChange} fileExtension="pdf" />
 									</FormControl>
 									<FormDescription>
-										This is your public display name.
+										Paste your CV in PDF format.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
