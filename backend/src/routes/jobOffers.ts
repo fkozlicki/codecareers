@@ -6,7 +6,7 @@ import {
 	getJobOffers,
 	updateJobOffer,
 } from '../controllers/jobOffersController';
-import { upload } from '..';
+import { upload } from '../lib/multer';
 
 export const jobOffersRouter = Router();
 
