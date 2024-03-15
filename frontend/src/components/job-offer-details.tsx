@@ -178,7 +178,11 @@ const JobOfferDetails = () => {
 					className="overflow-y-auto p-4 overscroll-y-auto h-screen flex-1"
 				></div>
 				<div className="p-2 text-center border-t">
-					<ApplyDialog position={position} jobOfferId={id} />
+					<ApplyDialog
+						position={position}
+						jobOfferId={id}
+						companyName={company.name}
+					/>
 				</div>
 			</div>
 		</div>
