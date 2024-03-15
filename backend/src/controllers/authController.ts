@@ -205,7 +205,6 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 			},
 		});
 		const githubUser: GitHubUser = await githubUserResponse.json();
-		console.log(githubUser);
 
 		const existingUser = await db.query.users.findFirst({
 			where: eq(users.githubId, githubUser.id),
