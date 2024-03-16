@@ -3,9 +3,13 @@ import {
 	PutObjectCommand,
 	S3Client,
 } from '@aws-sdk/client-s3';
+import { Request, Response } from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const s3Client = new S3Client({
-	region: process.env.S3_REGION,
+	region: process.env.S3_REGION!,
 	credentials: {
 		accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
 		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -38,3 +42,22 @@ export async function getFileFromS3(key: string) {
 
 	return Body;
 }
+
+export const serveFile =
+	(folderName: string) => async (req: Request, res: Response) => {
+		const filename = req.params.filename;
+
+		try {
+			const Body = await getFileFromS3(`${folderName}/${filename}`);
+
+			if (Body) {
+				const buffer = await Body.transformToByteArray();
+				res.send(Buffer.from(buffer));
+			} else {
+				res.send(404).send('File not found');
+			}
+		} catch (err) {
+			console.error(err);
+			res.status(500).send('Server error');
+		}
+	};
