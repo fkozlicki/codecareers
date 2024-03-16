@@ -2,14 +2,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { corsOptions } from './config/corsOptions';
-import { verifySession } from './middleware/session';
+import { serveFile } from './lib/s3';
+import { authorizeCv } from './middleware/authorization';
+import { requireSession, verifySession } from './middleware/session';
+import { applicationsRouter } from './routes/applications';
 import { authRouter } from './routes/auth';
 import { companiesRouter } from './routes/companies';
 import { jobOffersRouter } from './routes/jobOffers';
-import { technologiesRouter } from './routes/technologies';
 import { skillsRouter } from './routes/skills';
-import { applicationsRouter } from './routes/applications';
-import { getFileFromS3 } from './lib/s3';
+import { technologiesRouter } from './routes/technologies';
 import { usersRouter } from './routes/users';
 
 dotenv.config();
@@ -34,40 +35,8 @@ app.use('/technologies', technologiesRouter);
 app.use('/skills', skillsRouter);
 app.use('/applications', applicationsRouter);
 app.use('/users', usersRouter);
-app.use('/cv/:filename', async (req, res) => {
-	const filename = req.params.filename;
-
-	try {
-		const Body = await getFileFromS3(`cvs/${filename}`);
-
-		if (Body) {
-			const buffer = await Body.transformToByteArray();
-			res.send(Buffer.from(buffer));
-		} else {
-			res.send(404).send('File not found');
-		}
-	} catch (err) {
-		console.error(err);
-		res.status(404).send('File not found');
-	}
-});
-app.use('/avatars/:filename', async (req, res) => {
-	const filename = req.params.filename;
-
-	try {
-		const Body = await getFileFromS3(`avatars/${filename}`);
-
-		if (Body) {
-			const buffer = await Body.transformToByteArray();
-			res.send(Buffer.from(buffer));
-		} else {
-			res.send(404).send('File not found');
-		}
-	} catch (err) {
-		console.error(err);
-		res.status(404).send('File not found');
-	}
-});
+app.use('/avatars/:filename', serveFile('avatars'));
+app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
