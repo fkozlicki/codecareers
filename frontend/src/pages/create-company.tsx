@@ -3,7 +3,10 @@ import {
 	createCompanySchema,
 	useCreateCompanyMutation,
 } from '@/app/services/companies';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Dropzone } from '@/components/ui/dropzone';
 import {
 	Form,
 	FormControl,
@@ -15,8 +18,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { readFile } from '@/lib/cropImage';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader } from 'lucide-react';
+import { Image, Loader } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -32,6 +37,8 @@ const CreateCompany = () => {
 	});
 	const [createCompany, { isLoading }] = useCreateCompanyMutation();
 	const navigate = useNavigate();
+	const [avatarPreview, setAvatarPreview] = useState<string>();
+	const [bannerPreview, setBannerPreview] = useState<string>();
 
 	function onSubmit(values: CompanyValues) {
 		createCompany(values)
@@ -98,6 +105,78 @@ const CreateCompany = () => {
 										<Input placeholder="222-222-222" {...field} />
 									</FormControl>
 									<FormDescription>Your company phone number.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="avatar"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Avatar</FormLabel>
+									<FormControl>
+										<div className="flex items-center gap-4">
+											<Avatar className="w-14 h-14">
+												<AvatarImage src={avatarPreview} alt="avatar" />
+												<AvatarFallback>
+													<Image className="w-5 h-5 text-gray-500" />
+												</AvatarFallback>
+											</Avatar>
+											<Dropzone
+												className="flex-1"
+												onChange={async (file) => {
+													field.onChange(file);
+													const image = (await readFile(file)) as string;
+													setAvatarPreview(image);
+												}}
+												accept="image/*"
+												withCrop
+											/>
+										</div>
+									</FormControl>
+									<FormDescription>This is your public avatar.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="banner"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Banner</FormLabel>
+									<FormControl>
+										<div className="flex flex-col gap-4">
+											<Dropzone
+												className="flex-1"
+												onChange={async (file) => {
+													field.onChange(file);
+													const image = (await readFile(file)) as string;
+													setBannerPreview(image);
+												}}
+												accept="image/*"
+												withCrop
+												cropAspect={6 / 1}
+											/>
+											<AspectRatio
+												ratio={6 / 1}
+												className="overflow-hidden rounded-lg"
+											>
+												<div className="w-full h-full bg-muted flex justify-center items-center">
+													<Image className="w-5 h-5 text-gray-500" />
+													{bannerPreview && (
+														<img
+															src={bannerPreview}
+															alt=""
+															className="object-cover"
+														/>
+													)}
+												</div>
+											</AspectRatio>
+										</div>
+									</FormControl>
+									<FormDescription>This is your public banner.</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

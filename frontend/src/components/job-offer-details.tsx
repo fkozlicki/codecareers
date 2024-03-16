@@ -3,7 +3,7 @@ import {
 	useLazyGetJobOfferQuery,
 } from '@/app/services/jobOffers';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -12,7 +12,7 @@ import {
 	formatWorkType,
 } from '@/lib/format';
 import dayjs from 'dayjs';
-import { Building2, FileText, History, Star } from 'lucide-react';
+import { Building2, FileText, History, Image, Star } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ApplyDialog from './apply-dialog';
@@ -108,15 +108,23 @@ const JobOfferDetails = () => {
 		>
 			<div className="border rounded-md overflow-hidden h-full flex flex-col">
 				<div>
-					<AspectRatio ratio={6 / 1} className="overflow-hidden">
-						<img
-							src="https://img.freepik.com/premium-vector/technology-global-blue-wide-banner-design-background-abstract-3d-banner-design-with-dark-blue-technology-geometric-background-vector-illustration_181182-27934.jpg?w=1380"
-							alt=""
-							className="object-cover"
-						/>
+					<AspectRatio ratio={6 / 1}>
+						<div className="w-full h-full bg-muted flex justify-center items-center">
+							<Image className="w-5 h-5 text-gray-500" />
+							{company.backgroundUrl && (
+								<img
+									src={company.backgroundUrl}
+									alt="company banner"
+									className="object-cover"
+								/>
+							)}
+						</div>
 					</AspectRatio>
-					<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16">
-						<AvatarFallback className="rounded">AV</AvatarFallback>
+					<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16 border">
+						<AvatarImage src={company.avatarUrl} alt="company avatar" />
+						<AvatarFallback className="rounded">
+							<Building2 className="w-4 h-4 text-gray-500" />
+						</AvatarFallback>
 					</Avatar>
 				</div>
 				<div className="px-4 border-b">

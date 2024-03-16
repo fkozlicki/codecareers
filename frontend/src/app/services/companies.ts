@@ -7,6 +7,8 @@ export interface Company {
 	name: string;
 	description: string;
 	phoneNumber: string;
+	avatarUrl?: string;
+	backgroundUrl?: string;
 }
 
 export const createCompanySchema = z.object({
@@ -15,6 +17,8 @@ export const createCompanySchema = z.object({
 	phoneNumber: z
 		.string()
 		.regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/),
+	avatar: z.instanceof(Blob),
+	banner: z.instanceof(Blob).optional(),
 });
 
 export type CompanyValues = z.infer<typeof createCompanySchema>;
@@ -51,11 +55,20 @@ export const companiesApi = api.injectEndpoints({
 			providesTags: (_result, _err, id) => [{ type: 'Company', id }],
 		}),
 		createCompany: builder.mutation<{ company: Company }, CompanyValues>({
-			query: (data) => ({
-				url: 'companies',
-				method: 'POST',
-				body: data,
-			}),
+			query: (data) => {
+				const formData = new FormData();
+				Object.entries(data).forEach(([key, value]) => {
+					if (value) {
+						formData.append(key, value);
+					}
+				});
+
+				return {
+					url: 'companies',
+					method: 'POST',
+					body: formData,
+				};
+			},
 			invalidatesTags: ['Company'],
 		}),
 		updateCompany: builder.mutation<

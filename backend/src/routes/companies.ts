@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
 	createCompany,
+	createCompanySchema,
 	createJobOffer,
 	deleteCompany,
 	getCompanies,
@@ -11,13 +12,22 @@ import {
 } from '../controllers/companiesController';
 import { requireSession } from '../middleware/session';
 import { validate } from '../middleware/validate';
+import { upload } from '../lib/multer';
 
 export const companiesRouter = Router();
 
 companiesRouter
 	.route('/')
 	.get(getCompanies)
-	.post(requireSession, createCompany);
+	.post(
+		requireSession,
+		upload.fields([
+			{ name: 'avatar', maxCount: 1 },
+			{ name: 'banner', maxCount: 1 },
+		]),
+		validate(createCompanySchema),
+		createCompany
+	);
 
 companiesRouter
 	.route('/:id')

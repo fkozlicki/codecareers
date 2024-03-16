@@ -10,6 +10,8 @@ import {
 } from '../db/schema';
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import { generateId } from 'lucia';
+import { uploadFileToS3 } from '../lib/s3';
 
 export const getCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
@@ -49,10 +51,63 @@ export const getCompanies = async (req: Request, res: Response) => {
 	res.status(200).json({ companies: allCompanies });
 };
 
+export const createCompanySchema = z.object({
+	body: z.object({
+		name: z.string(),
+		description: z.string(),
+		phoneNumber: z.string(),
+	}),
+	files: z.object({
+		avatar: z
+			.tuple([
+				z.object({
+					fieldname: z.literal('avatar'),
+					buffer: z.instanceof(Buffer),
+				}),
+			])
+			.optional(),
+		banner: z
+			.tuple([
+				z.object({
+					fieldname: z.literal('banner'),
+					buffer: z.instanceof(Buffer),
+				}),
+			])
+			.optional(),
+	}),
+});
+
+type createCompanyValues = z.infer<typeof createCompanySchema>;
+
 export const createCompany = async (req: Request, res: Response) => {
+	const files = req.files as unknown as createCompanyValues['files'];
+	const avatarFilename = generateId(15);
+	const bannerFilename = generateId(15);
+
+	try {
+		if (files.avatar) {
+			await uploadFileToS3(`avatars/${avatarFilename}`, files.avatar[0].buffer);
+		}
+		if (files.banner) {
+			await uploadFileToS3(`avatars/${bannerFilename}`, files.banner[0].buffer);
+		}
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: 'Server error' });
+	}
+
 	const [newCompany] = await db
 		.insert(companies)
-		.values({ ownerId: res.locals.user.id, ...req.body })
+		.values({
+			ownerId: res.locals.user.id,
+			...req.body,
+			...(files.avatar
+				? { avatarUrl: `http://localhost:3000/avatars/${avatarFilename}` }
+				: {}),
+			...(files.banner
+				? { backgroundUrl: `http://localhost:3000/avatars/${bannerFilename}` }
+				: {}),
+		})
 		.returning();
 
 	res.status(201).json({ company: newCompany });
