@@ -1,15 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import { useUpdateUserMutation } from '@/app/services/users';
-import ImageCropper from '@/components/image-cropper';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog';
 import { Dropzone } from '@/components/ui/dropzone';
 import {
 	Form,
@@ -23,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { readFile } from '@/lib/cropImage';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Image } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -42,19 +35,13 @@ const Settings = () => {
 			lastName: user?.lastName ?? '',
 		},
 	});
-	const [image, setImage] = useState<string | null>(null);
-	const [cropperOpen, setCropperOpen] = useState<boolean>(false);
 	const [updateUser] = useUpdateUserMutation();
-
-	const avatar = form.watch('avatar');
-	const avatarUrl = avatar ? URL.createObjectURL(avatar) : undefined;
+	const [preview, setPreview] = useState<string | null>(null);
 
 	const onSubmit = (values: z.infer<typeof formSchema>) => {
 		updateUser({ id: user!.id, ...values })
 			.unwrap()
-			.then(() => {
-				window.location.reload();
-			});
+			.then(() => {});
 	};
 
 	return (
@@ -100,51 +87,43 @@ const Settings = () => {
 								</FormItem>
 							)}
 						/>
-						<div className="flex items-start gap-4">
-							<Avatar>
-								{user?.avatar && (
-									<AvatarImage src={avatarUrl || user.avatar} alt="avatar" />
-								)}
-							</Avatar>
-							<Dropzone
-								className="flex-1"
-								onChange={async (file) => {
-									const imageUrl = await readFile(file);
-									setImage(imageUrl as string);
-									setCropperOpen(true);
-								}}
-								accept="image/*"
-							/>
-						</div>
-						{image && (
-							<Dialog
-								open={cropperOpen}
-								onOpenChange={(open) => {
-									if (!open) {
-										setImage(null);
-									}
-									setCropperOpen(open);
-								}}
-							>
-								<DialogContent>
-									<DialogHeader>
-										<DialogTitle>Crop your avatar</DialogTitle>
-										<DialogDescription>
-											Make changes to your profile here. Click save when you're
-											done.
-										</DialogDescription>
-									</DialogHeader>
-									<ImageCropper
-										image={image}
-										setResult={(file) => {
-											form.setValue('avatar', file);
-											setCropperOpen(false);
-										}}
-									/>
-								</DialogContent>
-							</Dialog>
-						)}
-						<Button type="submit">Submit</Button>
+						<FormField
+							control={form.control}
+							name="avatar"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Avatar</FormLabel>
+									<FormControl>
+										<div className="flex items-center gap-4">
+											<Avatar className="w-14 h-14">
+												{preview && <AvatarImage src={preview} alt="avatar" />}
+												{user?.avatar && !preview && (
+													<AvatarImage src={user.avatar} alt="avatar" />
+												)}
+												<AvatarFallback>
+													<Image className="w-5 h-5 text-gray-500" />
+												</AvatarFallback>
+											</Avatar>
+											<Dropzone
+												className="flex-1"
+												onChange={async (file) => {
+													field.onChange(file);
+													const image = (await readFile(file)) as string;
+													setPreview(image);
+												}}
+												accept="image/*"
+												withCrop
+											/>
+										</div>
+									</FormControl>
+									<FormDescription>This is your public avatar.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full">
+							Save
+						</Button>
 					</form>
 				</Form>
 			</div>
