@@ -106,7 +106,7 @@ const ApplyDialog = ({
 								<FormItem>
 									<FormLabel>CV (PDF only)</FormLabel>
 									<FormControl>
-										<Dropzone onChange={field.onChange} fileExtension="pdf" />
+										<Dropzone onChange={field.onChange} accept=".pdf" />
 									</FormControl>
 									<FormDescription>
 										Paste your CV in PDF format.
