@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -30,6 +30,12 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const [numPages, setNumPages] = useState<number>();
 	const [pageNumber, setPageNumber] = useState<number>(1);
+	const options = useMemo(
+		() => ({
+			withCredentials: true,
+		}),
+		[]
+	);
 
 	const {
 		id,
@@ -127,6 +133,7 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 							<Document
 								file={`http://localhost:3000/cv/${cv}`}
 								onLoadSuccess={onDocumentLoadSuccess}
+								options={options}
 							>
 								<Page
 									pageNumber={pageNumber}
