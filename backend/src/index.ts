@@ -10,6 +10,7 @@ import { technologiesRouter } from './routes/technologies';
 import { skillsRouter } from './routes/skills';
 import { applicationsRouter } from './routes/applications';
 import { getFileFromS3 } from './lib/s3';
+import { usersRouter } from './routes/users';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use('/job-offers', jobOffersRouter);
 app.use('/technologies', technologiesRouter);
 app.use('/skills', skillsRouter);
 app.use('/applications', applicationsRouter);
+app.use('/users', usersRouter);
 app.use('/cv/:filename', async (req, res) => {
 	const filename = req.params.filename;
 
@@ -40,7 +42,23 @@ app.use('/cv/:filename', async (req, res) => {
 
 		if (Body) {
 			const buffer = await Body.transformToByteArray();
-			res.setHeader('Content-Type', 'application/pdf');
+			res.send(Buffer.from(buffer));
+		} else {
+			res.send(404).send('File not found');
+		}
+	} catch (err) {
+		console.error(err);
+		res.status(404).send('File not found');
+	}
+});
+app.use('/avatars/:filename', async (req, res) => {
+	const filename = req.params.filename;
+
+	try {
+		const Body = await getFileFromS3(`avatars/${filename}`);
+
+		if (Body) {
+			const buffer = await Body.transformToByteArray();
 			res.send(Buffer.from(buffer));
 		} else {
 			res.send(404).send('File not found');
