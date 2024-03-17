@@ -1,32 +1,18 @@
-import { Request, Response } from 'express';
-import { generateId } from 'lucia';
-import { Argon2id } from 'oslo/password';
-import { db } from '../db';
-import { users } from '../db/schema';
 import {
 	OAuth2RequestError,
 	generateCodeVerifier,
 	generateState,
 } from 'arctic';
-import { github, google, lucia } from '../lib/lucia';
-import { parseCookies, serializeCookie } from 'oslo/cookie';
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
-
-export const credentialsSignUpSchema = z.object({
-	body: z.object({
-		email: z.string(),
-		password: z.string(),
-		firstName: z.string(),
-		lastName: z.string(),
-	}),
-});
-
-type CredentialsSignUpSchema = z.infer<typeof credentialsSignUpSchema>;
+import { Request, Response } from 'express';
+import { parseCookies, serializeCookie } from 'oslo/cookie';
+import { Argon2id } from 'oslo/password';
+import { db } from '../db';
+import { users } from '../db/schema';
+import { github, google, lucia } from '../lib/lucia';
 
 export const handleCredentialsSignUp = async (req: Request, res: Response) => {
-	const { email, firstName, lastName, password } =
-		req.body as CredentialsSignUpSchema['body'];
+	const { email, firstName, lastName, password } = req.body;
 
 	const hashedPassword = await new Argon2id().hash(password);
 
@@ -44,17 +30,8 @@ export const handleCredentialsSignUp = async (req: Request, res: Response) => {
 	}
 };
 
-export const credentialsSignInSchema = z.object({
-	body: z.object({
-		email: z.string(),
-		password: z.string(),
-	}),
-});
-
-type CredentialsSignInSchema = z.infer<typeof credentialsSignInSchema>;
-
 export const handleCredentialsSignIn = async (req: Request, res: Response) => {
-	const { email, password } = req.body as CredentialsSignInSchema['body'];
+	const { email, password } = req.body;
 
 	const user = await db.query.users.findFirst({
 		where: eq(users.email, email),
@@ -82,6 +59,7 @@ export const handleCredentialsSignIn = async (req: Request, res: Response) => {
 };
 
 const codeVerifier = generateCodeVerifier();
+
 export const handleGoogleSignIn = async (_: Request, res: Response) => {
 	const state = generateState();
 	const url = await google.createAuthorizationURL(state, codeVerifier, {
@@ -267,6 +245,7 @@ export const handleSession = async (req: Request, res: Response) => {
 			.from(users)
 			.where(eq(users.id, res.locals.user.id))
 	)[0];
+
 	res.status(200).json({ user });
 };
 

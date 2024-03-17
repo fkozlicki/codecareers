@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import {
-	credentialsSignInSchema,
-	credentialsSignUpSchema,
 	handleCredentialsSignIn,
 	handleCredentialsSignUp,
 	handleGithubCallback,
@@ -12,6 +10,10 @@ import {
 	handleSession,
 } from '../controllers/authController';
 import { validate } from '../middleware/validate';
+import {
+	credentialsSignInSchema,
+	credentialsSignUpSchema,
+} from '../validators/auth';
 
 export const authRouter = Router();
 

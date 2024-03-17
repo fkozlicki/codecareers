@@ -1,6 +1,6 @@
+import { and, eq, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { db } from '../db';
-import { and, eq, isNull } from 'drizzle-orm';
 import { applications } from '../db/schema';
 
 export const getApplications = async (req: Request, res: Response) => {

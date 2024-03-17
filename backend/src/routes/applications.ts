@@ -4,8 +4,17 @@ import {
 	getApplications,
 	updateApplication,
 } from '../controllers/applicationsController';
+import { validate } from '../middleware/validate';
+import {
+	getApplicationsSchema,
+	updateApplicationSchema,
+} from '../validators/applications';
 
 export const applicationsRouter = Router();
 
-applicationsRouter.route('/').get(requireSession, getApplications);
-applicationsRouter.route('/:id').put(requireSession, updateApplication);
+applicationsRouter
+	.route('/')
+	.get(requireSession, validate(getApplicationsSchema), getApplications);
+applicationsRouter
+	.route('/:id')
+	.put(requireSession, validate(updateApplicationSchema), updateApplication);

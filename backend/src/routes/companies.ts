@@ -1,18 +1,24 @@
 import { Router } from 'express';
 import {
 	createCompany,
-	createCompanySchema,
 	createJobOffer,
 	deleteCompany,
 	getCompanies,
 	getCompany,
 	getJobOffers,
-	jobOfferSchema,
 	updateCompany,
 } from '../controllers/companiesController';
 import { requireSession } from '../middleware/session';
 import { validate } from '../middleware/validate';
 import { upload } from '../lib/multer';
+import {
+	createCompanySchema,
+	createJobOfferSchema,
+	deleteCompanySchema,
+	getCompanyJobOffersSchema,
+	getCompanySchema,
+	updateCompanySchema,
+} from '../validators/companies';
 
 export const companiesRouter = Router();
 
@@ -31,11 +37,11 @@ companiesRouter
 
 companiesRouter
 	.route('/:id')
-	.get(getCompany)
-	.put(requireSession, updateCompany)
-	.delete(requireSession, deleteCompany);
+	.get(requireSession, validate(getCompanySchema), getCompany)
+	.put(requireSession, validate(updateCompanySchema), updateCompany)
+	.delete(requireSession, validate(deleteCompanySchema), deleteCompany);
 
 companiesRouter
 	.route('/:id/job-offers')
-	.get(requireSession, getJobOffers)
-	.post(requireSession, validate(jobOfferSchema), createJobOffer);
+	.get(requireSession, validate(getCompanyJobOffersSchema), getJobOffers)
+	.post(requireSession, validate(createJobOfferSchema), createJobOffer);

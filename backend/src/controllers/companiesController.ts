@@ -1,4 +1,6 @@
 import { and, eq } from 'drizzle-orm';
+import { Request, Response } from 'express';
+import { generateId } from 'lucia';
 import { db } from '../db';
 import {
 	companies,
@@ -8,17 +10,11 @@ import {
 	skills,
 	technologies,
 } from '../db/schema';
-import { Request, Response } from 'express';
-import { z } from 'zod';
-import { generateId } from 'lucia';
 import { uploadFileToS3 } from '../lib/s3';
+import { JobOfferBody } from '../validators/jobOffers';
 
 export const getCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
-
-	if (!id) {
-		return res.status(400).json({ message: 'Company ID required' });
-	}
 
 	const company = await db.query.companies.findFirst({
 		where: eq(companies.id, id),
@@ -51,36 +47,8 @@ export const getCompanies = async (req: Request, res: Response) => {
 	res.status(200).json({ companies: allCompanies });
 };
 
-export const createCompanySchema = z.object({
-	body: z.object({
-		name: z.string(),
-		description: z.string(),
-		phoneNumber: z.string(),
-	}),
-	files: z.object({
-		avatar: z
-			.tuple([
-				z.object({
-					fieldname: z.literal('avatar'),
-					buffer: z.instanceof(Buffer),
-				}),
-			])
-			.optional(),
-		banner: z
-			.tuple([
-				z.object({
-					fieldname: z.literal('banner'),
-					buffer: z.instanceof(Buffer),
-				}),
-			])
-			.optional(),
-	}),
-});
-
-type createCompanyValues = z.infer<typeof createCompanySchema>;
-
 export const createCompany = async (req: Request, res: Response) => {
-	const files = req.files as unknown as createCompanyValues['files'];
+	const files = req.files as unknown as any;
 	const avatarFilename = generateId(15);
 	const bannerFilename = generateId(15);
 
@@ -116,10 +84,6 @@ export const createCompany = async (req: Request, res: Response) => {
 export const updateCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
 
-	if (!id) {
-		return res.status(400).json({ message: 'Company ID required' });
-	}
-
 	const company = await db.query.companies.findFirst({
 		where: eq(companies.id, req.params.id),
 	});
@@ -134,6 +98,22 @@ export const updateCompany = async (req: Request, res: Response) => {
 			.json({ message: 'You are not authorized to update this company' });
 	}
 
+	const files = req.files as unknown as any;
+	const avatarFilename = generateId(15);
+	const bannerFilename = generateId(15);
+
+	try {
+		if (files.avatar) {
+			await uploadFileToS3(`avatars/${avatarFilename}`, files.avatar[0].buffer);
+		}
+		if (files.banner) {
+			await uploadFileToS3(`avatars/${bannerFilename}`, files.banner[0].buffer);
+		}
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: 'Server error' });
+	}
+
 	const [updatedCompany] = await db
 		.update(companies)
 		.set(req.body)
@@ -145,10 +125,6 @@ export const updateCompany = async (req: Request, res: Response) => {
 
 export const deleteCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
-
-	if (!id) {
-		return res.status(400).json({ message: 'Company ID required' });
-	}
 
 	const company = await db.query.companies.findFirst({
 		where: eq(companies.id, req.params.id),
@@ -165,52 +141,18 @@ export const deleteCompany = async (req: Request, res: Response) => {
 	}
 
 	await db.delete(companies).where(eq(companies.id, id)).returning();
+
 	res.status(204).json({ message: 'Company deleted successfully' });
 };
 
-const skillItem = z.object({
-	label: z.string(),
-	value: z.string(),
-	__isNew__: z.boolean().optional(),
-});
-
-export const jobOfferSchema = z.object({
-	body: z.object({
-		position: z.string(),
-		description: z.string(),
-		level: z.enum(['junior', 'mid', 'senior']),
-		employmentType: z.enum([
-			'b2b',
-			'permanent',
-			'mandate',
-			'internship',
-			'task',
-		]),
-		workType: z.enum(['full_time', 'part_time', 'internship', 'freelance']),
-		salaryFrom: z.number().int(),
-		salaryTo: z.number().int(),
-		salaryCurrency: z.enum(['pln', 'gbp', 'eur', 'usd']),
-		skills: z.array(skillItem),
-		technologies: z.array(skillItem),
-	}),
-	params: z.object({
-		id: z.string(),
-	}),
-});
-type CreateJobOfferSchema = z.infer<typeof jobOfferSchema>;
-
 export const createJobOffer = async (req: Request, res: Response) => {
-	const { id: companyId } = req.params as CreateJobOfferSchema['params'];
-
-	if (!companyId) {
-		return res.status(400).json({ message: 'Company ID required' });
-	}
+	const companyId = req.params.id;
 
 	const {
 		technologies: _technologies,
 		skills: _skills,
 		...rest
-	} = req.body as CreateJobOfferSchema['body'];
+	}: JobOfferBody = req.body;
 
 	const [jobOffer] = await db
 		.insert(jobOffers)

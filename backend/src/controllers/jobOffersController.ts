@@ -16,10 +16,6 @@ export const getJobOffers = async (req: Request, res: Response) => {
 export const getJobOffer = async (req: Request, res: Response) => {
 	const id = req.params.id;
 
-	if (!id) {
-		return res.status(400).json({ message: 'Company ID required' });
-	}
-
 	const jobOffer = await db.query.jobOffers.findFirst({
 		where: eq(jobOffers.id, id),
 		with: {
