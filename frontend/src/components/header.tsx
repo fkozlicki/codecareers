@@ -9,6 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Code } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -17,8 +18,9 @@ const Header = () => {
 	return (
 		<header className="p-2 border-b flex justify-between items-center sticky top-0 bg-background z-10">
 			<div className="flex items-center gap-4">
-				<Link to="/">
-					<div>logo</div>
+				<Link to="/" className="inline-flex items-center gap-1 font-medium">
+					<Code className="w-6 h-6" />
+					CodeCareers
 				</Link>
 				<Link to="/">
 					<Button variant="link">Home</Button>

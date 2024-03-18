@@ -25,7 +25,7 @@ const CompanyLayout = () => {
 			<div className="md:hidden">
 				<Sheet>
 					<SheetTrigger asChild>
-						<Button size="icon" variant="outline" className="mb-4">
+						<Button size="icon" variant="outline" className="ml-4 mt-4">
 							<Menu className="w-4 h-4" />
 						</Button>
 					</SheetTrigger>
@@ -67,7 +67,7 @@ const CompanyLayout = () => {
 					<h2>{data?.company.description}</h2>
 				</div>
 			</div>
-			<div className="flex max-w-4xl m-auto">
+			<div className="flex max-w-4xl m-auto px-4 lg:px-0">
 				<div className="h-[calc(100vh-222px)] flex-col w-48 hidden md:flex pr-4 sticky top-[222px] self-start border-r mr-4">
 					<Link
 						to={`/my-companies/${id}`}

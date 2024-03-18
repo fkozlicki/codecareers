@@ -20,7 +20,7 @@ const Home = () => {
 						<div className="flex-1 p-4 flex flex-col gap-4 min-h-[calc(100vh-53px)]">
 							<JobOfferList />
 						</div>
-						<div className="flex-1">
+						<div className="flex-1 hidden md:block">
 							<JobOfferDetails />
 						</div>
 					</>

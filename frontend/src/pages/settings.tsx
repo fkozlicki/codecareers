@@ -45,7 +45,7 @@ const Settings = () => {
 	};
 
 	return (
-		<div className="py-8">
+		<div className="py-8 px-4">
 			<div className="max-w-xl m-auto">
 				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8 text-center">
 					Hi, {user?.username || `${user?.firstName} ${user?.lastName}`}

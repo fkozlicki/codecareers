@@ -38,7 +38,7 @@ const Applications = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 px-4">
 			{data?.applications.map((application) => (
 				<JobOfferCard key={application.id} jobOffer={application.jobOffer} />
 			))}

@@ -13,7 +13,7 @@ const Companies = () => {
 	});
 
 	return (
-		<div className="py-8">
+		<div className="py-8 px-4">
 			<div className="max-w-3xl m-auto">
 				<div className="flex items-center justify-between mb-8">
 					<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl text-center">
