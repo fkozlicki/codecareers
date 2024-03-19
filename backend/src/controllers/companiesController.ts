@@ -29,23 +29,19 @@ export const getCompany = async (req: Request, res: Response) => {
 };
 
 export const getCompanies = async (req: Request, res: Response) => {
-	if (req.params.userId) {
-		if (req.params.userId !== res.locals.user.id) {
-			return res
-				.status(403)
-				.json({ message: 'You are not authorized to update this company' });
-		}
+	const userId = req.params.userId;
 
-		const userCompanies = await db.query.companies.findMany({
-			where: eq(companies.id, req.params.id),
-		});
-
-		return res.status(200).json({ companies: userCompanies });
+	if (userId && userId !== res.locals.user.id) {
+		return res
+			.status(403)
+			.json({ message: 'You are not authorized to update this company' });
 	}
 
-	const allCompanies = await db.query.companies.findMany();
+	const result = await db.query.companies.findMany({
+		where: userId ? eq(companies.id, userId) : undefined,
+	});
 
-	res.status(200).json({ companies: allCompanies });
+	res.status(200).json({ companies: result });
 };
 
 export const createCompany = async (req: Request, res: Response) => {
@@ -233,7 +229,7 @@ export const createJobOffer = async (req: Request, res: Response) => {
 	res.status(201).json({ jobOffer });
 };
 
-export const getJobOffers = async (req: Request, res: Response) => {
+export const getCompanyJobOffers = async (req: Request, res: Response) => {
 	const companyId = req.params.id;
 	const sort = req.query.sort;
 

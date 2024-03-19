@@ -5,7 +5,7 @@ import {
 	deleteCompany,
 	getCompanies,
 	getCompany,
-	getJobOffers,
+	getCompanyJobOffers,
 	updateCompany,
 } from '../controllers/companiesController';
 import { requireSession } from '../middleware/session';
@@ -51,5 +51,5 @@ companiesRouter
 
 companiesRouter
 	.route('/:id/job-offers')
-	.get(requireSession, validate(getCompanyJobOffersSchema), getJobOffers)
+	.get(requireSession, validate(getCompanyJobOffersSchema), getCompanyJobOffers)
 	.post(requireSession, validate(createJobOfferSchema), createJobOffer);

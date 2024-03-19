@@ -53,7 +53,6 @@ export const updateJobOffer = async (req: Request, res: Response) => {
 
 	res.status(200).json({ jobOffer: updatedJobOffer });
 };
-export const deleteJobOffer = () => {};
 
 export const createApplication = async (req: Request, res: Response) => {
 	const id = req.params.id;
