@@ -38,7 +38,15 @@ companiesRouter
 companiesRouter
 	.route('/:id')
 	.get(requireSession, validate(getCompanySchema), getCompany)
-	.put(requireSession, validate(updateCompanySchema), updateCompany)
+	.put(
+		requireSession,
+		upload.fields([
+			{ name: 'avatar', maxCount: 1 },
+			{ name: 'banner', maxCount: 1 },
+		]),
+		validate(updateCompanySchema),
+		updateCompany
+	)
 	.delete(requireSession, validate(deleteCompanySchema), deleteCompany);
 
 companiesRouter

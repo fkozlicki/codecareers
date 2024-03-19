@@ -24,6 +24,8 @@ const companyFiles = z
 	})
 	.partial();
 
+export type CompanyFiles = z.infer<typeof companyFiles>;
+
 export const createCompanySchema = z.object({
 	body: companyBody,
 	files: companyFiles,
@@ -31,7 +33,7 @@ export const createCompanySchema = z.object({
 
 export const updateCompanySchema = z.object({
 	body: companyBody.partial(),
-	files: companyFiles,
+	files: companyFiles.optional(),
 	params: z.object({
 		id: z.string(),
 	}),

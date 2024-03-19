@@ -12,6 +12,7 @@ import {
 } from '../db/schema';
 import { uploadFileToS3 } from '../lib/s3';
 import { JobOfferBody } from '../validators/jobOffers';
+import { CompanyFiles } from '../validators/companies';
 
 export const getCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
@@ -98,25 +99,41 @@ export const updateCompany = async (req: Request, res: Response) => {
 			.json({ message: 'You are not authorized to update this company' });
 	}
 
-	const files = req.files as unknown as any;
+	const files = req.files as CompanyFiles | undefined;
 	const avatarFilename = generateId(15);
 	const bannerFilename = generateId(15);
 
-	try {
-		if (files.avatar) {
-			await uploadFileToS3(`avatars/${avatarFilename}`, files.avatar[0].buffer);
+	if (files) {
+		try {
+			if (files.avatar) {
+				await uploadFileToS3(
+					`avatars/${avatarFilename}`,
+					files.avatar[0].buffer
+				);
+			}
+			if (files.banner) {
+				await uploadFileToS3(
+					`avatars/${bannerFilename}`,
+					files.banner[0].buffer
+				);
+			}
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ message: 'Server error' });
 		}
-		if (files.banner) {
-			await uploadFileToS3(`avatars/${bannerFilename}`, files.banner[0].buffer);
-		}
-	} catch (error) {
-		console.error(error);
-		return res.status(500).json({ message: 'Server error' });
 	}
 
 	const [updatedCompany] = await db
 		.update(companies)
-		.set(req.body)
+		.set({
+			...req.body,
+			...(files?.avatar
+				? { avatarUrl: `http://localhost:3000/avatars/${avatarFilename}` }
+				: {}),
+			...(files?.banner
+				? { backgroundUrl: `http://localhost:3000/avatars/${bannerFilename}` }
+				: {}),
+		})
 		.where(eq(companies.id, id))
 		.returning();
 
