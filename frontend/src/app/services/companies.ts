@@ -7,8 +7,8 @@ export interface Company {
 	name: string;
 	description: string;
 	phoneNumber: string;
-	avatarUrl?: string;
-	backgroundUrl?: string;
+	avatarUrl: string | null;
+	backgroundUrl: string | null;
 }
 
 export const createCompanySchema = z.object({
@@ -17,7 +17,7 @@ export const createCompanySchema = z.object({
 	phoneNumber: z
 		.string()
 		.regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/),
-	avatar: z.instanceof(Blob),
+	avatar: z.instanceof(Blob).optional(),
 	banner: z.instanceof(Blob).optional(),
 });
 
@@ -77,10 +77,16 @@ export const companiesApi = api.injectEndpoints({
 		>({
 			query: (data) => {
 				const { id, ...body } = data;
+				const formData = new FormData();
+				Object.entries(body).forEach(([key, value]) => {
+					if (value) {
+						formData.append(key, value);
+					}
+				});
 				return {
 					url: `companies/${id}`,
 					method: 'PUT',
-					body,
+					body: formData,
 				};
 			},
 			async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
