@@ -25,24 +25,31 @@ const Applications = () => {
 		);
 	}
 
-	if (data && data.applications.length === 0) {
-		return (
-			<div>
-				<Empty
-					message={`You have no ${
-						sort?.toLowerCase() ?? 'pending'
-					} applications`}
-				/>
-			</div>
-		);
+	if (!data) {
+		return <div>Couldn't load data</div>;
 	}
 
 	return (
-		<div className="flex flex-col gap-4 px-4">
-			{data?.applications.map((application) => (
-				<JobOfferCard key={application.id} jobOffer={application.jobOffer} />
-			))}
-		</div>
+		<>
+			{data.applications.length > 0 ? (
+				<div className="flex flex-col gap-4 px-4">
+					{data.applications.map((application) => (
+						<JobOfferCard
+							key={application.id}
+							jobOffer={application.jobOffer}
+						/>
+					))}
+				</div>
+			) : (
+				<div>
+					<Empty
+						message={`You have no ${
+							sort?.toLowerCase() ?? 'pending'
+						} applications`}
+					/>
+				</div>
+			)}
+		</>
 	);
 };
 

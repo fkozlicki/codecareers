@@ -29,15 +29,17 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+interface ApplyDialogProps {
+	position: string;
+	jobOfferId: string;
+	companyName: string;
+}
+
 const ApplyDialog = ({
 	position,
 	jobOfferId,
 	companyName,
-}: {
-	position: string;
-	jobOfferId: string;
-	companyName: string;
-}) => {
+}: ApplyDialogProps) => {
 	const form = useForm<ApplicationValues>({
 		resolver: zodResolver(createApplicationSchema),
 		defaultValues: {

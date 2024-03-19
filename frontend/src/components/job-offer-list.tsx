@@ -18,9 +18,13 @@ const JobOfferList = () => {
 		);
 	}
 
+	if (!data) {
+		return <div>Couldn't load data</div>;
+	}
+
 	return (
 		<div className="flex flex-col gap-4">
-			{data?.jobOffers.map((jobOffer) => (
+			{data.jobOffers.map((jobOffer) => (
 				<Link key={jobOffer.id} to={`/?joid=${jobOffer.id}`}>
 					<JobOfferCard jobOffer={jobOffer} />
 				</Link>

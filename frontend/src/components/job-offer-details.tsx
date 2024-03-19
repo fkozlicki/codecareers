@@ -51,7 +51,7 @@ const JobOfferDetails = () => {
 
 	if (isLoading || isFetching) {
 		return (
-			<div className="p-4  top-[53px] min-h-[calc(100vh-246px)] overflow-hidden">
+			<div className="p-4 top-[53px] overflow-hidden">
 				<div className="border rounded-md overflow-hidden h-full flex flex-col">
 					<div>
 						<AspectRatio
@@ -101,7 +101,7 @@ const JobOfferDetails = () => {
 	return (
 		<div
 			ref={ref}
-			className="p-4 sticky top-[53px] min-h-[calc(100vh-246px)] overflow-hidden"
+			className="p-4 sticky top-[53px] min-h-[calc(100vh-254px)] overflow-hidden"
 			style={{
 				height,
 			}}
@@ -109,19 +109,23 @@ const JobOfferDetails = () => {
 			<div className="border rounded-md overflow-hidden h-full flex flex-col">
 				<div>
 					<AspectRatio ratio={6 / 1}>
-						<div className="w-full h-full bg-muted flex justify-center items-center">
-							<Image className="w-5 h-5 text-gray-500" />
-							{company.backgroundUrl && (
+						<div className="w-full h-full bg-muted grid place-items-center">
+							{company.backgroundUrl ? (
 								<img
 									src={company.backgroundUrl}
 									alt="company banner"
-									className="object-cover"
+									className="object-cover w-full"
 								/>
+							) : (
+								<Image className="w-5 h-5 text-gray-500" />
 							)}
 						</div>
 					</AspectRatio>
 					<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16 border">
-						<AvatarImage src={company.avatarUrl} alt="company avatar" />
+						<AvatarImage
+							src={company.avatarUrl ?? undefined}
+							alt="company avatar"
+						/>
 						<AvatarFallback className="rounded">
 							<Building2 className="w-4 h-4 text-gray-500" />
 						</AvatarFallback>
