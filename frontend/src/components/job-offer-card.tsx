@@ -9,6 +9,7 @@ import {
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Building2 } from 'lucide-react';
 
 dayjs.extend(relativeTime);
 
@@ -33,7 +34,7 @@ const JobOfferCard = ({
 
 	return (
 		<Card className="p-4 hover:shadow-md">
-			<div className="flex items-center justify-between mb-4">
+			<div className="flex items-center justify-between mb-2">
 				<div className="flex gap-2 items-center">
 					<CardTitle>{position}</CardTitle>
 					{admin && (
@@ -53,6 +54,12 @@ const JobOfferCard = ({
 					{salaryCurrency.toUpperCase()}
 				</span>
 			</div>
+			{'company' in jobOffer && (
+				<span className="inline-flex items-center gap-2 text-sm mb-4 text-gray-700">
+					<Building2 className="w-4 h-4" />
+					{jobOffer.company.name}
+				</span>
+			)}
 			<div className="flex justify-between items-center">
 				<div className="flex gap-2">
 					<Badge variant="outline" className="capitalize">
