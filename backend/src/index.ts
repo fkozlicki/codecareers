@@ -15,28 +15,35 @@ import { usersRouter } from './routes/users';
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOptions));
+export const createServer = () => {
+	const app = express();
 
-app.use(verifySession);
+	app.use(express.json());
+	app.use(express.urlencoded({ extended: true }));
+	app.use(cors(corsOptions));
 
-app.get('/', (req: Request, res: Response) => {
-	res.json({ message: 'Welcome to CodeCareers API' });
-});
+	app.use(verifySession);
 
-app.use('/', authRouter);
-app.use('/companies', companiesRouter);
-app.use('/job-offers', jobOffersRouter);
-app.use('/technologies', technologiesRouter);
-app.use('/skills', skillsRouter);
-app.use('/applications', applicationsRouter);
-app.use('/users', usersRouter);
-app.use('/avatars/:filename', serveFile('avatars'));
-app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
+	app.get('/', (req: Request, res: Response) => {
+		res.json({ message: 'Welcome to CodeCareers API' });
+	});
+
+	app.use('/', authRouter);
+	app.use('/companies', companiesRouter);
+	app.use('/job-offers', jobOffersRouter);
+	app.use('/technologies', technologiesRouter);
+	app.use('/skills', skillsRouter);
+	app.use('/applications', applicationsRouter);
+	app.use('/users', usersRouter);
+	app.use('/avatars/:filename', serveFile('avatars'));
+	app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
+
+	return app;
+};
+
+const app = createServer();
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
