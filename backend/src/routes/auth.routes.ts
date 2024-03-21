@@ -8,7 +8,7 @@ import {
 	handleGoogleSignIn,
 	handleLogout,
 	handleSession,
-} from '../controllers/authController';
+} from '../controllers/auth.controller';
 import { validate } from '../middleware/validate';
 import {
 	credentialsSignInSchema,

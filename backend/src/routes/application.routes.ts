@@ -3,7 +3,7 @@ import { requireSession } from '../middleware/session';
 import {
 	getApplications,
 	updateApplication,
-} from '../controllers/applicationsController';
+} from '../controllers/application.controller';
 import { validate } from '../middleware/validate';
 import {
 	getApplicationsSchema,

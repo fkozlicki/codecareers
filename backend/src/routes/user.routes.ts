@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { requireSession } from '../middleware/session';
-import { updateUser } from '../controllers/usersController';
+import { updateUser } from '../controllers/user.controller';
 import { upload } from '../lib/multer';
 import { validate } from '../middleware/validate';
 import { updateUserSchema } from '../validators/users';

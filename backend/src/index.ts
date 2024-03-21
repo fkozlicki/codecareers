@@ -5,13 +5,13 @@ import { corsOptions } from './config/corsOptions';
 import { serveFile } from './lib/s3';
 import { authorizeCv } from './middleware/authorization';
 import { requireSession, verifySession } from './middleware/session';
-import { applicationsRouter } from './routes/applications';
-import { authRouter } from './routes/auth';
-import { companiesRouter } from './routes/companies';
-import { jobOffersRouter } from './routes/jobOffers';
-import { skillsRouter } from './routes/skills';
-import { technologiesRouter } from './routes/technologies';
-import { usersRouter } from './routes/users';
+import { applicationsRouter } from './routes/application.routes';
+import { authRouter } from './routes/auth.routes';
+import { companiesRouter } from './routes/company.routes';
+import { jobOffersRouter } from './routes/jobOffer.routes';
+import { skillsRouter } from './routes/skill.routes';
+import { technologiesRouter } from './routes/technology.routes';
+import { usersRouter } from './routes/user.routes';
 
 dotenv.config();
 

@@ -7,7 +7,7 @@ import {
 	getCompany,
 	getCompanyJobOffers,
 	updateCompany,
-} from '../controllers/companiesController';
+} from '../controllers/company.controller';
 import { requireSession } from '../middleware/session';
 import { validate } from '../middleware/validate';
 import { upload } from '../lib/multer';

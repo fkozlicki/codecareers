@@ -5,7 +5,7 @@ import {
 	getJobOffer,
 	getJobOffers,
 	updateJobOffer,
-} from '../controllers/jobOffersController';
+} from '../controllers/jobOffer.controller';
 import { upload } from '../lib/multer';
 import { validate } from '../middleware/validate';
 import {
