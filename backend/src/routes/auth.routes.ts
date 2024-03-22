@@ -22,7 +22,7 @@ authRouter.post(
 	validate(credentialsSignUpSchema),
 	handleCredentialsSignUp
 );
-authRouter.get(
+authRouter.post(
 	'/login/credentials',
 	validate(credentialsSignInSchema),
 	handleCredentialsSignIn
