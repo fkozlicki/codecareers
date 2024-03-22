@@ -28,6 +28,7 @@ export const verifySession = async (
 	}
 
 	const { session, user } = await lucia.validateSession(sessionId);
+
 	if (session && session.fresh) {
 		res.appendHeader(
 			'Set-Cookie',

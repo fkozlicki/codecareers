@@ -28,7 +28,7 @@ export type CompanyFiles = z.infer<typeof companyFiles>;
 
 export const createCompanySchema = z.object({
 	body: companyBody,
-	files: companyFiles,
+	files: companyFiles.optional(),
 });
 
 export const updateCompanySchema = z.object({
