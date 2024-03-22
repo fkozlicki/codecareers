@@ -45,20 +45,28 @@ export const getCompanies = async (req: Request, res: Response) => {
 };
 
 export const createCompany = async (req: Request, res: Response) => {
-	const files = req.files as unknown as any;
+	const files = req.files as CompanyFiles | undefined;
 	const avatarFilename = generateId(15);
 	const bannerFilename = generateId(15);
 
-	try {
-		if (files.avatar) {
-			await uploadFileToS3(`avatars/${avatarFilename}`, files.avatar[0].buffer);
+	if (files) {
+		try {
+			if (files.avatar) {
+				await uploadFileToS3(
+					`avatars/${avatarFilename}`,
+					files.avatar[0].buffer
+				);
+			}
+			if (files.banner) {
+				await uploadFileToS3(
+					`avatars/${bannerFilename}`,
+					files.banner[0].buffer
+				);
+			}
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ message: 'Server error' });
 		}
-		if (files.banner) {
-			await uploadFileToS3(`avatars/${bannerFilename}`, files.banner[0].buffer);
-		}
-	} catch (error) {
-		console.error(error);
-		return res.status(500).json({ message: 'Server error' });
 	}
 
 	const [newCompany] = await db
@@ -66,14 +74,21 @@ export const createCompany = async (req: Request, res: Response) => {
 		.values({
 			ownerId: res.locals.user.id,
 			...req.body,
-			...(files.avatar
+			...(files?.avatar
 				? { avatarUrl: `http://localhost:3000/avatars/${avatarFilename}` }
 				: {}),
-			...(files.banner
+			...(files?.banner
 				? { backgroundUrl: `http://localhost:3000/avatars/${bannerFilename}` }
 				: {}),
 		})
-		.returning();
+		.returning({
+			id: companies.id,
+			name: companies.name,
+			description: companies.description,
+			phoneNumber: companies.phoneNumber,
+			avatarUrl: companies.avatarUrl,
+			backgroundUrl: companies.backgroundUrl,
+		});
 
 	res.status(201).json({ company: newCompany });
 };

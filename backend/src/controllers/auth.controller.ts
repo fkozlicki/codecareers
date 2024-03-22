@@ -14,6 +14,16 @@ import { github, google, lucia } from '../lib/lucia';
 export const handleCredentialsSignUp = async (req: Request, res: Response) => {
 	const { email, firstName, lastName, password } = req.body;
 
+	const existingUser = await db.query.users.findFirst({
+		where: eq(users.email, email),
+	});
+
+	if (existingUser) {
+		return res
+			.status(409)
+			.json({ message: 'User with this email already exists' });
+	}
+
 	const hashedPassword = await new Argon2id().hash(password);
 
 	try {
@@ -38,13 +48,13 @@ export const handleCredentialsSignIn = async (req: Request, res: Response) => {
 	});
 
 	if (!user || !user.password) {
-		return res.status(400).json({ message: 'Invalid credentials' });
+		return res.status(400).json({ error: 'Invalid data' });
 	}
 
 	const validPassword = await new Argon2id().verify(user.password, password);
 
 	if (!validPassword) {
-		return res.status(400).json({ message: 'Invalid credentials' });
+		return res.status(400).json({ error: 'Invalid data' });
 	}
 
 	const session = await lucia.createSession(user.id, {});
