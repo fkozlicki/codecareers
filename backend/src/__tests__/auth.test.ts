@@ -1,11 +1,30 @@
+import { Argon2id } from 'oslo/password';
 import supertest from 'supertest';
-import { createServer } from '..';
+import { app } from '..';
+import { db } from '../db';
+import { users } from '../db/schema';
+import { clearDb } from '../db/helpers';
 
-const app = createServer();
+beforeEach(async () => {
+	await clearDb();
+});
 
 describe('Auth Service', () => {
+	const password = 'S3cReT123';
+
+	beforeEach(async () => {
+		const hashedPassword = await new Argon2id().hash(password);
+
+		await db.insert(users).values({
+			firstName: 'Jon',
+			lastName: 'Snow',
+			email: 'jon.snow@gmail.com',
+			password: hashedPassword,
+		});
+	});
+
 	describe('[POST] /signup', () => {
-		it('When no user with the same email exists, create new user', async () => {
+		it('Create new user, when credentials are valid and no user with the same email exists', async () => {
 			const { statusCode, body } = await supertest(app).post('/signup').send({
 				firstName: 'Anna',
 				lastName: 'Marie',
@@ -15,6 +34,97 @@ describe('Auth Service', () => {
 
 			expect(statusCode).toBe(201);
 			expect(body).toEqual({ message: 'Signed up successfully' });
+		});
+
+		it('When user with same email exists, throw a 409 (duplicate) error', async () => {
+			const { statusCode, body } = await supertest(app).post('/signup').send({
+				firstName: 'Jon',
+				lastName: 'Snow',
+				email: 'jon.snow@gmail.com',
+				password: 'jonsnow123',
+			});
+
+			expect(statusCode).toBe(409);
+			expect(body).toEqual({ message: 'User with this email already exists' });
+		});
+
+		it('Throw 400 when credentials are invalid', async () => {
+			const invalidCredentials = [
+				// missing lastName
+				{
+					firstName: 'Lilly',
+					email: 'lilly@gmail.com',
+					password: 'lilly123',
+				},
+				// missing firstName
+				{
+					lastName: 'Pietrova',
+					email: 'pietrova@gmail.com',
+					password: 'pietrova123',
+				},
+				// missing email
+				{
+					firstName: 'Alan',
+					lastName: 'Walker',
+					password: 'alanwalker123',
+				},
+				// missing password
+				{
+					firstName: 'Jake',
+					lastName: 'Paul',
+					email: 'jake.paul@gmail.com',
+				},
+			];
+
+			for (let credentials of invalidCredentials) {
+				const { statusCode, body } = await supertest(app)
+					.post('/signup')
+					.send(credentials);
+
+				expect(statusCode).toBe(400);
+				expect(body).toEqual({ error: 'Invalid data' });
+			}
+		});
+	});
+
+	describe('[POST] /login/credentials', () => {
+		it('Sign in, when credentials are valid', async () => {
+			const { statusCode, body } = await supertest(app)
+				.post('/login/credentials')
+				.send({
+					email: 'jon.snow@gmail.com',
+					password,
+				});
+
+			expect(statusCode).toBe(200);
+			expect(body).toEqual({ message: 'Signed in' });
+		});
+
+		it('Throw 400, when credentials are invalid', async () => {
+			const invalidCredentials = [
+				// missing email
+				{
+					password: 'alanwalker123',
+				},
+				// missing password
+				{
+					email: 'jake.paul@gmail.com',
+				},
+				// wrong password
+				{
+					email: 'jon.snow@gmail.com',
+					password: 'secret123',
+				},
+			];
+
+			for (let credentials of invalidCredentials) {
+				const { statusCode, body } = await supertest(app)
+					.post('/login/credentials')
+					.send(credentials);
+
+				expect(statusCode).toBe(400);
+				expect(body).toEqual({ error: 'Invalid data' });
+			}
 		});
 	});
 });
