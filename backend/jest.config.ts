@@ -13,4 +13,5 @@ export default {
 		'^.+\\.tsx?$': ['ts-jest', { useESM: true }],
 	},
 	forceExit: true,
+	detectOpenHandles: true,
 } satisfies Config;

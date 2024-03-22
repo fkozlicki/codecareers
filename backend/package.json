@@ -10,6 +10,7 @@
 		"dev": "tsx watch src/index.ts",
 		"generate": "drizzle-kit generate:pg",
 		"push": "drizzle-kit push:pg",
+		"push:test": "NODE_ENV=test drizzle-kit push:pg",
 		"studio": "drizzle-kit studio",
 		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest"
 	},
