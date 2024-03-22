@@ -13,38 +13,34 @@ import { skillsRouter } from './routes/skill.routes';
 import { technologiesRouter } from './routes/technology.routes';
 import { usersRouter } from './routes/user.routes';
 
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` });
 
 const port = process.env.PORT || 3000;
 
-export const createServer = () => {
-	const app = express();
+export const app = express();
 
-	app.use(express.json());
-	app.use(express.urlencoded({ extended: true }));
-	app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
 
-	app.use(verifySession);
+app.use(verifySession);
 
-	app.get('/', (req: Request, res: Response) => {
-		res.json({ message: 'Welcome to CodeCareers API' });
-	});
-
-	app.use('/', authRouter);
-	app.use('/companies', companiesRouter);
-	app.use('/job-offers', jobOffersRouter);
-	app.use('/technologies', technologiesRouter);
-	app.use('/skills', skillsRouter);
-	app.use('/applications', applicationsRouter);
-	app.use('/users', usersRouter);
-	app.use('/avatars/:filename', serveFile('avatars'));
-	app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
-
-	return app;
-};
-
-const app = createServer();
-
-app.listen(port, () => {
-	console.log(`[server]: Server is running at http://localhost:${port}`);
+app.get('/', (req: Request, res: Response) => {
+	res.json({ message: 'Welcome to CodeCareers API' });
 });
+
+app.use('/', authRouter);
+app.use('/companies', companiesRouter);
+app.use('/job-offers', jobOffersRouter);
+app.use('/technologies', technologiesRouter);
+app.use('/skills', skillsRouter);
+app.use('/applications', applicationsRouter);
+app.use('/users', usersRouter);
+app.use('/avatars/:filename', serveFile('avatars'));
+app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
+
+if (process.env.NODE_ENV !== 'test') {
+	app.listen(port, () => {
+		console.log(`[server]: Server is running at http://localhost:${port}`);
+	});
+}

@@ -6,7 +6,7 @@ import {
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` });
 
 const s3Client = new S3Client({
 	region: process.env.S3_REGION!,

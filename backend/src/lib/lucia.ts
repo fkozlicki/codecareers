@@ -3,9 +3,6 @@ import { db } from '../db';
 import { User, sessions, users } from '../db/schema';
 import { Lucia } from 'lucia';
 import { GitHub, Google } from 'arctic';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
