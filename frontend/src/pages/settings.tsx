@@ -51,10 +51,7 @@ const Settings = () => {
 					Hi, {user?.username || `${user?.firstName} ${user?.lastName}`}
 				</h1>
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit, console.log)}
-						className="space-y-8"
-					>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<FormField
 							control={form.control}
 							name="firstName"
