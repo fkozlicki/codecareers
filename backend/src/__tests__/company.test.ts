@@ -1,7 +1,8 @@
 import supertest from 'supertest';
 import { app } from '..';
 import { db } from '../db';
-import { companies } from '../db/schema';
+import { companies, users } from '../db/schema';
+import { Argon2id } from 'oslo/password';
 
 const password = 'S3cReT123';
 
@@ -12,6 +13,23 @@ const companyRequest = {
 };
 
 describe('Company service', () => {
+	let userId;
+
+	beforeAll(async () => {
+		const hashedPassword = await new Argon2id().hash(password);
+		userId = (
+			await db
+				.insert(users)
+				.values({
+					firstName: 'Adam',
+					lastName: 'Joseph',
+					email: 'adamjospeh@gmail.com',
+					password: hashedPassword,
+				})
+				.returning()
+		)[0].id;
+	});
+
 	describe('[POST] /companies', () => {
 		it('Create company, when user is signed in and body is valid', async () => {
 			// sign in
@@ -76,16 +94,25 @@ describe('Company service', () => {
 	});
 
 	describe('[GET] /company/:id', () => {
+		let companyId;
+
 		beforeAll(async () => {
-			await db.insert(companies).values({
-				name: '',
-			});
+			companyId = (
+				await db
+					.insert(companies)
+					.values({
+						name: 'Google',
+						ownerId: userId!,
+						phoneNumber: '222 222 2222',
+					})
+					.returning()
+			)[0].id;
 		});
 
-		it('Throw 401, when user is not signed in', async () => {
+		it('Return company, when user have access to it', async () => {
 			// sign in
 			const { header } = await supertest(app).post('/login/credentials').send({
-				email: 'jon.snow@gmail.com',
+				email: 'adamjospeh@gmail.com',
 				password,
 			});
 
@@ -94,6 +121,13 @@ describe('Company service', () => {
 				.get('/companies/')
 				.set('cookie', header['set-cookie'])
 				.send(companyRequest);
+
+			expect(statusCode).toBe(200);
+			expect(body).toEqual({
+				id: companyId!,
+				name: 'Google',
+				phoneNumber: '222 222 2222',
+			});
 		});
 	});
 });
