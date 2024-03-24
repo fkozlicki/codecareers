@@ -14,7 +14,7 @@ import Company from './pages/company.tsx';
 import CreateCompany from './pages/create-company.tsx';
 import CreateJobOffer from './pages/create-job-offer.tsx';
 import Home from './pages/home.tsx';
-import JobOffers from './pages/job-offers.tsx';
+import CompanyJobOffers from './pages/company-job-offers.tsx';
 import Layout from './pages/layout.tsx';
 import Recruitments from './pages/recruitments.tsx';
 import Settings from './pages/settings.tsx';
@@ -91,7 +91,7 @@ const router = createBrowserRouter([
 								path: '',
 								element: (
 									<ProtectedRoute>
-										<JobOffers />
+										<CompanyJobOffers />
 									</ProtectedRoute>
 								),
 							},
