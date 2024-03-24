@@ -19,7 +19,7 @@ import ApplyDialog from './apply-dialog';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
-	const { data: jobOffersData } = useGetJobOffersQuery();
+	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10 });
 	const [queryJobOffer, { data, isLoading, isFetching }] =
 		useLazyGetJobOfferQuery();
 	const jobOfferId = searchParams.get('joid');

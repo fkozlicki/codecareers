@@ -5,7 +5,7 @@ import JobOfferList from '@/components/job-offer-list';
 import Empty from '@/components/ui/empty';
 
 const Home = () => {
-	const { data } = useGetJobOffersQuery();
+	const { data } = useGetJobOffersQuery({ pageSize: 10 });
 
 	return (
 		<div className="min-h-[calc(100vh-54px)] flex flex-col">
