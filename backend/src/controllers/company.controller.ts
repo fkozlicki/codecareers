@@ -11,18 +11,25 @@ import {
 	technologies,
 } from '../db/schema';
 import { uploadFileToS3 } from '../lib/s3';
-import { JobOfferBody } from '../validators/jobOffers';
-import { CompanyFiles } from '../validators/companies';
+import { CompanyFiles, CreateJobOfferSchema } from '../validators/companies';
 
 export const getCompany = async (req: Request, res: Response) => {
 	const id = req.params.id;
 
-	const company = await db.query.companies.findFirst({
+	const result = await db.query.companies.findFirst({
 		where: eq(companies.id, id),
 	});
 
-	if (!company) {
+	if (!result) {
 		return res.status(404).json({ message: `Company with id ${id} not found` });
+	}
+
+	const { ownerId, ...company } = result;
+
+	if (ownerId !== res.locals.user.id) {
+		return res
+			.status(403)
+			.json({ message: "You don't have permission to access this data" });
 	}
 
 	res.status(200).json({ company });
@@ -34,11 +41,14 @@ export const getCompanies = async (req: Request, res: Response) => {
 	if (userId && userId !== res.locals.user.id) {
 		return res
 			.status(403)
-			.json({ message: 'You are not authorized to update this company' });
+			.json({ message: "You don't have permission to access this data" });
 	}
 
 	const result = await db.query.companies.findMany({
 		where: userId ? eq(companies.id, userId) : undefined,
+		columns: {
+			ownerId: false,
+		},
 	});
 
 	res.status(200).json({ companies: result });
@@ -107,7 +117,7 @@ export const updateCompany = async (req: Request, res: Response) => {
 	if (company.ownerId !== res.locals.user.id) {
 		return res
 			.status(403)
-			.json({ message: 'You are not authorized to update this company' });
+			.json({ message: "You don't have permission to access this data" });
 	}
 
 	const files = req.files as CompanyFiles | undefined;
@@ -134,7 +144,7 @@ export const updateCompany = async (req: Request, res: Response) => {
 		}
 	}
 
-	const [updatedCompany] = await db
+	const [result] = await db
 		.update(companies)
 		.set({
 			...req.body,
@@ -147,6 +157,8 @@ export const updateCompany = async (req: Request, res: Response) => {
 		})
 		.where(eq(companies.id, id))
 		.returning();
+
+	const { ownerId, ...updatedCompany } = result;
 
 	res.status(200).json({ company: updatedCompany });
 };
@@ -165,7 +177,7 @@ export const deleteCompany = async (req: Request, res: Response) => {
 	if (company.ownerId !== res.locals.user.id) {
 		return res
 			.status(403)
-			.json({ message: 'You are not authorized to delete this company' });
+			.json({ message: "You don't have permission to access this data" });
 	}
 
 	await db.delete(companies).where(eq(companies.id, id)).returning();
@@ -173,16 +185,19 @@ export const deleteCompany = async (req: Request, res: Response) => {
 	res.status(204).json({ message: 'Company deleted successfully' });
 };
 
-export const createJobOffer = async (req: Request, res: Response) => {
+export const createJobOffer = async (
+	req: Request<
+		CreateJobOfferSchema['params'],
+		{},
+		CreateJobOfferSchema['body']
+	>,
+	res: Response
+) => {
 	const companyId = req.params.id;
 
-	const {
-		technologies: _technologies,
-		skills: _skills,
-		...rest
-	}: JobOfferBody = req.body;
+	const { technologies: _technologies, skills: _skills, ...rest } = req.body;
 
-	const [jobOffer] = await db
+	const [result] = await db
 		.insert(jobOffers)
 		.values({ companyId, ...rest })
 		.returning();
@@ -205,12 +220,12 @@ export const createJobOffer = async (req: Request, res: Response) => {
 	await db.insert(jobOfferTechnologies).values(
 		existingTechnologies
 			.map((tech) => ({
-				jobOfferId: jobOffer.id,
+				jobOfferId: result.id,
 				technologyId: tech.value,
 			}))
 			.concat(
 				createdTechnologies.map((tech) => ({
-					jobOfferId: jobOffer.id,
+					jobOfferId: result.id,
 					technologyId: tech.id,
 				}))
 			)
@@ -230,18 +245,45 @@ export const createJobOffer = async (req: Request, res: Response) => {
 	await db.insert(jobOfferSkills).values(
 		existingSkills
 			.map((skill) => ({
-				jobOfferId: jobOffer.id,
+				jobOfferId: result.id,
 				skillId: skill.value,
 			}))
 			.concat(
 				createdSkills.map((skill) => ({
-					jobOfferId: jobOffer.id,
+					jobOfferId: result.id,
 					skillId: skill.id,
 				}))
 			)
 	);
 
-	res.status(201).json({ jobOffer });
+	const createdJobOffer = await db.query.jobOffers.findFirst({
+		where: eq(jobOffers.id, result.id),
+		columns: {
+			companyId: false,
+		},
+		with: {
+			jobOfferSkills: {
+				with: {
+					skill: true,
+				},
+				columns: {
+					jobOfferId: false,
+					skillId: false,
+				},
+			},
+			jobOfferTechnologies: {
+				with: {
+					technology: true,
+				},
+				columns: {
+					jobOfferId: false,
+					technologyId: false,
+				},
+			},
+		},
+	});
+
+	res.status(201).json({ jobOffer: createdJobOffer });
 };
 
 export const getCompanyJobOffers = async (req: Request, res: Response) => {
