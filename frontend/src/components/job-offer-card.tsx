@@ -38,7 +38,7 @@ const JobOfferCard = ({
 	return (
 		<Card
 			className={cn('p-4 hover:shadow-md', {
-				'border-gray-400 shadow-md': selected,
+				'border-gray-500 shadow-md': selected,
 			})}
 		>
 			<div className="flex items-center justify-between mb-2">

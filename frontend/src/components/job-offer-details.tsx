@@ -137,12 +137,12 @@ const JobOfferDetails = () => {
 							<h2 className="text-3xl font-semibold tracking-tight">
 								{position}
 							</h2>
-							<span className="text-xl font-medium text-gray-700">
+							<span className="text-xl font-medium text-muted-foreground">
 								{formatCurrency(salaryFrom)} - {formatCurrency(salaryTo)}{' '}
 								{salaryCurrency.toUpperCase()}
 							</span>
 						</div>
-						<span className="text-sm text-slate-600">
+						<span className="text-sm text-muted-foreground">
 							{dayjs(createdAt).fromNow()}
 						</span>
 					</div>
