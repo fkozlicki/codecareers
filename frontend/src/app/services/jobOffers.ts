@@ -56,7 +56,10 @@ export const jobOffersApi = api.injectEndpoints({
 				return endpointName;
 			},
 			// Always merge incoming data to the cache entry
-			merge: (currentCache, newItems) => {
+			merge: (currentCache, newItems, { arg: { cursor } }) => {
+				if (!cursor && currentCache.jobOffers.length > 0) {
+					currentCache.jobOffers = [];
+				}
 				currentCache.jobOffers.push(...newItems.jobOffers);
 			},
 			// Refetch when the page arg changes
