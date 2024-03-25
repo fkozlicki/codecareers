@@ -23,6 +23,7 @@ import SignUp from './pages/sign-up.tsx';
 import ApplicationsLayout from './pages/applications-layout.tsx';
 import CompanyJobOffer from './pages/company-job-offer.tsx';
 import EditJobOffer from './pages/edit-job-offer.tsx';
+import { ThemeProvider } from 'next-themes';
 
 const router = createBrowserRouter([
 	{
@@ -140,7 +141,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<SessionProvider>
-				<RouterProvider router={router} />
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<RouterProvider router={router} />
+				</ThemeProvider>
 			</SessionProvider>
 		</Provider>
 	</React.StrictMode>

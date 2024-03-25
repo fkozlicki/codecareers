@@ -95,7 +95,7 @@ const CompanyLayout = () => {
 						Recruitments
 					</Link>
 				</div>
-				<div className="flex-1">
+				<div className="flex-1 pb-4">
 					<Outlet />
 				</div>
 			</div>

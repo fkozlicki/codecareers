@@ -295,6 +295,9 @@ export const getCompanyJobOffers = async (req: Request, res: Response) => {
 			eq(jobOffers.companyId, companyId),
 			sort ? eq(jobOffers.published, sort === 'public') : undefined
 		),
+		with: {
+			company: true,
+		},
 	});
 
 	res.status(200).json({ jobOffers: result });

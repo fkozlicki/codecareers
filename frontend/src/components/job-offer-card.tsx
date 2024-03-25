@@ -61,7 +61,7 @@ const JobOfferCard = ({
 					{salaryCurrency.toUpperCase()}
 				</span>
 			</div>
-			<span className="inline-flex items-center gap-2 text-sm mb-4 text-gray-700">
+			<span className="inline-flex items-center gap-2 text-sm mb-4 text-muted-foreground">
 				<Building2 className="w-4 h-4" />
 				{company.name}
 			</span>
