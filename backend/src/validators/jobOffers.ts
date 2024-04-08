@@ -15,11 +15,9 @@ export const jobOfferBody = z.object({
 	salaryFrom: z.number().int(),
 	salaryTo: z.number().int(),
 	salaryCurrency: z.enum(['pln', 'gbp', 'eur', 'usd']),
-	skills: z.array(skillItem),
-	technologies: z.array(skillItem),
+	skills: z.array(skillItem).min(1),
+	technologies: z.array(skillItem).min(1),
 });
-
-export type JobOfferBody = z.infer<typeof jobOfferBody>;
 
 export const getJobOfferSchema = z.object({
 	params: z.object({

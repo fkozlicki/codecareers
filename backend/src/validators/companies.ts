@@ -58,6 +58,8 @@ export const createJobOfferSchema = z.object({
 	}),
 });
 
+export type CreateJobOfferSchema = z.infer<typeof createJobOfferSchema>;
+
 export const getCompanyJobOffersSchema = z.object({
 	params: z.object({
 		id: z.string(),

@@ -102,7 +102,7 @@ export const Dropzone = ({
 		setFileSize(fileSizeInKB);
 	};
 
-	const onCropComplete = async (_: Area, croppedAreaPixels: Area) => {
+	const onCropComplete = (_: Area, croppedAreaPixels: Area) => {
 		setCroppedAreaPixels(croppedAreaPixels);
 	};
 

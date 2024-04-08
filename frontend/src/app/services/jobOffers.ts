@@ -22,6 +22,7 @@ export interface JobOffer {
 	salaryCurrency: string;
 	createdAt: string;
 	published: boolean;
+	company: Company;
 }
 
 export interface SkillItem {
@@ -30,7 +31,6 @@ export interface SkillItem {
 }
 
 export interface JobOfferDetailed extends JobOffer {
-	company: Company;
 	jobOfferSkills: {
 		skill: SkillItem;
 	}[];
@@ -43,9 +43,29 @@ export const jobOffersApi = api.injectEndpoints({
 			query: (id) => `job-offers/${id}`,
 			providesTags: (_result, _err, id) => [{ type: 'JobOffer', id }],
 		}),
-		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, string | null>({
-			query: (name) => `job-offers${name ? `?name=${name}` : ''}`,
+		getJobOffers: builder.query<
+			{ jobOffers: JobOffer[] },
+			{ pageSize: number; cursor?: string }
+		>({
+			query: (data) =>
+				`job-offers?pageSize=${data.pageSize}${
+					data.cursor ? `&cursor=${data.cursor}` : ''
+				}`,
 			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
+			serializeQueryArgs: ({ endpointName }) => {
+				return endpointName;
+			},
+			// Always merge incoming data to the cache entry
+			merge: (currentCache, newItems, { arg: { cursor } }) => {
+				if (!cursor && currentCache.jobOffers.length > 0) {
+					currentCache.jobOffers = [];
+				}
+				currentCache.jobOffers.push(...newItems.jobOffers);
+			},
+			// Refetch when the page arg changes
+			forceRefetch({ currentArg, previousArg }) {
+				return currentArg !== previousArg;
+			},
 		}),
 		updateJobOffer: builder.mutation<
 			JobOffer,
@@ -112,6 +132,7 @@ export const jobOffersApi = api.injectEndpoints({
 
 export const {
 	useGetJobOffersQuery,
+	useLazyGetJobOffersQuery,
 	useLazyGetJobOfferQuery,
 	useCreateApplicationMutation,
 	useGetJobOfferQuery,

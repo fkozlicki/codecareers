@@ -16,8 +16,10 @@ dayjs.extend(relativeTime);
 const JobOfferCard = ({
 	jobOffer,
 	admin,
+	selected,
 }: {
 	jobOffer: JobOffer | JobOfferDetailed;
+	selected?: boolean;
 	admin?: boolean;
 }) => {
 	const {
@@ -30,10 +32,15 @@ const JobOfferCard = ({
 		workType,
 		createdAt,
 		published,
+		company,
 	} = jobOffer;
 
 	return (
-		<Card className="p-4 hover:shadow-md">
+		<Card
+			className={cn('p-4 hover:shadow-md', {
+				'border-gray-500 shadow-md': selected,
+			})}
+		>
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex gap-2 items-center">
 					<CardTitle>{position}</CardTitle>
@@ -54,12 +61,10 @@ const JobOfferCard = ({
 					{salaryCurrency.toUpperCase()}
 				</span>
 			</div>
-			{'company' in jobOffer && (
-				<span className="inline-flex items-center gap-2 text-sm mb-4 text-gray-700">
-					<Building2 className="w-4 h-4" />
-					{jobOffer.company.name}
-				</span>
-			)}
+			<span className="inline-flex items-center gap-2 text-sm mb-4 text-muted-foreground">
+				<Building2 className="w-4 h-4" />
+				{company.name}
+			</span>
 			<div className="flex justify-between items-center">
 				<div className="flex gap-2">
 					<Badge variant="outline" className="capitalize">

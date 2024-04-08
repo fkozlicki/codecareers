@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Company service [GET] /comapnies/:id/job-offers Should return company job offers 1`] = `
+{
+  "companyId": "555878d8-2b8b-4633-8166-950372b043ee",
+  "createdAt": Any<String>,
+  "description": "",
+  "employmentType": "b2b",
+  "id": Any<String>,
+  "level": "senior",
+  "position": "Senior Web Developer",
+  "published": false,
+  "salaryCurrency": "pln",
+  "salaryFrom": 25000,
+  "salaryTo": 30000,
+  "workType": "full_time",
+}
+`;
+
+exports[`Company service [GET] /companies Return list of Adam's companies 1`] = `
+{
+  "avatarUrl": null,
+  "backgroundUrl": null,
+  "description": null,
+  "id": Any<String>,
+  "name": "Google",
+  "phoneNumber": "222 222 2222",
+}
+`;
+
+exports[`Company service [GET] /companies/:id Return company, when user have access to it 1`] = `
+{
+  "avatarUrl": null,
+  "backgroundUrl": null,
+  "description": null,
+  "id": Any<String>,
+  "name": "Google",
+  "phoneNumber": "222 222 2222",
+}
+`;
+
+exports[`Company service [POST] /comapnies/:id/job-offers Should create new job offer 1`] = `
+{
+  "createdAt": Any<String>,
+  "description": "We are looking for talented AI Engeneer",
+  "employmentType": "internship",
+  "id": Any<String>,
+  "jobOfferSkills": [
+    {
+      "skill": {
+        "id": "e6f6738f-6acf-4675-9d4c-57c62942f11e",
+        "name": "AI",
+      },
+    },
+  ],
+  "jobOfferTechnologies": [
+    {
+      "technology": {
+        "id": "4bc5de97-a810-46b1-9d9f-6e903cbf5d9a",
+        "name": "Python",
+      },
+    },
+  ],
+  "level": "junior",
+  "position": "Junior AI Engeneer",
+  "published": false,
+  "salaryCurrency": "pln",
+  "salaryFrom": 6000,
+  "salaryTo": 8000,
+  "workType": "part_time",
+}
+`;
+
+exports[`Company service [PUT] /companies/:id Should update company 1`] = `
+{
+  "avatarUrl": null,
+  "backgroundUrl": null,
+  "description": "This is Google Inc. after update",
+  "id": Any<String>,
+  "name": "Google Inc.",
+  "phoneNumber": "222 222 2222",
+}
+`;

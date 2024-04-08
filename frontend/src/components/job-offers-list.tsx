@@ -1,30 +1,29 @@
-import { useLazyGetCompanyJobOffersQuery } from '@/app/services/companies';
-import JobOfferCard from '@/components/job-offer-card';
-import JobOfferSkeleton from '@/components/job-offer-skeleton';
-import Empty from '@/components/ui/empty';
+import { useLazyGetJobOffersQuery } from '@/app/services/jobOffers';
 import { useEffect } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+import { Link, useSearchParams } from 'react-router-dom';
+import JobOfferCard from './job-offer-card';
+import JobOfferSkeleton from './job-offer-skeleton';
 
 const JobOffersList = () => {
-	const { id } = useParams();
-	const [params] = useSearchParams();
-	const sort = params.get('sort') ?? 'all';
-	const [fetchCompanies, { isLoading, data }] =
-		useLazyGetCompanyJobOffersQuery();
+	const [fetchJobOffers, { data, isLoading, isFetching, isUninitialized }] =
+		useLazyGetJobOffersQuery();
+	const [searchParams] = useSearchParams();
+	const joid = searchParams.get('joid');
+	const [ref, inView] = useInView();
+	const lastCursor = data?.jobOffers.at(data.jobOffers.length - 1)?.id;
 
 	useEffect(() => {
-		if (!id) {
-			return;
+		if (inView) {
+			fetchJobOffers({ pageSize: 10, cursor: lastCursor });
 		}
-		fetchCompanies({
-			id,
-			sort: sort === 'all' ? undefined : sort,
-		});
-	}, [sort, id]);
+	}, [fetchJobOffers, inView, lastCursor]);
 
-	if (isLoading) {
+	if (isLoading || isUninitialized) {
 		return (
-			<div className="flex flex-col gap-4">
+			<div ref={ref} className="flex flex-col gap-4">
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
@@ -37,22 +36,24 @@ const JobOffersList = () => {
 	}
 
 	return (
-		<>
-			{data.jobOffers.length > 0 ? (
-				<div className="flex flex-col gap-4">
-					{data.jobOffers.map((jobOffer) => (
-						<Link
-							key={jobOffer.id}
-							to={`/my-companies/${id}/job-offers/${jobOffer.id}`}
-						>
-							<JobOfferCard jobOffer={jobOffer} admin />
-						</Link>
-					))}
-				</div>
-			) : (
-				<Empty message="Your company have no job offers yet." />
+		<div className="flex flex-col gap-4">
+			{data.jobOffers.map((jobOffer) => (
+				<Link key={jobOffer.id} to={`/?joid=${jobOffer.id}`}>
+					<JobOfferCard
+						jobOffer={jobOffer}
+						selected={jobOffer.id === (joid || data.jobOffers[0].id)}
+					/>
+				</Link>
+			))}
+			{isFetching && (
+				<>
+					<JobOfferSkeleton />
+					<JobOfferSkeleton />
+					<JobOfferSkeleton />
+				</>
 			)}
-		</>
+			<div ref={ref}></div>
+		</div>
 	);
 };
 

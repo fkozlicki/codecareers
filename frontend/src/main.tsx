@@ -14,7 +14,7 @@ import Company from './pages/company.tsx';
 import CreateCompany from './pages/create-company.tsx';
 import CreateJobOffer from './pages/create-job-offer.tsx';
 import Home from './pages/home.tsx';
-import JobOffers from './pages/job-offers.tsx';
+import CompanyJobOffers from './pages/company-job-offers.tsx';
 import Layout from './pages/layout.tsx';
 import Recruitments from './pages/recruitments.tsx';
 import Settings from './pages/settings.tsx';
@@ -23,6 +23,7 @@ import SignUp from './pages/sign-up.tsx';
 import ApplicationsLayout from './pages/applications-layout.tsx';
 import CompanyJobOffer from './pages/company-job-offer.tsx';
 import EditJobOffer from './pages/edit-job-offer.tsx';
+import { ThemeProvider } from 'next-themes';
 
 const router = createBrowserRouter([
 	{
@@ -91,7 +92,7 @@ const router = createBrowserRouter([
 								path: '',
 								element: (
 									<ProtectedRoute>
-										<JobOffers />
+										<CompanyJobOffers />
 									</ProtectedRoute>
 								),
 							},
@@ -140,7 +141,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<SessionProvider>
-				<RouterProvider router={router} />
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<RouterProvider router={router} />
+				</ThemeProvider>
 			</SessionProvider>
 		</Provider>
 	</React.StrictMode>

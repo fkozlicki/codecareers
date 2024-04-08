@@ -1,17 +1,28 @@
-import { and, eq, ilike, isNull } from 'drizzle-orm';
+import { and, eq, gt, ilike, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { db } from '../db';
-import { applications, jobOffers } from '../db/schema';
+import { applications, jobOffers, users } from '../db/schema';
 import { uploadFileToS3 } from '../lib/s3';
 
 export const getJobOffers = async (req: Request, res: Response) => {
+	const cursor = req.query.cursor as string | undefined;
+	const pageSize = req.query.pageSize ? +req.query.pageSize : undefined;
+	const position = req.query.position as string | undefined;
+
 	const { name } = req.query;
 	const result = await db.query.jobOffers.findMany({
 		where: and(
 			eq(jobOffers.published, true),
+			position ? eq(jobOffers.position, position) : undefined,
+			cursor ? gt(jobOffers.id, cursor) : undefined,
 			name ? ilike(jobOffers.position, `%${name}%`) : undefined
 		),
+		limit: pageSize,
+		orderBy: users.id,
+		with: {
+			company: true,
+		},
 	});
 
 	res.status(200).json({ jobOffers: result });

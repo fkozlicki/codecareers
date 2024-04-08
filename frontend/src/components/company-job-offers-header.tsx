@@ -9,7 +9,7 @@ import {
 import { ChevronDownIcon } from 'lucide-react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
-const JobOffersHeader = () => {
+const CompanyJobOffersHeader = () => {
 	const { id } = useParams();
 	const [params] = useSearchParams();
 	const sort = params.get('sort') ?? 'all';
@@ -46,4 +46,4 @@ const JobOffersHeader = () => {
 	);
 };
 
-export default JobOffersHeader;
+export default CompanyJobOffersHeader;

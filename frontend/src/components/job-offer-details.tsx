@@ -19,8 +19,8 @@ import ApplyDialog from './apply-dialog';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
-	const { data: jobOffersData } = useGetJobOffersQuery();
-	const [queryJobOffer, { data, isLoading, isFetching }] =
+	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10 });
+	const [queryJobOffer, { data, isLoading, isFetching, isUninitialized }] =
 		useLazyGetJobOfferQuery();
 	const jobOfferId = searchParams.get('joid');
 	const ref = useRef<HTMLDivElement>(null);
@@ -49,17 +49,17 @@ const JobOfferDetails = () => {
 		}
 	}, [jobOfferId, queryJobOffer, jobOffersData]);
 
-	if (isLoading || isFetching) {
+	if (isLoading || isFetching || isUninitialized) {
 		return (
 			<div className="p-4 top-[53px] overflow-hidden">
 				<div className="border rounded-md overflow-hidden h-full flex flex-col">
 					<div>
 						<AspectRatio
 							ratio={6 / 1}
-							className="overflow-hidden bg-slate-300"
+							className="overflow-hidden bg-muted"
 						></AspectRatio>
 						<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16">
-							<Skeleton className="w-full h-full bg-primary/50" />
+							<Skeleton className="w-full h-full bg-muted" />
 						</Avatar>
 					</div>
 					<div className="px-4 border-b">
@@ -79,7 +79,7 @@ const JobOfferDetails = () => {
 	}
 
 	if (!data) {
-		return null;
+		return <div>Couldn't load data</div>;
 	}
 
 	const {
@@ -101,12 +101,12 @@ const JobOfferDetails = () => {
 	return (
 		<div
 			ref={ref}
-			className="p-4 sticky top-[53px] min-h-[calc(100vh-254px)] overflow-hidden"
+			className="p-4 sticky top-[53px] min-h-[calc(100vh-254px)] "
 			style={{
 				height,
 			}}
 		>
-			<div className="border rounded-md overflow-hidden h-full flex flex-col">
+			<div className="border rounded-md h-full flex flex-col">
 				<div>
 					<AspectRatio ratio={6 / 1}>
 						<div className="w-full h-full bg-muted grid place-items-center">
@@ -137,12 +137,12 @@ const JobOfferDetails = () => {
 							<h2 className="text-3xl font-semibold tracking-tight">
 								{position}
 							</h2>
-							<span className="text-xl font-medium text-gray-700">
+							<span className="text-xl font-medium text-muted-foreground">
 								{formatCurrency(salaryFrom)} - {formatCurrency(salaryTo)}{' '}
 								{salaryCurrency.toUpperCase()}
 							</span>
 						</div>
-						<span className="text-sm text-slate-600">
+						<span className="text-sm text-muted-foreground">
 							{dayjs(createdAt).fromNow()}
 						</span>
 					</div>
@@ -187,7 +187,7 @@ const JobOfferDetails = () => {
 					dangerouslySetInnerHTML={{
 						__html: description,
 					}}
-					className="overflow-y-auto p-4 overscroll-y-auto h-screen flex-1"
+					className="overflow-y-auto p-4 flex-1"
 				></div>
 				<div className="p-2 text-center border-t">
 					<ApplyDialog
