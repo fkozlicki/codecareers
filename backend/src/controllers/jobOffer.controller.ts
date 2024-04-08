@@ -9,8 +9,8 @@ export const getJobOffers = async (req: Request, res: Response) => {
 	const cursor = req.query.cursor as string | undefined;
 	const pageSize = req.query.pageSize ? +req.query.pageSize : undefined;
 	const position = req.query.position as string | undefined;
-
 	const { name } = req.query;
+
 	const result = await db.query.jobOffers.findMany({
 		where: and(
 			eq(jobOffers.published, true),

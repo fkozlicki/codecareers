@@ -10,14 +10,15 @@ const JobOffersList = () => {
 		useLazyGetJobOffersQuery();
 	const [searchParams] = useSearchParams();
 	const joid = searchParams.get('joid');
+	const name = searchParams.get('name');
 	const [ref, inView] = useInView();
-	const lastCursor = data?.jobOffers.at(data.jobOffers.length - 1)?.id;
+	const cursor = data?.jobOffers.at(-1)?.id;
 
 	useEffect(() => {
 		if (inView) {
-			fetchJobOffers({ pageSize: 10, cursor: lastCursor });
+			fetchJobOffers({ pageSize: 10, cursor, name });
 		}
-	}, [fetchJobOffers, inView, lastCursor]);
+	}, [inView, cursor, name]);
 
 	if (isLoading || isUninitialized) {
 		return (

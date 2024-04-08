@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 const Home = () => {
 	const [searchParams] = useSearchParams();
 	const name = searchParams.get('name');
-	const { data } = useGetJobOffersQuery({ pageSize: 10 });
+	const { data } = useGetJobOffersQuery({ pageSize: 10, name });
 
 	return (
 		<div className="min-h-[calc(100vh-54px)] flex flex-col">
