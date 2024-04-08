@@ -19,13 +19,9 @@ const JobOffersList = () => {
 		}
 	}, [fetchJobOffers, inView, lastCursor]);
 
-	if (isUninitialized) {
-		return <div ref={ref}></div>;
-	}
-
-	if (isLoading) {
+	if (isLoading || isUninitialized) {
 		return (
-			<div className="flex flex-col gap-4">
+			<div ref={ref} className="flex flex-col gap-4">
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
