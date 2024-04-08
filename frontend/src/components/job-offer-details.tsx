@@ -19,9 +19,12 @@ import ApplyDialog from './apply-dialog';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
-	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10 });
-	const [queryJobOffer, { data, isLoading, isFetching, isUninitialized }] =
-		useLazyGetJobOfferQuery();
+	const name = searchParams.get('name');
+	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10, name });
+	const [
+		queryJobOffer,
+		{ data, isLoading, isFetching, isUninitialized, isError },
+	] = useLazyGetJobOfferQuery();
 	const jobOfferId = searchParams.get('joid');
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
@@ -78,8 +81,8 @@ const JobOfferDetails = () => {
 		);
 	}
 
-	if (!data) {
-		return <div>Couldn't load data</div>;
+	if (isError) {
+		return <div className="p-4">Couldn't load data</div>;
 	}
 
 	const {
