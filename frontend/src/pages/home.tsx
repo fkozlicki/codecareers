@@ -3,9 +3,12 @@ import Hero from '@/components/hero';
 import JobOfferDetails from '@/components/job-offer-details';
 import JobOfferList from '@/components/job-offer-list';
 import Empty from '@/components/ui/empty';
+import { useSearchParams } from 'react-router-dom';
 
 const Home = () => {
-	const { data } = useGetJobOffersQuery();
+	const [searchParams] = useSearchParams();
+	const name = searchParams.get('name');
+	const { data } = useGetJobOffersQuery(name);
 
 	return (
 		<div className="min-h-[calc(100vh-54px)] flex flex-col">

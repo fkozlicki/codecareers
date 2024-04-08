@@ -43,8 +43,8 @@ export const jobOffersApi = api.injectEndpoints({
 			query: (id) => `job-offers/${id}`,
 			providesTags: (_result, _err, id) => [{ type: 'JobOffer', id }],
 		}),
-		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, void>({
-			query: () => `job-offers`,
+		getJobOffers: builder.query<{ jobOffers: JobOffer[] }, string | null>({
+			query: (name) => `job-offers${name ? `?name=${name}` : ''}`,
 			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
 		}),
 		updateJobOffer: builder.mutation<

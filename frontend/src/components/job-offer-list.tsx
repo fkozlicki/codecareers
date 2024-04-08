@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import JobOfferCard from './job-offer-card';
 import { useGetJobOffersQuery } from '@/app/services/jobOffers';
 import JobOfferSkeleton from './job-offer-skeleton';
 
 const JobOfferList = () => {
-	const { data, isLoading } = useGetJobOffersQuery();
+	const [searchParams] = useSearchParams();
+	const name = searchParams.get('name');
+	const { data, isLoading } = useGetJobOffersQuery(name);
 
 	if (isLoading) {
 		return (

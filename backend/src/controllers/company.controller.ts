@@ -38,7 +38,7 @@ export const getCompanies = async (req: Request, res: Response) => {
 	}
 
 	const result = await db.query.companies.findMany({
-		where: userId ? eq(companies.id, userId) : undefined,
+		where: eq(companies.ownerId, userId ?? res.locals.user.id),
 	});
 
 	res.status(200).json({ companies: result });

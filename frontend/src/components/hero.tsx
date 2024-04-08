@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import Search from '@/components/search';
 import { Code } from 'lucide-react';
 
 const Hero = () => {
@@ -10,13 +9,7 @@ const Hero = () => {
 					<Code className="w-10 h-10 lg:w-14 lg:h-14 mr-2" strokeWidth={2.5} />
 					CodeCareers
 				</h1>
-				<div className="flex items-center gap-4">
-					<Input
-						placeholder="Search for a job..."
-						className="h-12 px-4 py-2 text-base"
-					/>
-					<Button className="h-12 px-8 text-base">Search</Button>
-				</div>
+				<Search />
 			</div>
 		</div>
 	);
