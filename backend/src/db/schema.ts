@@ -24,6 +24,7 @@ export const users = pgTable('user', {
 export const usersRelations = relations(users, ({ many }) => ({
 	companies: many(companies),
 	applications: many(applications),
+	chatUsers: many(chatUsers),
 }));
 
 export type User = typeof users.$inferSelect;
@@ -198,6 +199,69 @@ export const applicationsRelations = relations(applications, ({ one }) => ({
 	}),
 	user: one(users, {
 		fields: [applications.userId],
+		references: [users.id],
+	}),
+}));
+
+export const recruitments = pgTable('recruitment', {
+	id: uuid('id').notNull().primaryKey().defaultRandom(),
+	applicationId: uuid('application_id').notNull(),
+});
+
+export const recruitmentsRelations = relations(recruitments, ({ one }) => ({
+	application: one(applications, {
+		fields: [recruitments.applicationId],
+		references: [applications.id],
+	}),
+}));
+
+export const chats = pgTable('chat', {
+	id: uuid('id').notNull().primaryKey().defaultRandom(),
+});
+
+export const chatsRelations = relations(chats, ({ many }) => ({
+	chatUsers: many(chatUsers),
+	messages: many(messages),
+}));
+
+export const chatUsers = pgTable(
+	'chat_user',
+	{
+		chatId: uuid('chat_id')
+			.notNull()
+			.references(() => chats.id),
+		userId: uuid('user_id')
+			.notNull()
+			.references(() => users.id),
+	},
+	(t) => ({ pk: primaryKey({ columns: [t.chatId, t.userId] }) })
+);
+
+export const chatUsersRelations = relations(chatUsers, ({ one }) => ({
+	chat: one(chats, {
+		fields: [chatUsers.chatId],
+		references: [chats.id],
+	}),
+	user: one(users, {
+		fields: [chatUsers.userId],
+		references: [users.id],
+	}),
+}));
+
+export const messages = pgTable('message', {
+	id: uuid('id').notNull().primaryKey().defaultRandom(),
+	content: text('content'),
+	chatId: uuid('chat_id').notNull(),
+	userid: uuid('user_id').notNull(),
+});
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+	chat: one(chats, {
+		fields: [messages.chatId],
+		references: [chats.id],
+	}),
+	user: one(users, {
+		fields: [messages.userid],
 		references: [users.id],
 	}),
 }));

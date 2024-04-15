@@ -21,14 +21,22 @@ export const applicationsApi = api.injectEndpoints({
 			query: (sort) => `applications${sort ? `?sort=${sort}` : ''}`,
 			providesTags: ['Application'],
 		}),
-		updateApplication: build.mutation<
-			{ application: Application },
-			{ id: string; accepted: boolean }
-		>({
-			query: (data) => {
-				const { id, ...body } = data;
-
-				return { url: `applications/${id}`, method: 'PUT', body };
+		acceptApplication: build.mutation<{ application: Application }, string>({
+			query: (id) => {
+				return { url: `applications/${id}/accept`, method: 'POST' };
+			},
+			onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+				try {
+					await queryFulfilled;
+					dispatch(applicationsApi.util.invalidateTags(['Application']));
+				} catch (e) {
+					console.error(e);
+				}
+			},
+		}),
+		rejectApplication: build.mutation<{ application: Application }, string>({
+			query: (id) => {
+				return { url: `applications/${id}/reject`, method: 'POST' };
 			},
 			onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
 				try {
@@ -42,5 +50,8 @@ export const applicationsApi = api.injectEndpoints({
 	}),
 });
 
-export const { useLazyGetApplicationsQuery, useUpdateApplicationMutation } =
-	applicationsApi;
+export const {
+	useLazyGetApplicationsQuery,
+	useAcceptApplicationMutation,
+	useRejectApplicationMutation,
+} = applicationsApi;

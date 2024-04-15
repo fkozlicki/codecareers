@@ -1,7 +1,9 @@
 import {
 	Application,
-	useUpdateApplicationMutation,
+	useAcceptApplicationMutation,
+	useRejectApplicationMutation,
 } from '@/app/services/applications';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -12,13 +14,11 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import dayjs from 'dayjs';
+import { ChevronLeft, ChevronRight, Loader } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	'pdfjs-dist/build/pdf.worker.min.js',
@@ -26,7 +26,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const ApplicationCard = ({ application }: { application: Application }) => {
-	const [updateApplication] = useUpdateApplicationMutation();
 	const [open, setOpen] = useState<boolean>(false);
 	const [numPages, setNumPages] = useState<number>();
 	const [pageNumber, setPageNumber] = useState<number>(1);
@@ -36,6 +35,8 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 		}),
 		[]
 	);
+	const [acceptApplication, acceptState] = useAcceptApplicationMutation();
+	const [rejectApplication, rejectState] = useRejectApplicationMutation();
 
 	const {
 		id,
@@ -46,11 +47,16 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 		accepted,
 	} = application;
 
-	const handleDecision = (accepted: boolean) => {
-		updateApplication({
-			id,
-			accepted,
-		})
+	const handleAccept = () => {
+		acceptApplication(id)
+			.unwrap()
+			.then(() => {
+				setOpen(false);
+			});
+	};
+
+	const handleReject = () => {
+		rejectApplication(id)
 			.unwrap()
 			.then(() => {
 				setOpen(false);
@@ -64,6 +70,8 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 	const changePageNumber = (value: number) => {
 		setPageNumber((prev) => prev + value);
 	};
+
+	const isLoading = acceptState.isLoading || rejectState.isLoading;
 
 	return (
 		<Dialog open={open} onOpenChange={(open) => setOpen(open)}>
@@ -151,17 +159,27 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 				{accepted === null && (
 					<DialogFooter>
 						<Button
-							onClick={() => handleDecision(true)}
+							disabled={isLoading}
+							onClick={handleAccept}
 							className="flex-1 bg-green-600 hover:bg-green-500"
 						>
-							Accept
+							{isLoading ? (
+								<Loader className="w-4 h-4 animate-spin" />
+							) : (
+								'Accept'
+							)}
 						</Button>
 						<Button
-							onClick={() => handleDecision(false)}
+							disabled={isLoading}
+							onClick={handleReject}
 							variant="destructive"
 							className="flex-1"
 						>
-							Reject
+							{isLoading ? (
+								<Loader className="w-4 h-4 animate-spin" />
+							) : (
+								'Reject'
+							)}
 						</Button>
 					</DialogFooter>
 				)}

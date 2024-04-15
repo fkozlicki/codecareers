@@ -43,6 +43,13 @@
       "when": 1710282809779,
       "tag": "0005_overrated_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1713181838609,
+      "tag": "0006_gifted_franklin_storm",
+      "breakpoints": true
     }
   ]
 }
