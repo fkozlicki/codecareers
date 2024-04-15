@@ -1,4 +1,4 @@
-import { and, eq, gt, ilike, isNull } from 'drizzle-orm';
+import { and, count, eq, gt, ilike, isNull } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { db } from '../db';
@@ -25,7 +25,21 @@ export const getJobOffers = async (req: Request, res: Response) => {
 		},
 	});
 
-	res.status(200).json({ jobOffers: result });
+	const nextCursor = result.at(-1)?.id;
+	let hasNextPage = false;
+
+	if (nextCursor) {
+		const [result] = await db
+			.select({ count: count() })
+			.from(jobOffers)
+			.where(gt(jobOffers.id, nextCursor))
+			.limit(1);
+		if (result.count > 0) {
+			hasNextPage = true;
+		}
+	}
+
+	res.status(200).json({ cursor: nextCursor, hasNextPage, jobOffers: result });
 };
 
 export const getJobOffer = async (req: Request, res: Response) => {

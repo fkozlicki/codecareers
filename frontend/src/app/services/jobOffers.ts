@@ -44,7 +44,7 @@ export const jobOffersApi = api.injectEndpoints({
 			providesTags: (_result, _err, id) => [{ type: 'JobOffer', id }],
 		}),
 		getJobOffers: builder.query<
-			{ jobOffers: JobOffer[] },
+			{ jobOffers: JobOffer[]; cursor?: string; hasNextPage: boolean },
 			{ pageSize: number; cursor?: string; name: string | null }
 		>({
 			query: ({ name, pageSize, cursor }) => {
@@ -62,6 +62,8 @@ export const jobOffersApi = api.injectEndpoints({
 					currentCache.jobOffers = [];
 				}
 				currentCache.jobOffers.push(...newItems.jobOffers);
+				currentCache.cursor = newItems.cursor;
+				currentCache.hasNextPage = newItems.hasNextPage;
 			},
 			// Refetch when the page arg changes
 			forceRefetch({ currentArg, previousArg }) {

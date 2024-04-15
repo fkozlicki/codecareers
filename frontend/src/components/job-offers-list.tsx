@@ -17,10 +17,11 @@ const JobOffersList = () => {
 	const [fetchJobOffers] = useLazyGetJobOffersQuery();
 	const [ref, inView] = useInView();
 	const joid = searchParams.get('joid');
-	const cursor = data?.jobOffers.at(-1)?.id;
+	const cursor = data?.cursor;
+	const hasNextPage = data?.hasNextPage;
 
 	useEffect(() => {
-		if (inView && !isLoading) {
+		if (inView && !isLoading && hasNextPage) {
 			fetchJobOffers({ pageSize: 2, cursor, name });
 		}
 	}, [inView, cursor]);
