@@ -1,15 +1,11 @@
 import { Router } from 'express';
-import { requireSession } from '../middleware/session';
 import {
-	createMessage,
-	getMessages,
 	getRecruitment,
+	getRecruitments,
 } from '../controllers/recruitment.controller';
+import { requireSession } from '../middleware/session';
 
 export const recruitmentsRouter = Router();
 
+recruitmentsRouter.route('/').get(requireSession, getRecruitments);
 recruitmentsRouter.route('/:id').get(requireSession, getRecruitment);
-recruitmentsRouter
-	.route('/:id/chat/messages')
-	.get(requireSession, getMessages)
-	.post(requireSession, createMessage);

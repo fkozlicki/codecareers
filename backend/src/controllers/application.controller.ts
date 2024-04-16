@@ -60,19 +60,8 @@ export const acceptApplication = async (req: Request, res: Response) => {
 		return res.status(404).json({ message: 'Not found' });
 	}
 
-	// CREATE RECRUITMENT
-	const [newRecruitment] = await db
-		.insert(recruitments)
-		.values({
-			applicationId: id,
-		})
-		.returning();
-
 	// CREATE NEW CHAT
-	const [newChat] = await db
-		.insert(chats)
-		.values({ recruitmentId: newRecruitment.id })
-		.returning();
+	const [newChat] = await db.insert(chats).values({}).returning();
 	await db
 		.insert(chatUsers)
 		.values({ chatId: newChat.id, userId: res.locals.user.id });
@@ -83,6 +72,15 @@ export const acceptApplication = async (req: Request, res: Response) => {
 			userId: application.jobOffer.company.ownerId,
 		});
 	}
+
+	// CREATE RECRUITMENT
+	await db
+		.insert(recruitments)
+		.values({
+			applicationId: id,
+			chatId: newChat.id,
+		})
+		.returning();
 
 	// UPDATE APPLICATION
 	const [updatedApplication] = await db

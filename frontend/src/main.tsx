@@ -1,3 +1,4 @@
+import { ThemeProvider } from 'next-themes';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -7,23 +8,24 @@ import ProtectedRoute from './components/protected-route.tsx';
 import SessionProvider from './components/session-provider.tsx';
 import './index.css';
 import NotFound from './pages/404.tsx';
+import ApplicationsLayout from './pages/applications-layout.tsx';
 import Applications from './pages/applications.tsx';
 import Companies from './pages/companies.tsx';
+import CompanyJobOffer from './pages/company-job-offer.tsx';
+import CompanyJobOffers from './pages/company-job-offers.tsx';
 import CompanyLayout from './pages/company-layout.tsx';
+import CompanyRecruitment from './pages/company-recruitment.tsx';
+import CompanyRecruitments from './pages/company-recruitments.tsx';
 import Company from './pages/company.tsx';
 import CreateCompany from './pages/create-company.tsx';
 import CreateJobOffer from './pages/create-job-offer.tsx';
+import EditJobOffer from './pages/edit-job-offer.tsx';
 import Home from './pages/home.tsx';
-import CompanyJobOffers from './pages/company-job-offers.tsx';
 import Layout from './pages/layout.tsx';
-import Recruitments from './pages/recruitments.tsx';
 import Settings from './pages/settings.tsx';
 import SignIn from './pages/sign-in.tsx';
 import SignUp from './pages/sign-up.tsx';
-import ApplicationsLayout from './pages/applications-layout.tsx';
-import CompanyJobOffer from './pages/company-job-offer.tsx';
-import EditJobOffer from './pages/edit-job-offer.tsx';
-import { ThemeProvider } from 'next-themes';
+import Recruitments from './pages/recruitments.tsx';
 import Recruitment from './pages/recruitment.tsx';
 
 const router = createBrowserRouter([
@@ -55,6 +57,27 @@ const router = createBrowserRouter([
 					{
 						path: '',
 						element: <Applications />,
+					},
+				],
+			},
+			{
+				path: '/my-recruitments',
+				children: [
+					{
+						path: '',
+						element: (
+							<ProtectedRoute>
+								<Recruitments />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ':recruitmentId',
+						element: (
+							<ProtectedRoute>
+								<Recruitment />
+							</ProtectedRoute>
+						),
 					},
 				],
 			},
@@ -123,7 +146,7 @@ const router = createBrowserRouter([
 								path: '',
 								element: (
 									<ProtectedRoute>
-										<Recruitments />
+										<CompanyRecruitments />
 									</ProtectedRoute>
 								),
 							},
@@ -131,7 +154,7 @@ const router = createBrowserRouter([
 								path: ':recruitmentId',
 								element: (
 									<ProtectedRoute>
-										<Recruitment />
+										<CompanyRecruitment />
 									</ProtectedRoute>
 								),
 							},

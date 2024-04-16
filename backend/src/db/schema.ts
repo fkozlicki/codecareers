@@ -207,6 +207,7 @@ export const applicationsRelations = relations(applications, ({ one }) => ({
 export const recruitments = pgTable('recruitment', {
 	id: uuid('id').notNull().primaryKey().defaultRandom(),
 	applicationId: uuid('application_id').notNull(),
+	chatId: uuid('chat_id').notNull(),
 });
 
 export const recruitmentsRelations = relations(recruitments, ({ one }) => ({
@@ -214,20 +215,19 @@ export const recruitmentsRelations = relations(recruitments, ({ one }) => ({
 		fields: [recruitments.applicationId],
 		references: [applications.id],
 	}),
+	chat: one(chats, {
+		fields: [recruitments.chatId],
+		references: [chats.id],
+	}),
 }));
 
 export const chats = pgTable('chat', {
 	id: uuid('id').notNull().primaryKey().defaultRandom(),
-	recruitmentId: uuid('recruitment_id').notNull(),
 });
 
 export const chatsRelations = relations(chats, ({ many, one }) => ({
 	chatUsers: many(chatUsers),
 	messages: many(messages),
-	recruitment: one(recruitments, {
-		fields: [chats.recruitmentId],
-		references: [recruitments.id],
-	}),
 }));
 
 export const chatUsers = pgTable(
@@ -259,7 +259,7 @@ export const messages = pgTable('message', {
 	content: text('content'),
 	chatId: uuid('chat_id').notNull(),
 	userId: uuid('user_id').notNull(),
-	createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+	createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export const messagesRelations = relations(messages, ({ one }) => ({

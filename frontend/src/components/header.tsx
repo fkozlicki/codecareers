@@ -73,6 +73,11 @@ const Header = () => {
 										Applications
 									</DropdownMenuItem>
 								</Link>
+								<Link to="/my-recruitments">
+									<DropdownMenuItem className="cursor-pointer">
+										Recruitments
+									</DropdownMenuItem>
+								</Link>
 								<Link to="/my-companies">
 									<DropdownMenuItem className="cursor-pointer">
 										Companies
