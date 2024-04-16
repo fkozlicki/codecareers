@@ -1,8 +1,8 @@
+import { and, count, desc, eq, lt, or } from 'drizzle-orm';
 import { Request, Response } from 'express';
-import { db } from '../db';
-import { and, asc, count, desc, eq, gt, lt, or } from 'drizzle-orm';
-import { chats, messages } from '../db/schema';
 import { io } from '..';
+import { db } from '../db';
+import { messages } from '../db/schema';
 
 export const getMessages = async (req: Request, res: Response) => {
 	const { id } = req.params;
@@ -18,7 +18,15 @@ export const getMessages = async (req: Request, res: Response) => {
 	const result = await db.query.messages.findMany({
 		where: and(
 			eq(messages.chatId, id),
-			cursor ? lt(messages.createdAt, cursor.createdAt) : undefined
+			cursor
+				? or(
+						lt(messages.createdAt, cursor.createdAt),
+						and(
+							eq(messages.createdAt, cursor.createdAt),
+							lt(messages.id, cursor.id)
+						)
+				  )
+				: undefined
 		),
 		limit: pageSize,
 		orderBy: [desc(messages.createdAt)],
@@ -36,7 +44,16 @@ export const getMessages = async (req: Request, res: Response) => {
 			.select({ count: count() })
 			.from(messages)
 			.where(
-				and(eq(messages.chatId, id), lt(messages.createdAt, lastItem.createdAt))
+				and(
+					eq(messages.chatId, id),
+					or(
+						lt(messages.createdAt, lastItem.createdAt),
+						and(
+							eq(messages.createdAt, lastItem.createdAt),
+							lt(messages.id, lastItem.id)
+						)
+					)
+				)
 			)
 			.limit(1);
 		if (result.count > 0) {

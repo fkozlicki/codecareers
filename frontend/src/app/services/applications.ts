@@ -51,7 +51,7 @@ export const applicationsApi = api.injectEndpoints({
 });
 
 export const {
-	useLazyGetApplicationsQuery,
+	useGetApplicationsQuery,
 	useAcceptApplicationMutation,
 	useRejectApplicationMutation,
 } = applicationsApi;

@@ -88,7 +88,7 @@ const CompanyLayout = () => {
 					<Link
 						to={`/my-companies/${id}/recruitments`}
 						className={navLinkClassNames(
-							pathname === `/my-companies/${id}/recruitments`
+							pathname.includes(`/my-companies/${id}/recruitments`)
 						)}
 					>
 						<Users className="w-5 h-5 mr-2" />

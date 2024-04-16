@@ -1,5 +1,5 @@
 import { useGetJobOfferQuery } from '@/app/services/jobOffers';
-import ApplicationsList from '@/components/applications-list';
+import JobOfferApplicationsList from '@/components/job-offer-applications-list';
 import JobOfferTabs from '@/components/job-offer-tabs';
 import JobOfferHeader from '@/components/job-offer-header';
 import { Loader } from 'lucide-react';
@@ -27,7 +27,7 @@ const CompanyJobOffer = () => {
 		<>
 			<JobOfferHeader position={position} published={published} />
 			<JobOfferTabs />
-			<ApplicationsList />
+			<JobOfferApplicationsList />
 		</>
 	);
 };

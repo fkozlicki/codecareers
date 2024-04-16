@@ -1,57 +1,35 @@
-import { useLazyGetApplicationsQuery } from '@/app/services/applications';
-import JobOfferCard from '@/components/job-offer-card';
-import JobOfferSkeleton from '@/components/job-offer-skeleton';
-import SetMeetingDialog from '@/components/set-meeting-dialog';
-import Empty from '@/components/ui/empty';
-import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import ApplicationsList from '@/components/applications-list';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const Applications = () => {
-	const [fetchApplications, { data, isLoading, isFetching }] =
-		useLazyGetApplicationsQuery();
 	const [searchParams] = useSearchParams();
 	const sort = searchParams.get('sort');
 
-	useEffect(() => {
-		fetchApplications(sort);
-	}, [sort]);
-
-	if (isLoading || isFetching) {
-		return (
-			<div className="flex flex-col gap-4">
-				<JobOfferSkeleton />
-				<JobOfferSkeleton />
-				<JobOfferSkeleton />
-			</div>
-		);
-	}
-
-	if (!data) {
-		return <div>Couldn't load data</div>;
-	}
-
 	return (
-		<>
-			{data.applications.length > 0 ? (
-				<div className="flex flex-col gap-4 px-4">
-					{data.applications.map((application) => (
-						<SetMeetingDialog key={application.id}>
-							<div>
-								<JobOfferCard jobOffer={application.jobOffer} />
-							</div>
-						</SetMeetingDialog>
-					))}
-				</div>
-			) : (
-				<div>
-					<Empty
-						message={`You have no ${
-							sort?.toLowerCase() ?? 'pending'
-						} applications`}
-					/>
-				</div>
-			)}
-		</>
+		<div className="max-w-2xl m-auto py-8">
+			<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl text-center mb-4">
+				Your applications
+			</h1>
+			<Tabs
+				value={sort ?? 'pending'}
+				defaultValue="pending"
+				className="flex justify-center mb-6"
+			>
+				<TabsList className="">
+					<Link to="/my-applications">
+						<TabsTrigger value="pending">Pending</TabsTrigger>
+					</Link>
+					<Link to={`/my-applications?sort=accepted`}>
+						<TabsTrigger value="accepted">Accepted</TabsTrigger>
+					</Link>
+					<Link to={`/my-applications?sort=rejected`}>
+						<TabsTrigger value="rejected">Rejected</TabsTrigger>
+					</Link>
+				</TabsList>
+			</Tabs>
+			<ApplicationsList />
+		</div>
 	);
 };
 

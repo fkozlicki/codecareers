@@ -1,24 +1,17 @@
-import { useGetJobOfferApplicationsQuery } from '@/app/services/jobOffers';
-import ApplicationCard from '@/components/application-card';
-import JobOfferSkeleton from '@/components/job-offer-skeleton';
-import Empty from '@/components/ui/empty';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useGetApplicationsQuery } from '@/app/services/applications';
+import { useSearchParams } from 'react-router-dom';
+import Empty from './ui/empty';
+import SetMeetingDialog from './set-meeting-dialog';
+import JobOfferCard from './job-offer-card';
 
 const ApplicationsList = () => {
-	const { jobOfferId } = useParams();
 	const [searchParams] = useSearchParams();
 	const sort = searchParams.get('sort');
 	const { data, isLoading, isUninitialized, isError } =
-		useGetJobOfferApplicationsQuery({ id: jobOfferId!, sort });
+		useGetApplicationsQuery(sort);
 
 	if (isLoading || isUninitialized) {
-		return (
-			<div className="flex flex-col gap-4">
-				<JobOfferSkeleton />
-				<JobOfferSkeleton />
-				<JobOfferSkeleton />
-			</div>
-		);
+		return <div>Loading..</div>;
 	}
 
 	if (isError) {
@@ -28,17 +21,19 @@ const ApplicationsList = () => {
 	if (data.applications.length === 0) {
 		return (
 			<Empty
-				message={`Your job offer has 0 ${
-					sort ? sort.toLowerCase() : 'new'
-				} applications`}
+				message={`You have no ${sort?.toLowerCase() ?? 'pending'} applications`}
 			/>
 		);
 	}
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 px-4">
 			{data.applications.map((application) => (
-				<ApplicationCard key={application.id} application={application} />
+				<SetMeetingDialog key={application.id}>
+					<div>
+						<JobOfferCard jobOffer={application.jobOffer} />
+					</div>
+				</SetMeetingDialog>
 			))}
 		</div>
 	);
