@@ -6,11 +6,12 @@ import {
 	getCompanies,
 	getCompany,
 	getCompanyJobOffers,
+	getCompanyRecruitments,
 	updateCompany,
 } from '../controllers/company.controller';
+import { upload } from '../lib/multer';
 import { requireSession } from '../middleware/session';
 import { validate } from '../middleware/validate';
-import { upload } from '../lib/multer';
 import {
 	createCompanySchema,
 	createJobOfferSchema,
@@ -53,3 +54,7 @@ companiesRouter
 	.route('/:id/job-offers')
 	.get(requireSession, validate(getCompanyJobOffersSchema), getCompanyJobOffers)
 	.post(requireSession, validate(createJobOfferSchema), createJobOffer);
+
+companiesRouter
+	.route('/:id/recruitments')
+	.get(requireSession, getCompanyRecruitments);

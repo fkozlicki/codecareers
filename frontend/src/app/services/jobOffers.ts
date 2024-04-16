@@ -140,5 +140,5 @@ export const {
 	useCreateApplicationMutation,
 	useGetJobOfferQuery,
 	useUpdateJobOfferMutation,
-	useLazyGetJobOfferApplicationsQuery,
+	useGetJobOfferApplicationsQuery,
 } = jobOffersApi;

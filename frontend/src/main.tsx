@@ -24,6 +24,7 @@ import ApplicationsLayout from './pages/applications-layout.tsx';
 import CompanyJobOffer from './pages/company-job-offer.tsx';
 import EditJobOffer from './pages/edit-job-offer.tsx';
 import { ThemeProvider } from 'next-themes';
+import Recruitment from './pages/recruitment.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -117,11 +118,24 @@ const router = createBrowserRouter([
 					},
 					{
 						path: 'recruitments',
-						element: (
-							<ProtectedRoute>
-								<Recruitments />
-							</ProtectedRoute>
-						),
+						children: [
+							{
+								path: '',
+								element: (
+									<ProtectedRoute>
+										<Recruitments />
+									</ProtectedRoute>
+								),
+							},
+							{
+								path: ':recruitmentId',
+								element: (
+									<ProtectedRoute>
+										<Recruitment />
+									</ProtectedRoute>
+								),
+							},
+						],
 					},
 				],
 			},

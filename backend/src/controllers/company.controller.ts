@@ -3,12 +3,15 @@ import { Request, Response } from 'express';
 import { generateId } from 'lucia';
 import { db } from '../db';
 import {
+	applications,
 	companies,
 	jobOfferSkills,
 	jobOfferTechnologies,
 	jobOffers,
+	recruitments,
 	skills,
 	technologies,
+	users,
 } from '../db/schema';
 import { uploadFileToS3 } from '../lib/s3';
 import { CompanyFiles, CreateJobOfferSchema } from '../validators/companies';
@@ -301,4 +304,31 @@ export const getCompanyJobOffers = async (req: Request, res: Response) => {
 	});
 
 	res.status(200).json({ jobOffers: result });
+};
+
+export const getCompanyRecruitments = async (req: Request, res: Response) => {
+	const companyId = req.params.id;
+
+	const result = await db
+		.select({
+			id: recruitments.id,
+			jobOffer: {
+				position: jobOffers.position,
+			},
+			user: {
+				id: users.id,
+				firstName: users.firstName,
+				lastName: users.lastName,
+				username: users.username,
+				avatar: users.avatar,
+			},
+		})
+		.from(recruitments)
+		.leftJoin(applications, eq(recruitments.applicationId, applications.id))
+		.leftJoin(jobOffers, eq(applications.jobOfferId, jobOffers.id))
+		.leftJoin(companies, eq(jobOffers.companyId, companies.id))
+		.leftJoin(users, eq(applications.userId, users.id))
+		.where(eq(companies.id, companyId));
+
+	res.status(200).json({ recruitments: result });
 };

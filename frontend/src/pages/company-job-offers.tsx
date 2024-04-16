@@ -3,10 +3,10 @@ import CompanyJobOffersList from '@/components/company-job-offers-list';
 
 const CompanyJobOffers = () => {
 	return (
-		<div>
+		<>
 			<CompanyJobOffersHeader />
 			<CompanyJobOffersList />
-		</div>
+		</>
 	);
 };
 

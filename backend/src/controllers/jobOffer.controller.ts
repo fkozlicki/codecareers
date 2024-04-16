@@ -7,7 +7,7 @@ import { uploadFileToS3 } from '../lib/s3';
 
 export const getJobOffers = async (req: Request, res: Response) => {
 	const cursor = req.query.cursor as string | undefined;
-	const pageSize = req.query.pageSize ? +req.query.pageSize : undefined;
+	const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
 	const position = req.query.position as string | undefined;
 	const { name } = req.query;
 
@@ -87,6 +87,8 @@ export const createApplication = async (req: Request, res: Response) => {
 	const id = req.params.id;
 	const file = req.file;
 
+	console.log(file);
+
 	const filename = generateId(15);
 
 	if (file) {
@@ -98,12 +100,15 @@ export const createApplication = async (req: Request, res: Response) => {
 		}
 	}
 
-	const application = await db.insert(applications).values({
-		userId: res.locals.user.id,
-		jobOfferId: id,
-		...req.body,
-		...(file ? { cv: filename } : {}),
-	});
+	const [application] = await db
+		.insert(applications)
+		.values({
+			userId: res.locals.user.id,
+			jobOfferId: id,
+			...req.body,
+			...(file ? { cv: filename } : {}),
+		})
+		.returning();
 
 	res.status(201).json({ application });
 };

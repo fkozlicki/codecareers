@@ -1,25 +1,17 @@
-import { useLazyGetJobOfferApplicationsQuery } from '@/app/services/jobOffers';
+import { useGetJobOfferApplicationsQuery } from '@/app/services/jobOffers';
 import ApplicationCard from '@/components/application-card';
 import JobOfferSkeleton from '@/components/job-offer-skeleton';
 import Empty from '@/components/ui/empty';
-import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 const ApplicationsList = () => {
 	const { jobOfferId } = useParams();
-	const [fetchApplications, { data, isFetching }] =
-		useLazyGetJobOfferApplicationsQuery();
 	const [searchParams] = useSearchParams();
 	const sort = searchParams.get('sort');
+	const { data, isLoading, isUninitialized, isError } =
+		useGetJobOfferApplicationsQuery({ id: jobOfferId!, sort });
 
-	useEffect(() => {
-		if (!jobOfferId) {
-			return;
-		}
-		fetchApplications({ id: jobOfferId, sort: sort });
-	}, [sort, jobOfferId]);
-
-	if (isFetching) {
+	if (isLoading || isUninitialized) {
 		return (
 			<div className="flex flex-col gap-4">
 				<JobOfferSkeleton />
@@ -29,26 +21,26 @@ const ApplicationsList = () => {
 		);
 	}
 
-	if (!data) {
+	if (isError) {
 		return <div>Couldn't load data</div>;
 	}
 
+	if (data.applications.length === 0) {
+		return (
+			<Empty
+				message={`Your job offer has 0 ${
+					sort ? sort.toLowerCase() : 'new'
+				} applications`}
+			/>
+		);
+	}
+
 	return (
-		<>
-			{data.applications.length > 0 ? (
-				<div className="flex flex-col gap-4">
-					{data.applications.map((application) => (
-						<ApplicationCard key={application.id} application={application} />
-					))}
-				</div>
-			) : (
-				<Empty
-					message={`Your job offer has 0 ${
-						sort ? sort.toLowerCase() : 'new'
-					} applications`}
-				/>
-			)}
-		</>
+		<div className="flex flex-col gap-4">
+			{data.applications.map((application) => (
+				<ApplicationCard key={application.id} application={application} />
+			))}
+		</div>
 	);
 };
 

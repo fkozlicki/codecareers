@@ -10,12 +10,13 @@ export const validate =
 				query: req.query,
 				params: req.params,
 				files: req.files,
+				file: req.file,
 			});
 			return next();
 		} catch (error) {
 			if (error instanceof ZodError) {
 				res.status(400).json({ error: 'Invalid data' });
-				console.log(error.errors);
+				console.error(error.errors);
 			} else {
 				res.status(500).json({ error: 'Internal Server Error' });
 			}

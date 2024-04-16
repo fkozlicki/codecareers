@@ -16,9 +16,10 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import dayjs from 'dayjs';
-import { ChevronLeft, ChevronRight, Loader } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Loader } from 'lucide-react';
+import { useState } from 'react';
+import { pdfjs } from 'react-pdf';
+import PDFViewer from './pdf-viewer';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	'pdfjs-dist/build/pdf.worker.min.js',
@@ -27,14 +28,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const ApplicationCard = ({ application }: { application: Application }) => {
 	const [open, setOpen] = useState<boolean>(false);
-	const [numPages, setNumPages] = useState<number>();
-	const [pageNumber, setPageNumber] = useState<number>(1);
-	const options = useMemo(
-		() => ({
-			withCredentials: true,
-		}),
-		[]
-	);
 	const [acceptApplication, acceptState] = useAcceptApplicationMutation();
 	const [rejectApplication, rejectState] = useRejectApplicationMutation();
 
@@ -61,14 +54,6 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 			.then(() => {
 				setOpen(false);
 			});
-	};
-
-	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
-		setNumPages(numPages);
-	};
-
-	const changePageNumber = (value: number) => {
-		setPageNumber((prev) => prev + value);
 	};
 
 	const isLoading = acceptState.isLoading || rejectState.isLoading;
@@ -117,43 +102,7 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 						</div>
 					</TabsContent>
 					<TabsContent value="cv">
-						{cv && (
-							<div className="flex gap-4 justify-center pt-4">
-								<Button
-									onClick={() => changePageNumber(-1)}
-									disabled={pageNumber === 1}
-									size="icon"
-								>
-									<ChevronLeft />
-									<span className="sr-only">Previous page</span>
-								</Button>
-								<Button
-									onClick={() => changePageNumber(1)}
-									disabled={pageNumber === numPages}
-									size="icon"
-								>
-									<ChevronRight />
-									<span className="sr-only">Next page</span>
-								</Button>
-							</div>
-						)}
-						<div className="max-h-[50vh] overflow-y-scroll overflow-x-hidden">
-							<Document
-								file={`http://localhost:3000/cv/${cv}`}
-								onLoadSuccess={onDocumentLoadSuccess}
-								options={options}
-							>
-								<Page
-									pageNumber={pageNumber}
-									renderAnnotationLayer={false}
-									renderTextLayer={false}
-									scale={1}
-								/>
-							</Document>
-						</div>
-						<p className="text-center">
-							Page {pageNumber} of {numPages}
-						</p>
+						<PDFViewer href={`http://localhost:3000/cv/${cv}`} />
 					</TabsContent>
 				</Tabs>
 				{accepted === null && (

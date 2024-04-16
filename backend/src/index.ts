@@ -9,6 +9,7 @@ import { applicationsRouter } from './routes/application.routes';
 import { authRouter } from './routes/auth.routes';
 import { companiesRouter } from './routes/company.routes';
 import { jobOffersRouter } from './routes/jobOffer.routes';
+import { recruitmentsRouter } from './routes/recruitment.routes';
 import { skillsRouter } from './routes/skill.routes';
 import { technologiesRouter } from './routes/technology.routes';
 import { usersRouter } from './routes/user.routes';
@@ -36,6 +37,7 @@ app.use('/technologies', technologiesRouter);
 app.use('/skills', skillsRouter);
 app.use('/applications', applicationsRouter);
 app.use('/users', usersRouter);
+app.use('/recruitments', recruitmentsRouter);
 app.use('/avatars/:filename', serveFile('avatars'));
 app.use('/cv/:filename', requireSession, authorizeCv, serveFile('cvs'));
 

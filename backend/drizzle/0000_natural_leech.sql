@@ -28,7 +28,19 @@ CREATE TABLE IF NOT EXISTS "application" (
 	"user_id" uuid NOT NULL,
 	"job_offer_id" uuid NOT NULL,
 	"cv" text,
-	"introduction" text
+	"introduction" text,
+	"accepted" boolean
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "chat_user" (
+	"chat_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	CONSTRAINT "chat_user_chat_id_user_id_pk" PRIMARY KEY("chat_id","user_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "chat" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"recruitment_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "company" (
@@ -64,11 +76,25 @@ CREATE TABLE IF NOT EXISTS "job_offer" (
 	"salary_to" integer NOT NULL,
 	"currency" "currency" NOT NULL,
 	"company_id" uuid NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"published" boolean DEFAULT false NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "message" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"content" text,
+	"chat_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "recruitment" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"application_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL
 );
@@ -79,7 +105,7 @@ CREATE TABLE IF NOT EXISTS "skill" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "technology" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL
 );
 --> statement-breakpoint
@@ -91,8 +117,21 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"username" text,
 	"email" text,
 	"password" text,
+	"avatar" text,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "chat_user" ADD CONSTRAINT "chat_user_chat_id_chat_id_fk" FOREIGN KEY ("chat_id") REFERENCES "chat"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "chat_user" ADD CONSTRAINT "chat_user_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "job_offer_skill" ADD CONSTRAINT "job_offer_skill_job_offer_id_job_offer_id_fk" FOREIGN KEY ("job_offer_id") REFERENCES "job_offer"("id") ON DELETE no action ON UPDATE no action;

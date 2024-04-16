@@ -1,6 +1,8 @@
+import { Argon2id } from 'oslo/password';
 import supertest from 'supertest';
 import { app } from '..';
 import { db } from '../db';
+import { clearDb } from '../db/helpers';
 import {
 	companies,
 	jobOffers,
@@ -8,9 +10,6 @@ import {
 	technologies,
 	users,
 } from '../db/schema';
-import { Argon2id } from 'oslo/password';
-import { eq } from 'drizzle-orm';
-import { clearDb } from '../db/helpers';
 
 const password = 'S3cReT123';
 

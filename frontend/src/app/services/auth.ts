@@ -5,7 +5,6 @@ export interface User {
 	firstName?: string;
 	lastName?: string;
 	username?: string;
-	image: string | null;
 	avatar: string | null;
 }
 

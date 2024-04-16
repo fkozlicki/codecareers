@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { api } from './api';
 import { JobOffer } from './jobOffers';
+import { User } from './auth';
 
 export interface Company {
 	id: string;
@@ -43,6 +44,12 @@ export const createJobOfferSchema = z.object({
 });
 
 export type JobOfferValues = z.infer<typeof createJobOfferSchema>;
+
+export interface Recruitment {
+	id: string;
+	jobOffer: Pick<JobOffer, 'id' | 'position'>;
+	user: User;
+}
 
 export const companiesApi = api.injectEndpoints({
 	endpoints: (builder) => ({
@@ -124,11 +131,17 @@ export const companiesApi = api.injectEndpoints({
 		}),
 		getCompanyJobOffers: builder.query<
 			{ jobOffers: JobOffer[] },
-			{ id: string; sort?: string }
+			{ id: string; sort: string | null }
 		>({
 			query: ({ id, sort }) =>
 				`companies/${id}/job-offers${sort ? `?sort=${sort}` : ''}`,
 			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
+		}),
+		getCompanyRecruitments: builder.query<
+			{ recruitments: Recruitment[] },
+			string
+		>({
+			query: (id) => `companies/${id}/recruitments`,
 		}),
 	}),
 });
@@ -139,6 +152,6 @@ export const {
 	useGetCompanyQuery,
 	useUpdateCompanyMutation,
 	useCreateJobOfferMutation,
+	useGetCompanyRecruitmentsQuery,
 	useGetCompanyJobOffersQuery,
-	useLazyGetCompanyJobOffersQuery,
 } = companiesApi;

@@ -40,6 +40,7 @@ export const updateApplication = async (req: Request, res: Response) => {
 export const acceptApplication = async (req: Request, res: Response) => {
 	const id = req.params.id;
 
+	// FIND APPLICATION
 	const application = await db.query.applications.findFirst({
 		where: eq(applications.id, id),
 		with: {
@@ -59,12 +60,7 @@ export const acceptApplication = async (req: Request, res: Response) => {
 		return res.status(404).json({ message: 'Not found' });
 	}
 
-	await db
-		.update(applications)
-		.set({ accepted: true })
-		.where(eq(applications.id, id))
-		.returning();
-
+	// CREATE RECRUITMENT
 	const [newRecruitment] = await db
 		.insert(recruitments)
 		.values({
@@ -72,7 +68,11 @@ export const acceptApplication = async (req: Request, res: Response) => {
 		})
 		.returning();
 
-	const [newChat] = await db.insert(chats).values({}).returning();
+	// CREATE NEW CHAT
+	const [newChat] = await db
+		.insert(chats)
+		.values({ recruitmentId: newRecruitment.id })
+		.returning();
 	await db
 		.insert(chatUsers)
 		.values({ chatId: newChat.id, userId: res.locals.user.id });
@@ -84,7 +84,14 @@ export const acceptApplication = async (req: Request, res: Response) => {
 		});
 	}
 
-	res.status(201).json({ recruitment: newRecruitment });
+	// UPDATE APPLICATION
+	const [updatedApplication] = await db
+		.update(applications)
+		.set({ accepted: true })
+		.where(eq(applications.id, id))
+		.returning();
+
+	res.status(201).json({ application: updatedApplication });
 };
 
 export const rejectApplication = async (req: Request, res: Response) => {

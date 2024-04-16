@@ -2,6 +2,7 @@ import { relations, sql } from 'drizzle-orm';
 import {
 	boolean,
 	integer,
+	jsonb,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -217,11 +218,16 @@ export const recruitmentsRelations = relations(recruitments, ({ one }) => ({
 
 export const chats = pgTable('chat', {
 	id: uuid('id').notNull().primaryKey().defaultRandom(),
+	recruitmentId: uuid('recruitment_id').notNull(),
 });
 
-export const chatsRelations = relations(chats, ({ many }) => ({
+export const chatsRelations = relations(chats, ({ many, one }) => ({
 	chatUsers: many(chatUsers),
 	messages: many(messages),
+	recruitment: one(recruitments, {
+		fields: [chats.recruitmentId],
+		references: [recruitments.id],
+	}),
 }));
 
 export const chatUsers = pgTable(
@@ -252,7 +258,8 @@ export const messages = pgTable('message', {
 	id: uuid('id').notNull().primaryKey().defaultRandom(),
 	content: text('content'),
 	chatId: uuid('chat_id').notNull(),
-	userid: uuid('user_id').notNull(),
+	userId: uuid('user_id').notNull(),
+	createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
 });
 
 export const messagesRelations = relations(messages, ({ one }) => ({
@@ -261,7 +268,7 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 		references: [chats.id],
 	}),
 	user: one(users, {
-		fields: [messages.userid],
+		fields: [messages.userId],
 		references: [users.id],
 	}),
 }));
