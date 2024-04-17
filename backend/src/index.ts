@@ -1,22 +1,21 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
+import { createServer } from 'node:http';
+import { Server } from 'socket.io';
 import { corsOptions } from './config/corsOptions';
 import { serveFile } from './lib/s3';
 import { authorizeCv } from './middleware/authorization';
 import { requireSession, verifySession } from './middleware/session';
 import { applicationsRouter } from './routes/application.routes';
 import { authRouter } from './routes/auth.routes';
+import { chatsRouter } from './routes/chat.routes';
 import { companiesRouter } from './routes/company.routes';
 import { jobOffersRouter } from './routes/jobOffer.routes';
 import { recruitmentsRouter } from './routes/recruitment.routes';
 import { skillsRouter } from './routes/skill.routes';
 import { technologiesRouter } from './routes/technology.routes';
 import { usersRouter } from './routes/user.routes';
-import { Server } from 'socket.io';
-import { createServer } from 'node:http';
-import { chats } from './db/schema';
-import { chatsRouter } from './routes/chat.routes';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` });
 
@@ -36,10 +35,6 @@ io.on('connection', (socket) => {
 	socket.on('join_room', (data) => {
 		socket.join(data);
 	});
-
-	// socket.on("send_message", (data) => {
-	//   socket.to(data.room).emit("receive_message", data);
-	// });
 });
 
 app.use(express.json());
