@@ -27,7 +27,7 @@ const Home = () => {
 							<JobOffersList />
 						</div>
 						<div className="flex-1 hidden md:block">
-							<JobOfferDetails />
+							{data && <JobOfferDetails />}
 						</div>
 					</>
 				)}

@@ -76,30 +76,28 @@ const JobOfferDetails = () => {
 			}}
 		>
 			<div className="border rounded-md h-full flex flex-col">
-				<div>
-					<AspectRatio ratio={6 / 1}>
-						<div className="w-full h-full bg-muted grid place-items-center">
-							{company.backgroundUrl ? (
-								<img
-									src={company.backgroundUrl}
-									alt="company banner"
-									className="object-cover w-full"
-								/>
-							) : (
-								<Image className="w-5 h-5 text-gray-500" />
-							)}
-						</div>
-					</AspectRatio>
-					<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16 border">
-						<AvatarImage
-							src={company.avatarUrl ?? undefined}
-							alt="company avatar"
-						/>
-						<AvatarFallback className="rounded">
-							<Building2 className="w-4 h-4 text-gray-500" />
-						</AvatarFallback>
-					</Avatar>
-				</div>
+				<AspectRatio ratio={6 / 1}>
+					<div className="w-full h-full bg-muted grid place-items-center">
+						{company.backgroundUrl ? (
+							<img
+								src={company.backgroundUrl}
+								alt="company banner"
+								className="object-cover w-full"
+							/>
+						) : (
+							<Image className="w-5 h-5 text-gray-500" />
+						)}
+					</div>
+				</AspectRatio>
+				<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16 border">
+					<AvatarImage
+						src={company.avatarUrl ?? undefined}
+						alt="company avatar"
+					/>
+					<AvatarFallback className="rounded">
+						<Building2 className="w-4 h-4 text-gray-500" />
+					</AvatarFallback>
+				</Avatar>
 				<div className="px-4 border-b">
 					<div className="flex justify-between items-center mb-2">
 						<div className="flex gap-2 items-baseline">
