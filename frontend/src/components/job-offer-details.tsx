@@ -1,6 +1,6 @@
 import {
+	useGetJobOfferQuery,
 	useGetJobOffersQuery,
-	useLazyGetJobOfferQuery,
 } from '@/app/services/jobOffers';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -20,12 +20,11 @@ import ApplyDialog from './apply-dialog';
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
 	const name = searchParams.get('name');
+	const joid = searchParams.get('joid');
 	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10, name });
-	const [
-		queryJobOffer,
-		{ data, isLoading, isFetching, isUninitialized, isError },
-	] = useLazyGetJobOfferQuery();
-	const jobOfferId = searchParams.get('joid');
+	const jobOfferId = joid ?? jobOffersData?.jobOffers[0].id;
+	const { data, isLoading, isFetching, isUninitialized, isError } =
+		useGetJobOfferQuery(jobOfferId!);
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
 
@@ -43,14 +42,6 @@ const JobOfferDetails = () => {
 
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
-
-	useEffect(() => {
-		if (jobOfferId) {
-			queryJobOffer(jobOfferId);
-		} else if (jobOffersData && jobOffersData.jobOffers[0]) {
-			queryJobOffer(jobOffersData.jobOffers[0].id);
-		}
-	}, [jobOfferId, queryJobOffer, jobOffersData]);
 
 	if (isLoading || isFetching || isUninitialized) {
 		return (
