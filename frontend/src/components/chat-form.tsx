@@ -46,7 +46,7 @@ const ChatForm = ({ id }: { id: string }) => {
 						<FormItem className="space-y-0 w-full mr-4">
 							<FormLabel className="sr-only">Content</FormLabel>
 							<FormControl>
-								<Input placeholder="shadcn" {...field} />
+								<Input placeholder="Type your message..." {...field} />
 							</FormControl>
 						</FormItem>
 					)}

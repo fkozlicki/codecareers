@@ -11,9 +11,8 @@ import JobOfferSkeleton from './job-offer-skeleton';
 const JobOffersList = () => {
 	const [searchParams] = useSearchParams();
 	const name = searchParams.get('name');
-	const { data, isLoading, isFetching, isUninitialized } = useGetJobOffersQuery(
-		{ pageSize: 2, name }
-	);
+	const { data, isLoading, isFetching, isUninitialized, isError } =
+		useGetJobOffersQuery({ pageSize: 10, name });
 	const [fetchJobOffers] = useLazyGetJobOffersQuery();
 	const [ref, inView] = useInView();
 	const joid = searchParams.get('joid');
@@ -22,13 +21,13 @@ const JobOffersList = () => {
 
 	useEffect(() => {
 		if (inView && !isLoading && hasNextPage) {
-			fetchJobOffers({ pageSize: 2, cursor, name });
+			fetchJobOffers({ pageSize: 10, cursor, name });
 		}
-	}, [inView, cursor]);
+	}, [inView]);
 
 	if (isLoading || isUninitialized) {
 		return (
-			<div ref={ref} className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4">
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
 				<JobOfferSkeleton />
@@ -38,7 +37,7 @@ const JobOffersList = () => {
 		);
 	}
 
-	if (!data) {
+	if (isError) {
 		return <div>Couldn't load data</div>;
 	}
 
