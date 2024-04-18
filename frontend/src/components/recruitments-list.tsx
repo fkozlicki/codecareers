@@ -1,13 +1,20 @@
 import { useGetRecruitmentsQuery } from '@/app/services/recruitments';
 import { Link } from 'react-router-dom';
 import Empty from './ui/empty';
+import JobOfferSkeleton from './job-offer-skeleton';
 
 const RecruitmentsList = () => {
 	const { data, isUninitialized, isLoading, isError } =
 		useGetRecruitmentsQuery();
 
-	if (isUninitialized || isLoading) {
-		return <div>Loading...</div>;
+	if (isLoading || isUninitialized) {
+		return (
+			<div className="flex flex-col gap-4">
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+			</div>
+		);
 	}
 
 	if (isError) {

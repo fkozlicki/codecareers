@@ -2,6 +2,7 @@ import { useGetApplicationsQuery } from '@/app/services/applications';
 import { useSearchParams } from 'react-router-dom';
 import JobOfferCard from './job-offer-card';
 import Empty from './ui/empty';
+import JobOfferSkeleton from './job-offer-skeleton';
 
 const ApplicationsList = () => {
 	const [searchParams] = useSearchParams();
@@ -10,7 +11,13 @@ const ApplicationsList = () => {
 		useGetApplicationsQuery(sort);
 
 	if (isLoading || isUninitialized) {
-		return <div>Loading..</div>;
+		return (
+			<div className="flex flex-col gap-4">
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+			</div>
+		);
 	}
 
 	if (isError) {

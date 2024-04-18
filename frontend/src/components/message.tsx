@@ -19,14 +19,14 @@ const Message = ({ user, content, leading }: MessageProps) => {
 	) : (
 		<div className="flex items-center gap-2">
 			{leading ? (
-				<Avatar className="w-[36px] h-[36px]">
+				<Avatar className="w-9 h-9">
 					<AvatarFallback>
 						<UserIcon />
 					</AvatarFallback>
 					<AvatarImage src={user.avatar ?? undefined} alt="user avatar" />
 				</Avatar>
 			) : (
-				<div className="w-[36px]"></div>
+				<div className="w-9"></div>
 			)}
 
 			<div className="p-2 text-sm bg-secondary rounded-md">{content}</div>

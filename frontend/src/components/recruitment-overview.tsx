@@ -3,6 +3,7 @@ import { User } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import PDFViewer from './pdf-viewer';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Skeleton } from './ui/skeleton';
 
 const RecruitmentOverview = () => {
 	const { recruitmentId } = useParams();
@@ -10,8 +11,15 @@ const RecruitmentOverview = () => {
 		recruitmentId!
 	);
 
-	if (isUninitialized || isLoading) {
-		return <div>Loading...</div>;
+	if (isLoading || isUninitialized) {
+		return (
+			<div>
+				<Skeleton className="h-4 w-64 mb-3" />
+				<Skeleton className="h-4 w-full mb-3" />
+				<Skeleton className="h-8 w-full mb-3" />
+				<Skeleton className="h-12 w-full" />
+			</div>
+		);
 	}
 
 	if (isError) {

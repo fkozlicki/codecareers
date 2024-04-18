@@ -5,16 +5,19 @@ import {
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Message from './message';
+import Empty from './ui/empty';
+import MessagesSkeleton from './messages-skeleton';
 
 interface ChatMessagesProps {
 	id: string;
 }
 
 const ChatMessages = ({ id }: ChatMessagesProps) => {
-	const { data, isLoading, isUninitialized, isError } = useGetMessagesQuery({
-		id,
-		pageSize: 10,
-	});
+	const { data, isLoading, isUninitialized, isError, isFetching } =
+		useGetMessagesQuery({
+			id,
+			pageSize: 10,
+		});
 	const [fetchMore] = useLazyGetMessagesQuery();
 	const [ref, inView] = useInView();
 
@@ -25,7 +28,7 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
 	}, [inView]);
 
 	if (isLoading || isUninitialized) {
-		return <div>Loading..</div>;
+		return <MessagesSkeleton />;
 	}
 
 	if (isError) {
@@ -33,7 +36,7 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
 	}
 
 	return (
-		<div className="flex flex-col-reverse gap-2 overflow-y-auto pr-4">
+		<div className="flex flex-col-reverse gap-2 overflow-y-auto pr-4 flex-1">
 			{data.messages.map(({ id, content, user }, index, array) => (
 				<Message
 					key={id}
@@ -44,7 +47,13 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
 					}
 				/>
 			))}
+			{isFetching && <MessagesSkeleton />}
 			<div ref={ref}></div>
+			{!data.hasNextPage && (
+				<div className="flex-1 grid place-items-center">
+					<Empty message="No more messages" />
+				</div>
+			)}
 		</div>
 	);
 };

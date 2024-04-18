@@ -1,4 +1,5 @@
 import { useGetCompanyRecruitmentsQuery } from '@/app/services/companies';
+import JobOfferSkeleton from '@/components/job-offer-skeleton';
 import RecruitmentCard from '@/components/recruitment-card';
 import Empty from '@/components/ui/empty';
 import { useParams } from 'react-router-dom';
@@ -9,7 +10,13 @@ const CompanyRecruitments = () => {
 		useGetCompanyRecruitmentsQuery(companyId!);
 
 	if (isLoading || isUninitialized) {
-		return <div>Loading...</div>;
+		return (
+			<div className="flex flex-col gap-4">
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+				<JobOfferSkeleton />
+			</div>
+		);
 	}
 
 	if (isError) {
