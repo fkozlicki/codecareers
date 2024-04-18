@@ -75,19 +75,19 @@ const JobOfferDetails = () => {
 				height,
 			}}
 		>
-			<div className="border rounded-md h-full flex flex-col">
+			<div className="border rounded-md h-full flex flex-col overflow-hidden">
 				<AspectRatio ratio={6 / 1}>
-					<div className="w-full h-full bg-muted grid place-items-center">
-						{company.backgroundUrl ? (
-							<img
-								src={company.backgroundUrl}
-								alt="company banner"
-								className="object-cover w-full"
-							/>
-						) : (
+					{company.backgroundUrl ? (
+						<img
+							src={company.backgroundUrl}
+							alt="company banner"
+							className="object-cover w-full"
+						/>
+					) : (
+						<div className="w-full h-full bg-muted grid place-items-center">
 							<Image className="w-5 h-5 text-gray-500" />
-						)}
-					</div>
+						</div>
+					)}
 				</AspectRatio>
 				<Avatar className="rounded -translate-y-1/2 ml-4 w-16 h-16 border">
 					<AvatarImage

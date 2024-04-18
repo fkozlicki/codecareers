@@ -29,7 +29,7 @@ const PDFViewer = ({ href }: PDFViewerProps) => {
 
 	return (
 		<>
-			<div className="flex gap-4 justify-center pt-4">
+			<div className="flex gap-4 justify-center pt-4 mb-4">
 				<Button
 					onClick={() => changePageNumber(-1)}
 					disabled={pageNumber === 1 || isLoading}
@@ -51,6 +51,7 @@ const PDFViewer = ({ href }: PDFViewerProps) => {
 				file={href}
 				onLoadSuccess={onDocumentLoadSuccess}
 				options={options}
+				className="mb-4"
 			>
 				<Page
 					pageNumber={pageNumber}
@@ -60,7 +61,7 @@ const PDFViewer = ({ href }: PDFViewerProps) => {
 				/>
 			</Document>
 			<p className="text-center">
-				Page {pageNumber} of {numPages}
+				{pageNumber} of {numPages}
 			</p>
 		</>
 	);

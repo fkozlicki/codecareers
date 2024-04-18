@@ -8,6 +8,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Building2, FilePen, LogOut, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeaderDropdown = ({ user }: { user: User }) => {
@@ -26,26 +27,33 @@ const HeaderDropdown = ({ user }: { user: User }) => {
 				<DropdownMenuSeparator />
 				<Link to="/my-applications">
 					<DropdownMenuItem className="cursor-pointer">
+						<FilePen size={16} className="mr-2" />
 						Applications
 					</DropdownMenuItem>
 				</Link>
 				<Link to="/my-recruitments">
 					<DropdownMenuItem className="cursor-pointer">
+						<Users size={16} className="mr-2" />
 						Recruitments
 					</DropdownMenuItem>
 				</Link>
 				<Link to="/my-companies">
 					<DropdownMenuItem className="cursor-pointer">
+						<Building2 size={16} className="mr-2" />
 						Companies
 					</DropdownMenuItem>
 				</Link>
 				<Link to="/settings">
 					<DropdownMenuItem className="cursor-pointer">
+						<Settings size={16} className="mr-2" />
 						Settings
 					</DropdownMenuItem>
 				</Link>
 				<a href="http://localhost:3000/logout">
-					<DropdownMenuItem className="cursor-pointer">Logout</DropdownMenuItem>
+					<DropdownMenuItem className="cursor-pointer">
+						<LogOut size={16} className="mr-2" />
+						Logout
+					</DropdownMenuItem>
 				</a>
 			</DropdownMenuContent>
 		</DropdownMenu>

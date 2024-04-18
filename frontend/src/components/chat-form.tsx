@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/form';
 import { Input } from './ui/input';
+import { SendHorizontal } from 'lucide-react';
 
 const messageSchema = z.object({
 	content: z.string().min(1),
@@ -50,7 +51,10 @@ const ChatForm = ({ id }: { id: string }) => {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
+				<Button type="submit">
+					Send
+					<SendHorizontal size={16} className="ml-2" />
+				</Button>
 			</form>
 		</Form>
 	);

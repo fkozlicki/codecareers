@@ -27,13 +27,15 @@ const MultiSelect = <
 			classNames={{
 				indicatorsContainer: () => 'pr-3',
 				control: () =>
-					'!border-input !shadow-sm !cursor-pointer !min-h-[36px] !rounded-md',
+					'!border-input !shadow-sm !cursor-pointer !min-h-[36px] !rounded-md !bg-background',
 				menu: () => 'border !border-input !shadow-md !text-sm',
 				placeholder: () => '!text-primary',
-				menuList: () => 'p-1',
+				menuList: () => 'p-1 bg-background',
 				option: () =>
 					'relative flex w-full cursor-default select-none items-center rounded-sm !py-1.5 !pl-2 !pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 !bg-popover hover:!bg-accent',
 				indicatorSeparator: () => '!bg-input',
+				multiValue: () => '!bg-secondary text-primary',
+				multiValueLabel: () => '!text-primary',
 			}}
 		/>
 	);

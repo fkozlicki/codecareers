@@ -1,8 +1,7 @@
 import { useGetApplicationsQuery } from '@/app/services/applications';
 import { useSearchParams } from 'react-router-dom';
-import Empty from './ui/empty';
-import SetMeetingDialog from './set-meeting-dialog';
 import JobOfferCard from './job-offer-card';
+import Empty from './ui/empty';
 
 const ApplicationsList = () => {
 	const [searchParams] = useSearchParams();
@@ -29,11 +28,7 @@ const ApplicationsList = () => {
 	return (
 		<div className="flex flex-col gap-4 px-4">
 			{data.applications.map((application) => (
-				<SetMeetingDialog key={application.id}>
-					<div>
-						<JobOfferCard jobOffer={application.jobOffer} />
-					</div>
-				</SetMeetingDialog>
+				<JobOfferCard jobOffer={application.jobOffer} />
 			))}
 		</div>
 	);

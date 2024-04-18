@@ -51,7 +51,7 @@ const Search = () => {
 					)}
 				/>
 				<Button className="h-12 px-8 text-base" type="submit">
-					Submit
+					Search
 				</Button>
 			</form>
 		</Form>

@@ -1,5 +1,6 @@
 import { JobOffer } from '@/app/services/jobOffers';
 import { Separator } from '@/components/ui/separator';
+import { InlineWidget } from 'react-calendly';
 
 const RecruitmentJobOffer = ({ jobOffer }: { jobOffer: JobOffer }) => {
 	const { description, company, position } = jobOffer;
@@ -12,6 +13,8 @@ const RecruitmentJobOffer = ({ jobOffer }: { jobOffer: JobOffer }) => {
 			<Separator className="my-4" />
 			<h2>{position}</h2>
 			<div dangerouslySetInnerHTML={{ __html: description }} />
+			<Separator className="my-4" />
+			<InlineWidget url="https://calendly.com/filip-kozlickii" />
 		</div>
 	);
 };
