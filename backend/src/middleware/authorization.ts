@@ -29,7 +29,10 @@ export const authorizeCv = async (
 		return res.status(404).json({ message: 'Not found' });
 	}
 
-	if (application.jobOffer.company.ownerId !== res.locals.user.id) {
+	if (
+		application.userId !== res.locals.user.id &&
+		application.jobOffer.company.ownerId !== res.locals.user.id
+	) {
 		return res
 			.status(403)
 			.json({ message: 'You are not allowed to access this resource' });
