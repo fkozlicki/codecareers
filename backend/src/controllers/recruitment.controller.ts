@@ -30,7 +30,11 @@ export const getRecruitment = async (req: Request, res: Response) => {
 			application: {
 				with: {
 					user: true,
-					jobOffer: true,
+					jobOffer: {
+						with: {
+							company: true,
+						},
+					},
 				},
 			},
 		},
