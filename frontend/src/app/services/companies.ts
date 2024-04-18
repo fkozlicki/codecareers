@@ -47,7 +47,7 @@ export type JobOfferValues = z.infer<typeof createJobOfferSchema>;
 
 export interface Recruitment {
 	id: string;
-	jobOffer: Pick<JobOffer, 'id' | 'position'>;
+	jobOffer: JobOffer;
 	user: User;
 }
 

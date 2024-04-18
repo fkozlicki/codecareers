@@ -4,6 +4,7 @@ import { db } from '../db';
 import {
 	applications,
 	chats,
+	companies,
 	jobOffers,
 	messages,
 	recruitments,
@@ -12,10 +13,17 @@ import { io } from '..';
 
 export const getRecruitments = async (req: Request, res: Response) => {
 	const result = await db
-		.select({ id: recruitments.id, jobOffer: jobOffers })
+		.select({
+			id: recruitments.id,
+			jobOffer: {
+				...jobOffers,
+				company: companies,
+			},
+		})
 		.from(recruitments)
 		.leftJoin(applications, eq(recruitments.applicationId, applications.id))
 		.leftJoin(jobOffers, eq(applications.jobOfferId, jobOffers.id))
+		.leftJoin(companies, eq(jobOffers.companyId, companies.id))
 		.where(eq(applications.userId, res.locals.user.id));
 
 	res.status(200).json({ recruitments: result });

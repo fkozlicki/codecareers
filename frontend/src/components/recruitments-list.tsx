@@ -2,6 +2,7 @@ import { useGetRecruitmentsQuery } from '@/app/services/recruitments';
 import { Link } from 'react-router-dom';
 import Empty from './ui/empty';
 import JobOfferSkeleton from './job-offer-skeleton';
+import JobOfferCard from './job-offer-card';
 
 const RecruitmentsList = () => {
 	const { data, isUninitialized, isLoading, isError } =
@@ -29,7 +30,7 @@ const RecruitmentsList = () => {
 		<div className="flex flex-col gap-2">
 			{data.recruitments.map((recruitment) => (
 				<Link to={`/my-recruitments/${recruitment.id}`} key={recruitment.id}>
-					<div>{recruitment.jobOffer.position}</div>
+					<JobOfferCard jobOffer={recruitment.jobOffer} />
 				</Link>
 			))}
 		</div>
