@@ -7,23 +7,23 @@ import { messages } from '../db/schema';
 export const getMessages = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
-	const messageId = req.query.cursor as string | undefined;
+	const cursor = req.query.cursor as string | undefined;
 
-	const cursor = messageId
+	const cursorMessage = cursor
 		? await db.query.messages.findFirst({
-				where: eq(messages.id, messageId),
+				where: eq(messages.id, cursor),
 		  })
 		: undefined;
 
 	const result = await db.query.messages.findMany({
 		where: and(
 			eq(messages.chatId, id),
-			cursor
+			cursorMessage
 				? or(
-						lt(messages.createdAt, cursor.createdAt),
+						lt(messages.createdAt, cursorMessage.createdAt),
 						and(
-							eq(messages.createdAt, cursor.createdAt),
-							lt(messages.id, cursor.id)
+							eq(messages.createdAt, cursorMessage.createdAt),
+							lt(messages.id, cursorMessage.id)
 						)
 				  )
 				: undefined
@@ -40,23 +40,13 @@ export const getMessages = async (req: Request, res: Response) => {
 	const nextCursor = lastItem?.id;
 
 	if (lastItem) {
-		const [result] = await db
-			.select({ count: count() })
-			.from(messages)
-			.where(
-				and(
-					eq(messages.chatId, id),
-					or(
-						lt(messages.createdAt, lastItem.createdAt),
-						and(
-							eq(messages.createdAt, lastItem.createdAt),
-							lt(messages.id, lastItem.id)
-						)
-					)
-				)
-			)
-			.limit(1);
-		if (result.count > 0) {
+		const result = await db.query.messages.findFirst({
+			where: and(
+				eq(messages.chatId, id),
+				lt(messages.createdAt, lastItem.createdAt)
+			),
+		});
+		if (result) {
 			hasNextPage = true;
 		}
 	}
