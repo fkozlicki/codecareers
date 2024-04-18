@@ -2,18 +2,28 @@ import { useGetRecruitmentQuery } from '@/app/services/recruitments';
 import RecruitmentChat from '@/components/recruitment-chat';
 import RecruitmentOverview from '@/components/recruitment-overview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 const CompanyRecruitment = () => {
-	const { recruitmentId } = useParams();
+	const { recruitmentId, companyId } = useParams();
 	const { data } = useGetRecruitmentQuery(recruitmentId!);
+	const [searchParams] = useSearchParams();
+	const view = searchParams.get('view');
 
 	return (
-		<Tabs defaultValue="overview">
+		<Tabs defaultValue="overview" value={view ?? undefined}>
 			<div className="flex justify-center">
 				<TabsList>
-					<TabsTrigger value="overview">Overview</TabsTrigger>
-					<TabsTrigger value="chat">Chat</TabsTrigger>
+					<Link
+						to={`/my-companies/${companyId}/recruitments/${recruitmentId}?view=overview`}
+					>
+						<TabsTrigger value="overview">Overview</TabsTrigger>
+					</Link>
+					<Link
+						to={`/my-companies/${companyId}/recruitments/${recruitmentId}?view=chat`}
+					>
+						<TabsTrigger value="chat">Chat</TabsTrigger>
+					</Link>
 				</TabsList>
 			</div>
 			<TabsContent value="overview">

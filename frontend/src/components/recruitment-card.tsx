@@ -9,10 +9,10 @@ interface RecruitmentCardProps {
 }
 
 const RecruitmentCard = ({ recruitment }: RecruitmentCardProps) => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 
 	return (
-		<Link to={`/my-companies/${id}/recruitments/${recruitment.id}`}>
+		<Link to={`/my-companies/${companyId}/recruitments/${recruitment.id}`}>
 			<Card className="hover:shadow-md">
 				<CardContent className="p-4">
 					<span className="inline-block mb-4">

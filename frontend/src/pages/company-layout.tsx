@@ -5,9 +5,9 @@ import CompanyNavigation from '@/components/company-navigation';
 import { Outlet, useParams } from 'react-router-dom';
 
 const CompanyLayout = () => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 
-	const { data } = useGetCompanyQuery(id!);
+	const { data } = useGetCompanyQuery(companyId!);
 
 	return (
 		<>

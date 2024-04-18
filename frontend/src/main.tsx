@@ -91,7 +91,7 @@ const router = createBrowserRouter([
 				),
 			},
 			{
-				path: '/my-companies/:id',
+				path: '/my-companies/:companyId',
 				element: <CompanyLayout />,
 				children: [
 					{

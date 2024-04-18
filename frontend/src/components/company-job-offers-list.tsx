@@ -5,11 +5,11 @@ import Empty from '@/components/ui/empty';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 const CompanyJobOffersList = () => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 	const [params] = useSearchParams();
 	const sort = params.get('sort');
 	const { data, isLoading, isError, isUninitialized } =
-		useGetCompanyJobOffersQuery({ id: id!, sort });
+		useGetCompanyJobOffersQuery({ id: companyId!, sort });
 
 	if (isLoading || isUninitialized) {
 		return (
@@ -34,7 +34,7 @@ const CompanyJobOffersList = () => {
 			{data.jobOffers.map((jobOffer) => (
 				<Link
 					key={jobOffer.id}
-					to={`/my-companies/${id}/job-offers/${jobOffer.id}`}
+					to={`/my-companies/${companyId}/job-offers/${jobOffer.id}`}
 				>
 					<JobOfferCard jobOffer={jobOffer} admin />
 				</Link>

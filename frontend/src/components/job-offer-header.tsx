@@ -11,7 +11,7 @@ interface JobOfferHeaderProps {
 }
 
 const JobOfferHeader = ({ position, published }: JobOfferHeaderProps) => {
-	const { id, jobOfferId } = useParams();
+	const { companyId, jobOfferId } = useParams();
 	const [updateJobOffer] = useUpdateJobOfferMutation();
 
 	const handleChangePublic = () => {
@@ -44,7 +44,7 @@ const JobOfferHeader = ({ position, published }: JobOfferHeaderProps) => {
 				</Badge>
 			</div>
 			<div className="flex gap-2">
-				<Link to={`/my-companies/${id}/job-offers/${jobOfferId}/edit`}>
+				<Link to={`/my-companies/${companyId}/job-offers/${jobOfferId}/edit`}>
 					<Button>Edit</Button>
 				</Link>
 				<Button onClick={handleChangePublic}>

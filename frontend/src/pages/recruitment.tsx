@@ -2,20 +2,29 @@ import { useGetRecruitmentQuery } from '@/app/services/recruitments';
 import RecruitmentApplication from '@/components/recruitment-application';
 import RecruitmentChat from '@/components/recruitment-chat';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import RecruitmentJobOffer from './recruitment-job-offer';
 
 const Recruitment = () => {
 	const { recruitmentId } = useParams();
+	const [searchParams] = useSearchParams();
 	const { data } = useGetRecruitmentQuery(recruitmentId!);
 
+	const view = searchParams.get('view');
+
 	return (
-		<Tabs defaultValue="job-offer" className="p-4">
+		<Tabs defaultValue="job-offer" value={view ?? undefined} className="p-4">
 			<div className="flex justify-center mb-8">
 				<TabsList>
-					<TabsTrigger value="job-offer">Job offer</TabsTrigger>
-					<TabsTrigger value="application">Application</TabsTrigger>
-					<TabsTrigger value="chat">Chat</TabsTrigger>
+					<Link to={`/my-recruitments/${recruitmentId}?view=job-offer`}>
+						<TabsTrigger value="job-offer">Job offer</TabsTrigger>
+					</Link>
+					<Link to={`/my-recruitments/${recruitmentId}?view=application`}>
+						<TabsTrigger value="application">Application</TabsTrigger>
+					</Link>
+					<Link to={`/my-recruitments/${recruitmentId}?view=chat`}>
+						<TabsTrigger value="chat">Chat</TabsTrigger>
+					</Link>
 				</TabsList>
 			</div>
 			{data && (

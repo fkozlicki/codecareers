@@ -2,26 +2,26 @@ import { useLocation, useParams } from 'react-router-dom';
 import NavigationLink from './navigation-link';
 
 const CompanyNavigationLinks = () => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 	const { pathname } = useLocation();
 
 	return (
 		<>
 			<NavigationLink
-				to={`/my-companies/${id}`}
-				active={pathname === `/my-companies/${id}`}
+				to={`/my-companies/${companyId}`}
+				active={pathname === `/my-companies/${companyId}`}
 			>
 				General
 			</NavigationLink>
 			<NavigationLink
-				to={`/my-companies/${id}/job-offers`}
-				active={pathname.includes(`/my-companies/${id}/job-offers`)}
+				to={`/my-companies/${companyId}/job-offers`}
+				active={pathname.includes(`/my-companies/${companyId}/job-offers`)}
 			>
 				Job offers
 			</NavigationLink>
 			<NavigationLink
-				to={`/my-companies/${id}/recruitments`}
-				active={pathname.includes(`/my-companies/${id}/recruitments`)}
+				to={`/my-companies/${companyId}/recruitments`}
+				active={pathname.includes(`/my-companies/${companyId}/recruitments`)}
 			>
 				Recruitments
 			</NavigationLink>

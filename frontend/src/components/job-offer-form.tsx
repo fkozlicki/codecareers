@@ -36,7 +36,7 @@ const JobOfferForm = ({
 }: {
 	defaultValues?: JobOfferValues;
 }) => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 	const form = useForm<JobOfferValues>({
 		resolver: zodResolver(createJobOfferSchema),
 		defaultValues: defaultValues ?? {
@@ -70,14 +70,14 @@ const JobOfferForm = ({
 		})) ?? [];
 
 	const onSubmit = (values: JobOfferValues) => {
-		if (!id) {
+		if (!companyId) {
 			return;
 		}
-		createJobOffer({ ...values, companyId: id })
+		createJobOffer({ ...values, companyId })
 			.unwrap()
 			.then(() => {
 				if (!defaultValues) {
-					navigate(`/my-companies/${id}/job-offers`);
+					navigate(`/my-companies/${companyId}/job-offers`);
 				}
 				toast.success(
 					`Successfuly ${defaultValues ? 'updated' : 'created'} company`

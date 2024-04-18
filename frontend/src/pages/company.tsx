@@ -3,8 +3,8 @@ import CompanyForm from '@/components/company-form';
 import { useParams } from 'react-router-dom';
 
 const Company = () => {
-	const { id } = useParams();
-	const { data, isLoading, isError } = useGetCompanyQuery(id!);
+	const { companyId } = useParams();
+	const { data, isLoading, isError } = useGetCompanyQuery(companyId!);
 
 	if (isLoading) {
 		return <div>Loading..</div>;

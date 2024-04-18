@@ -4,9 +4,9 @@ import Empty from '@/components/ui/empty';
 import { useParams } from 'react-router-dom';
 
 const CompanyRecruitments = () => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 	const { data, isLoading, isError, isUninitialized } =
-		useGetCompanyRecruitmentsQuery(id!);
+		useGetCompanyRecruitmentsQuery(companyId!);
 
 	if (isLoading || isUninitialized) {
 		return <div>Loading...</div>;
@@ -23,7 +23,7 @@ const CompanyRecruitments = () => {
 	return (
 		<div>
 			{data.recruitments.map((recruitment) => (
-				<RecruitmentCard recruitment={recruitment} />
+				<RecruitmentCard key={recruitment.id} recruitment={recruitment} />
 			))}
 		</div>
 	);

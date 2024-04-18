@@ -10,13 +10,13 @@ import { ChevronDownIcon } from 'lucide-react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 const CompanyJobOffersHeader = () => {
-	const { id } = useParams();
+	const { companyId } = useParams();
 	const [params] = useSearchParams();
 	const sort = params.get('sort') ?? 'all';
 
 	return (
 		<div className="flex justify-between items-center mb-8">
-			<Link to={`/my-companies/${id}/job-offers/create`}>
+			<Link to={`/my-companies/${companyId}/job-offers/create`}>
 				<Button>Create</Button>
 			</Link>
 			<DropdownMenu>
@@ -28,15 +28,15 @@ const CompanyJobOffersHeader = () => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuRadioGroup value={sort}>
-						<Link to={`/my-companies/${id}/job-offers`}>
+						<Link to={`/my-companies/${companyId}/job-offers`}>
 							<DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
 						</Link>
-						<Link to={`/my-companies/${id}/job-offers?sort=public`}>
+						<Link to={`/my-companies/${companyId}/job-offers?sort=public`}>
 							<DropdownMenuRadioItem value="public">
 								Public
 							</DropdownMenuRadioItem>
 						</Link>
-						<Link to={`/my-companies/${id}/job-offers?sort=draft`}>
+						<Link to={`/my-companies/${companyId}/job-offers?sort=draft`}>
 							<DropdownMenuRadioItem value="draft">Draft</DropdownMenuRadioItem>
 						</Link>
 					</DropdownMenuRadioGroup>
