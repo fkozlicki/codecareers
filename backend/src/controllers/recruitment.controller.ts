@@ -1,15 +1,7 @@
-import { and, count, desc, eq, gt } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { db } from '../db';
-import {
-	applications,
-	chats,
-	companies,
-	jobOffers,
-	messages,
-	recruitments,
-} from '../db/schema';
-import { io } from '..';
+import { applications, companies, jobOffers, recruitments } from '../db/schema';
 
 export const getRecruitments = async (req: Request, res: Response) => {
 	const result = await db

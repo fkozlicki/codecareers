@@ -25,27 +25,24 @@ export const getJobOfferSchema = z.object({
 	}),
 });
 
+export const getJobOffersSchema = z.object({
+	query: z.object({
+		cursor: z.string().optional(),
+		pageSize: z.number().optional(),
+		position: z.string().optional(),
+	}),
+});
+
+export type GetJobOffersSchema = z.infer<typeof getJobOffersSchema>;
+
 export const updateJobOfferSchema = z.object({
 	params: z.object({
 		id: z.string(),
 	}),
-	file: z
-		.object({
-			fieldname: z.literal('cv'),
-			buffer: z.instanceof(Buffer),
-		})
-		.optional(),
 	body: jobOfferBody.partial(),
 });
 
-export const getJobOfferApplications = z.object({
-	params: z.object({
-		id: z.string(),
-	}),
-	query: z.object({
-		sort: z.enum(['accepted', 'rejected']).optional(),
-	}),
-});
+export type UpdateJobOfferSchema = z.infer<typeof updateJobOfferSchema>;
 
 const applicationBody = z.object({
 	introduction: z.string(),
@@ -58,8 +55,21 @@ const applicationFile = z.object({
 
 export const createApplicationSchema = z.object({
 	body: applicationBody,
-	file: applicationFile,
+	file: applicationFile.optional(),
 	params: z.object({
 		id: z.string(),
 	}),
 });
+
+export type CreateApplicationSchema = z.infer<typeof createApplicationSchema>;
+
+export const getJobOfferApplications = z.object({
+	params: z.object({
+		id: z.string(),
+	}),
+	query: z.object({
+		sort: z.enum(['accepted', 'rejected']).optional(),
+	}),
+});
+
+export type GetJobOfferApplications = z.infer<typeof getJobOfferApplications>;

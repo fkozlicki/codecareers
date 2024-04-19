@@ -182,7 +182,7 @@ export const getCompanyJobOffers = async (
 	const { sort } = req.query;
 
 	try {
-		const result = await jobOfferService.getJobOffersByCompanyId(id, sort);
+		const result = await jobOfferService.findJobOffersByCompanyId(id, sort);
 
 		res.status(200).json({ jobOffers: result });
 	} catch (error) {

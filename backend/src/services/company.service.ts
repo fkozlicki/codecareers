@@ -53,26 +53,22 @@ export const createCompany = async (
 	body: CreateCompanySchema['body'],
 	files: CreateCompanySchema['files']
 ) => {
-	let avatar;
-	let banner;
+	let avatarUrl;
+	let backgroundUrl;
 
 	if (files) {
 		const { avatarFilename, bannerFilename } = await uploadCompanyFiles(files);
-		avatar = avatarFilename;
-		banner = bannerFilename;
+		avatarUrl = `http://localhost:3000/avatars/${avatarFilename}`;
+		backgroundUrl = `http://localhost:3000/avatars/${bannerFilename}`;
 	}
 
 	const [newCompany] = await db
 		.insert(companies)
 		.values({
 			ownerId,
+			avatarUrl,
+			backgroundUrl,
 			...body,
-			...(avatar
-				? { avatarUrl: `http://localhost:3000/avatars/${avatar}` }
-				: {}),
-			...(banner
-				? { backgroundUrl: `http://localhost:3000/avatars/${banner}` }
-				: {}),
 		})
 		.returning();
 

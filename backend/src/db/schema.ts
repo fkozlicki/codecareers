@@ -51,6 +51,8 @@ export const companies = pgTable('company', {
 	backgroundUrl: text('background_url'),
 });
 
+export type Company = typeof companies.$inferSelect;
+
 export const companiesRelations = relations(companies, ({ one, many }) => ({
 	owner: one(users, {
 		fields: [companies.ownerId],
@@ -112,6 +114,8 @@ export const jobOffers = pgTable('job_offer', {
 		.defaultNow(),
 	published: boolean('published').notNull().default(false),
 });
+
+export type JobOffer = typeof jobOffers.$inferSelect;
 
 export const jobOffersRelations = relations(jobOffers, ({ many, one }) => ({
 	jobOfferSkills: many(jobOfferSkills),
@@ -192,6 +196,8 @@ export const applications = pgTable('application', {
 	introduction: text('introduction'),
 	accepted: boolean('accepted'),
 });
+
+export type Application = typeof applications.$inferSelect;
 
 export const applicationsRelations = relations(applications, ({ one }) => ({
 	jobOffer: one(jobOffers, {
