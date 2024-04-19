@@ -1,10 +1,7 @@
-import { and, count, desc, eq, lt, or } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { io } from '..';
-import { db } from '../db';
-import { messages } from '../db/schema';
-import { GetMessagesSchema } from '../validators/chat';
 import * as chatService from '../services/chat.service';
+import { GetMessagesSchema } from '../validators/chat';
 
 export const getMessages = async (
 	req: Request<GetMessagesSchema['params'], {}, {}, GetMessagesSchema['query']>,

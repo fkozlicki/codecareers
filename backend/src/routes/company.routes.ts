@@ -17,6 +17,7 @@ import {
 	createJobOfferSchema,
 	deleteCompanySchema,
 	getCompanyJobOffersSchema,
+	getCompanyRecruitmentsSchema,
 	getCompanySchema,
 	updateCompanySchema,
 } from '../validators/companies';
@@ -57,4 +58,8 @@ companiesRouter
 
 companiesRouter
 	.route('/:id/recruitments')
-	.get(requireSession, getCompanyRecruitments);
+	.get(
+		requireSession,
+		validate(getCompanyRecruitmentsSchema),
+		getCompanyRecruitments
+	);

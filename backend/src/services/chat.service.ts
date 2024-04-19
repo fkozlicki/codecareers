@@ -32,6 +32,7 @@ export const createMessage = async (
 		})
 		.returning();
 
+	// TODO: Change to user service method
 	const { password, ...user } = (await db.query.users.findFirst({
 		where: eq(users.id, userId),
 	}))!;
