@@ -9,11 +9,7 @@ export const updateUserSchema = z.object({
 	params: z.object({
 		id: z.string(),
 	}),
-	file: z
-		.object({
-			fieldname: z.literal('avatar'),
-			buffer: z.instanceof(Buffer),
-		})
-		.optional(),
 	body: userBody.partial(),
 });
+
+export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
