@@ -8,6 +8,19 @@ import {
 	users,
 } from '../db/schema';
 
+export const createRecruitment = async (
+	applicationId: string,
+	chatId: string
+) => {
+	return await db
+		.insert(recruitments)
+		.values({
+			applicationId,
+			chatId,
+		})
+		.returning();
+};
+
 export const getRecruitmentsByCompanyId = async (companyId: string) => {
 	return await db
 		.select({
