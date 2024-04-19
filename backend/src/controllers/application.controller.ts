@@ -1,11 +1,8 @@
-import { eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
-import { db } from '../db';
-import { applications, chatUsers, chats, recruitments } from '../db/schema';
 import * as applicationService from '../services/application.service';
-import { GetApplicationsSchema } from '../validators/applications';
 import * as chatService from '../services/chat.service';
 import * as recruitmentService from '../services/recruitment.service';
+import { GetApplicationsSchema } from '../validators/applications';
 
 export const getApplications = async (
 	req: Request<{}, {}, {}, GetApplicationsSchema['query']>,
