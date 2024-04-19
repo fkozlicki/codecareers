@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { db } from '../db';
+import * as skillService from '../services/skill.service';
 
 export const getSkills = async (req: Request, res: Response) => {
-	const skills = await db.query.skills.findMany();
+	const skills = await skillService.findSkills();
 
 	res.status(200).json({ skills });
 };
