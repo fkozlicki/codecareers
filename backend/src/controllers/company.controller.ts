@@ -1,6 +1,5 @@
 import { and, eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
-import { generateId } from 'lucia';
 import { db } from '../db';
 import {
 	applications,
@@ -13,179 +12,145 @@ import {
 	technologies,
 	users,
 } from '../db/schema';
-import { uploadFileToS3 } from '../lib/s3';
-import { CompanyFiles, CreateJobOfferSchema } from '../validators/companies';
+import * as companyService from '../services/company.service';
+import {
+	CreateCompanySchema,
+	CreateJobOfferSchema,
+	DeleteCompanySchema,
+	GetCompanyJobOffersSchema,
+	GetCompanyRecruitmentsSchema,
+	GetCompanySchema,
+	UpdateCompanySchema,
+} from '../validators/companies';
 
-export const getCompany = async (req: Request, res: Response) => {
-	const id = req.params.id;
+export const getCompany = async (
+	req: Request<GetCompanySchema['params']>,
+	res: Response
+) => {
+	const { id } = req.params;
 
-	const result = await db.query.companies.findFirst({
-		where: eq(companies.id, id),
-	});
+	try {
+		const result = await companyService.findCompanyById(id);
 
-	if (!result) {
-		return res.status(404).json({ message: `Company with id ${id} not found` });
+		if (!result) {
+			return res
+				.status(404)
+				.json({ message: `Company with id ${id} not found` });
+		}
+
+		const { ownerId, ...company } = result;
+
+		if (ownerId !== res.locals.user.id) {
+			return res
+				.status(403)
+				.json({ message: "You don't have permission to access this data" });
+		}
+
+		res.status(200).json({ company });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
 	}
-
-	const { ownerId, ...company } = result;
-
-	if (ownerId !== res.locals.user.id) {
-		return res
-			.status(403)
-			.json({ message: "You don't have permission to access this data" });
-	}
-
-	res.status(200).json({ company });
 };
 
 export const getCompanies = async (req: Request, res: Response) => {
-	const userId = req.params.userId;
+	try {
+		const result = await companyService.findCompaniesByUserId(
+			res.locals.user.id
+		);
 
-	if (userId && userId !== res.locals.user.id) {
-		return res
-			.status(403)
-			.json({ message: "You don't have permission to access this data" });
+		res.status(200).json({ companies: result });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
 	}
-
-	const result = await db.query.companies.findMany({
-		where: eq(companies.ownerId, userId ?? res.locals.user.id),
-		columns: {
-			ownerId: false,
-		},
-	});
-
-	res.status(200).json({ companies: result });
 };
 
-export const createCompany = async (req: Request, res: Response) => {
-	const files = req.files as CompanyFiles | undefined;
-	const avatarFilename = generateId(15);
-	const bannerFilename = generateId(15);
+export const createCompany = async (
+	req: Request<{}, {}, CreateCompanySchema['body']> & {
+		files: CreateCompanySchema['files'];
+	},
+	res: Response
+) => {
+	try {
+		const newCompany = await companyService.createCompany(
+			res.locals.user.id,
+			req.body,
+			req.files
+		);
 
-	if (files) {
-		try {
-			if (files.avatar) {
-				await uploadFileToS3(
-					`avatars/${avatarFilename}`,
-					files.avatar[0].buffer
-				);
-			}
-			if (files.banner) {
-				await uploadFileToS3(
-					`avatars/${bannerFilename}`,
-					files.banner[0].buffer
-				);
-			}
-		} catch (error) {
-			console.error(error);
-			return res.status(500).json({ message: 'Server error' });
+		res.status(201).json({ company: newCompany });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
+};
+
+export const updateCompany = async (
+	req: Request<
+		UpdateCompanySchema['params'],
+		{},
+		UpdateCompanySchema['body']
+	> & {
+		files: UpdateCompanySchema['files'];
+	},
+	res: Response
+) => {
+	const { id } = req.params;
+
+	try {
+		const company = await companyService.findCompanyById(id);
+
+		if (!company) {
+			return res
+				.status(404)
+				.json({ message: `Company with id ${id} not found` });
 		}
-	}
 
-	const [newCompany] = await db
-		.insert(companies)
-		.values({
-			ownerId: res.locals.user.id,
-			...req.body,
-			...(files?.avatar
-				? { avatarUrl: `http://localhost:3000/avatars/${avatarFilename}` }
-				: {}),
-			...(files?.banner
-				? { backgroundUrl: `http://localhost:3000/avatars/${bannerFilename}` }
-				: {}),
-		})
-		.returning({
-			id: companies.id,
-			name: companies.name,
-			description: companies.description,
-			phoneNumber: companies.phoneNumber,
-			avatarUrl: companies.avatarUrl,
-			backgroundUrl: companies.backgroundUrl,
-		});
-
-	res.status(201).json({ company: newCompany });
-};
-
-export const updateCompany = async (req: Request, res: Response) => {
-	const id = req.params.id;
-
-	const company = await db.query.companies.findFirst({
-		where: eq(companies.id, req.params.id),
-	});
-
-	if (!company) {
-		return res.status(404).json({ message: `Company with id ${id} not found` });
-	}
-
-	if (company.ownerId !== res.locals.user.id) {
-		return res
-			.status(403)
-			.json({ message: "You don't have permission to access this data" });
-	}
-
-	const files = req.files as CompanyFiles | undefined;
-	const avatarFilename = generateId(15);
-	const bannerFilename = generateId(15);
-
-	if (files) {
-		try {
-			if (files.avatar) {
-				await uploadFileToS3(
-					`avatars/${avatarFilename}`,
-					files.avatar[0].buffer
-				);
-			}
-			if (files.banner) {
-				await uploadFileToS3(
-					`avatars/${bannerFilename}`,
-					files.banner[0].buffer
-				);
-			}
-		} catch (error) {
-			console.error(error);
-			return res.status(500).json({ message: 'Server error' });
+		if (company.ownerId !== res.locals.user.id) {
+			return res
+				.status(403)
+				.json({ message: "You don't have permission to access this data" });
 		}
+
+		const updatedCompany = await companyService.updateCompany(
+			id,
+			req.body,
+			req.files
+		);
+
+		const { ownerId, ...rest } = updatedCompany;
+
+		res.status(200).json({ company: rest });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
 	}
-
-	const [result] = await db
-		.update(companies)
-		.set({
-			...req.body,
-			...(files?.avatar
-				? { avatarUrl: `http://localhost:3000/avatars/${avatarFilename}` }
-				: {}),
-			...(files?.banner
-				? { backgroundUrl: `http://localhost:3000/avatars/${bannerFilename}` }
-				: {}),
-		})
-		.where(eq(companies.id, id))
-		.returning();
-
-	const { ownerId, ...updatedCompany } = result;
-
-	res.status(200).json({ company: updatedCompany });
 };
 
-export const deleteCompany = async (req: Request, res: Response) => {
-	const id = req.params.id;
+export const deleteCompany = async (
+	req: Request<DeleteCompanySchema['params']>,
+	res: Response
+) => {
+	const { id } = req.params;
 
-	const company = await db.query.companies.findFirst({
-		where: eq(companies.id, req.params.id),
-	});
+	try {
+		const company = await companyService.findCompanyById(id);
 
-	if (!company) {
-		return res.status(404).json({ message: `Company with id ${id} not found` });
+		if (!company) {
+			return res
+				.status(404)
+				.json({ message: `Company with id ${id} not found` });
+		}
+
+		if (company.ownerId !== res.locals.user.id) {
+			return res
+				.status(403)
+				.json({ message: "You don't have permission to access this data" });
+		}
+
+		const deletedCompany = await companyService.deleteCompanyById(id);
+
+		res.status(200).json({ company: deletedCompany });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
 	}
-
-	if (company.ownerId !== res.locals.user.id) {
-		return res
-			.status(403)
-			.json({ message: "You don't have permission to access this data" });
-	}
-
-	await db.delete(companies).where(eq(companies.id, id)).returning();
-
-	res.status(204).json({ message: 'Company deleted successfully' });
 };
 
 export const createJobOffer = async (
@@ -196,13 +161,13 @@ export const createJobOffer = async (
 	>,
 	res: Response
 ) => {
-	const companyId = req.params.id;
+	const { id } = req.params;
 
 	const { technologies: _technologies, skills: _skills, ...rest } = req.body;
 
 	const [result] = await db
 		.insert(jobOffers)
-		.values({ companyId, ...rest })
+		.values({ companyId: id, ...rest })
 		.returning();
 
 	const newTechnologies = _technologies.filter(
@@ -289,13 +254,21 @@ export const createJobOffer = async (
 	res.status(201).json({ jobOffer: createdJobOffer });
 };
 
-export const getCompanyJobOffers = async (req: Request, res: Response) => {
-	const companyId = req.params.id;
+export const getCompanyJobOffers = async (
+	req: Request<
+		GetCompanyJobOffersSchema['params'],
+		{},
+		{},
+		GetCompanyJobOffersSchema['query']
+	>,
+	res: Response
+) => {
+	const { id } = req.params;
 	const sort = req.query.sort;
 
 	const result = await db.query.jobOffers.findMany({
 		where: and(
-			eq(jobOffers.companyId, companyId),
+			eq(jobOffers.companyId, id),
 			sort ? eq(jobOffers.published, sort === 'public') : undefined
 		),
 		with: {
@@ -306,8 +279,11 @@ export const getCompanyJobOffers = async (req: Request, res: Response) => {
 	res.status(200).json({ jobOffers: result });
 };
 
-export const getCompanyRecruitments = async (req: Request, res: Response) => {
-	const companyId = req.params.id;
+export const getCompanyRecruitments = async (
+	req: Request<GetCompanyRecruitmentsSchema['params']>,
+	res: Response
+) => {
+	const { id } = req.params;
 
 	const result = await db
 		.select({
@@ -328,7 +304,7 @@ export const getCompanyRecruitments = async (req: Request, res: Response) => {
 		.leftJoin(jobOffers, eq(applications.jobOfferId, jobOffers.id))
 		.leftJoin(companies, eq(jobOffers.companyId, companies.id))
 		.leftJoin(users, eq(applications.userId, users.id))
-		.where(eq(companies.id, companyId));
+		.where(eq(companies.id, id));
 
 	res.status(200).json({ recruitments: result });
 };

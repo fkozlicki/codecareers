@@ -31,6 +31,8 @@ export const createCompanySchema = z.object({
 	files: companyFiles.optional(),
 });
 
+export type CreateCompanySchema = z.infer<typeof createCompanySchema>;
+
 export const updateCompanySchema = z.object({
 	body: companyBody.partial(),
 	files: companyFiles.optional(),
@@ -39,17 +41,23 @@ export const updateCompanySchema = z.object({
 	}),
 });
 
+export type UpdateCompanySchema = z.infer<typeof updateCompanySchema>;
+
 export const getCompanySchema = z.object({
 	params: z.object({
 		id: z.string(),
 	}),
 });
 
+export type GetCompanySchema = z.infer<typeof getCompanySchema>;
+
 export const deleteCompanySchema = z.object({
 	params: z.object({
 		id: z.string(),
 	}),
 });
+
+export type DeleteCompanySchema = z.infer<typeof deleteCompanySchema>;
 
 export const createJobOfferSchema = z.object({
 	body: jobOfferBody,
@@ -68,3 +76,17 @@ export const getCompanyJobOffersSchema = z.object({
 		sort: z.enum(['public', 'draft']).optional(),
 	}),
 });
+
+export type GetCompanyJobOffersSchema = z.infer<
+	typeof getCompanyJobOffersSchema
+>;
+
+export const getCompanyRecruitmentsSchema = z.object({
+	params: z.object({
+		id: z.string(),
+	}),
+});
+
+export type GetCompanyRecruitmentsSchema = z.infer<
+	typeof getCompanyRecruitmentsSchema
+>;
