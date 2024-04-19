@@ -48,14 +48,8 @@ const applicationBody = z.object({
 	introduction: z.string(),
 });
 
-const applicationFile = z.object({
-	fieldname: z.literal('cv'),
-	buffer: z.instanceof(Buffer),
-});
-
 export const createApplicationSchema = z.object({
 	body: applicationBody,
-	file: applicationFile.optional(),
 	params: z.object({
 		id: z.string(),
 	}),

@@ -19,7 +19,7 @@ export const createApplication = async (
 	jobOfferId: string,
 	userId: string,
 	body: CreateApplicationSchema['body'],
-	file: CreateApplicationSchema['file']
+	file?: Express.Multer.File
 ) => {
 	let cv;
 
@@ -118,7 +118,7 @@ export const findApplicationsByJobOfferId = async (
 	});
 };
 
-const uploadCV = async (file: Required<CreateApplicationSchema>['file']) => {
+const uploadCV = async (file: Express.Multer.File) => {
 	const filename = generateId(15);
 
 	try {

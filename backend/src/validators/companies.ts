@@ -7,35 +7,14 @@ const companyBody = z.object({
 	phoneNumber: z.string(),
 });
 
-const companyFiles = z
-	.object({
-		avatar: z.tuple([
-			z.object({
-				fieldname: z.literal('avatar'),
-				buffer: z.instanceof(Buffer),
-			}),
-		]),
-		banner: z.tuple([
-			z.object({
-				fieldname: z.literal('banner'),
-				buffer: z.instanceof(Buffer),
-			}),
-		]),
-	})
-	.partial();
-
-export type CompanyFiles = z.infer<typeof companyFiles>;
-
 export const createCompanySchema = z.object({
 	body: companyBody,
-	files: companyFiles.optional(),
 });
 
 export type CreateCompanySchema = z.infer<typeof createCompanySchema>;
 
 export const updateCompanySchema = z.object({
 	body: companyBody.partial(),
-	files: companyFiles.optional(),
 	params: z.object({
 		id: z.string(),
 	}),

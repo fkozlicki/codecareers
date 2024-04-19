@@ -7,6 +7,7 @@ import {
 } from '../validators/companies';
 import { generateId } from 'lucia';
 import { uploadFileToS3 } from '../lib/s3';
+import { MulterFiles } from '../lib/multer';
 
 export const findCompanyById = async (id: string) => {
 	return await db.query.companies.findFirst({
@@ -23,9 +24,7 @@ export const findCompaniesByUserId = async (userId: string) => {
 	});
 };
 
-const uploadCompanyFiles = async (
-	files: Required<CreateCompanySchema>['files']
-) => {
+const uploadCompanyFiles = async (files: MulterFiles) => {
 	let avatarFilename;
 	let bannerFilename;
 
@@ -51,7 +50,9 @@ const uploadCompanyFiles = async (
 export const createCompany = async (
 	ownerId: string,
 	body: CreateCompanySchema['body'],
-	files: CreateCompanySchema['files']
+	files?: {
+		[fieldname: string]: Express.Multer.File[] | undefined;
+	}
 ) => {
 	let avatarUrl;
 	let backgroundUrl;
@@ -78,7 +79,7 @@ export const createCompany = async (
 export const updateCompany = async (
 	id: string,
 	body: UpdateCompanySchema['body'],
-	files: UpdateCompanySchema['files']
+	files?: MulterFiles
 ) => {
 	let avatar;
 	let banner;

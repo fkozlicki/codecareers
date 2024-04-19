@@ -11,6 +11,7 @@ import {
 	GetCompanySchema,
 	UpdateCompanySchema,
 } from '../validators/companies';
+import { MulterFiles } from '../lib/multer';
 
 export const getCompany = async (
 	req: Request<GetCompanySchema['params']>,
@@ -54,16 +55,16 @@ export const getCompanies = async (req: Request, res: Response) => {
 };
 
 export const createCompany = async (
-	req: Request<{}, {}, CreateCompanySchema['body']> & {
-		files: CreateCompanySchema['files'];
-	},
+	req: Request<{}, {}, CreateCompanySchema['body']>,
 	res: Response
 ) => {
+	type A = typeof req.files;
+
 	try {
 		const newCompany = await companyService.createCompany(
 			res.locals.user.id,
 			req.body,
-			req.files
+			req.files as MulterFiles
 		);
 
 		res.status(201).json({ company: newCompany });
@@ -73,13 +74,7 @@ export const createCompany = async (
 };
 
 export const updateCompany = async (
-	req: Request<
-		UpdateCompanySchema['params'],
-		{},
-		UpdateCompanySchema['body']
-	> & {
-		files: UpdateCompanySchema['files'];
-	},
+	req: Request<UpdateCompanySchema['params'], {}, UpdateCompanySchema['body']>,
 	res: Response
 ) => {
 	const { id } = req.params;
@@ -102,7 +97,7 @@ export const updateCompany = async (
 		const updatedCompany = await companyService.updateCompany(
 			id,
 			req.body,
-			req.files
+			req.files as MulterFiles
 		);
 
 		const { ownerId, ...rest } = updatedCompany;
@@ -197,7 +192,7 @@ export const getCompanyRecruitments = async (
 	const { id } = req.params;
 
 	try {
-		const result = await recruitmentService.getRecruitmentsByCompanyId(id);
+		const result = await recruitmentService.findRecruitmentsByCompanyId(id);
 
 		res.status(200).json({ recruitments: result });
 	} catch (error) {

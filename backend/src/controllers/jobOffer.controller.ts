@@ -53,9 +53,11 @@ export const updateJobOffer = async (req: Request, res: Response) => {
 };
 
 export const createApplication = async (
-	req: Request<CreateApplicationSchema['params']> & {
-		file: CreateApplicationSchema['file'];
-	},
+	req: Request<
+		CreateApplicationSchema['params'],
+		{},
+		CreateApplicationSchema['body']
+	>,
 	res: Response
 ) => {
 	const { id } = req.params;

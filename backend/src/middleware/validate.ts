@@ -9,8 +9,6 @@ export const validate =
 				body: req.body,
 				query: req.query,
 				params: req.params,
-				files: req.files,
-				file: req.file,
 			});
 			return next();
 		} catch (error) {
