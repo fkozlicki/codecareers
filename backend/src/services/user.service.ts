@@ -4,9 +4,40 @@ import { users } from '../db/schema';
 import { UpdateUserSchema } from '../validators/users';
 import { generateId } from 'lucia';
 import { uploadFileToS3 } from '../lib/s3';
+import { SignUpSchema } from '../validators/auth';
 
 export const findUserById = async (id: string) => {
 	return await db.query.users.findFirst({ where: eq(users.id, id) });
+};
+
+export const findUserByGithubId = async (githubId: number) => {
+	return await db.query.users.findFirst({
+		where: eq(users.githubId, githubId),
+	});
+};
+
+export const findUserByEmail = async (email: string) => {
+	return await db.query.users.findFirst({ where: eq(users.email, email) });
+};
+
+type GoogleUserBody = {
+	firstName: string;
+	lastName: string;
+	email: string;
+	avatar: string;
+};
+
+type GithubUserBody = {
+	username: string;
+	githubId: number;
+	avatar: string;
+};
+
+export const createUser = async (
+	body: SignUpSchema['body'] | GoogleUserBody | GithubUserBody
+) => {
+	const [newUser] = await db.insert(users).values(body).returning();
+	return newUser;
 };
 
 export const updateUser = async (

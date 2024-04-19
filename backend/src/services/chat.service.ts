@@ -2,6 +2,7 @@ import { and, desc, eq, lt, or } from 'drizzle-orm';
 import { db } from '../db';
 import { chatUsers, chats, messages, users } from '../db/schema';
 import { CreateMessageSchema } from '../validators/chat';
+import * as userService from '../services/user.service';
 
 export const createChat = async (userId: string, ownerId: string) => {
 	const [newChat] = await db.insert(chats).values({}).returning();
@@ -32,10 +33,7 @@ export const createMessage = async (
 		})
 		.returning();
 
-	// TODO: Change to user service method
-	const { password, ...user } = (await db.query.users.findFirst({
-		where: eq(users.id, userId),
-	}))!;
+	const { password, ...user } = (await userService.findUserById(userId))!;
 
 	return { ...newMessage, user };
 };

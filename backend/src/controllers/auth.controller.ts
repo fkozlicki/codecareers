@@ -3,35 +3,35 @@ import {
 	generateCodeVerifier,
 	generateState,
 } from 'arctic';
-import { eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
 import { parseCookies, serializeCookie } from 'oslo/cookie';
 import { Argon2id } from 'oslo/password';
-import { db } from '../db';
-import { users } from '../db/schema';
 import { github, google, lucia } from '../lib/lucia';
+import * as userService from '../services/user.service';
+import { SignUpSchema } from '../validators/auth';
 
-export const handleCredentialsSignUp = async (req: Request, res: Response) => {
+export const signUp = async (
+	req: Request<{}, {}, SignUpSchema['body']>,
+	res: Response
+) => {
 	const { email, firstName, lastName, password } = req.body;
 
-	const existingUser = await db.query.users.findFirst({
-		where: eq(users.email, email),
-	});
-
-	if (existingUser) {
-		return res
-			.status(409)
-			.json({ message: 'User with this email already exists' });
-	}
-
-	const hashedPassword = await new Argon2id().hash(password);
-
 	try {
-		await db.insert(users).values({
+		const existingUser = await userService.findUserByEmail(email);
+
+		if (existingUser) {
+			return res
+				.status(409)
+				.json({ message: 'User with this email already exists' });
+		}
+
+		const hashedPassword = await new Argon2id().hash(password);
+
+		await userService.createUser({
 			email,
-			password: hashedPassword,
 			firstName,
 			lastName,
+			password: hashedPassword,
 		});
 
 		res.status(201).json({ message: 'Signed up successfully' });
@@ -40,37 +40,39 @@ export const handleCredentialsSignUp = async (req: Request, res: Response) => {
 	}
 };
 
-export const handleCredentialsSignIn = async (req: Request, res: Response) => {
+export const credentialsSignIn = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 
-	const user = await db.query.users.findFirst({
-		where: eq(users.email, email),
-	});
+	try {
+		const user = await userService.findUserByEmail(email);
 
-	if (!user || !user.password) {
-		return res.status(400).json({ error: 'Invalid data' });
+		if (!user?.password) {
+			return res.status(400).json({ error: 'Invalid sign in method' });
+		}
+
+		const validPassword = await new Argon2id().verify(user.password, password);
+
+		if (!validPassword) {
+			return res.status(400).json({ error: 'Invalid data' });
+		}
+
+		const session = await lucia.createSession(user.id, {});
+
+		res
+			.appendHeader(
+				'Set-Cookie',
+				lucia.createSessionCookie(session.id).serialize()
+			)
+			.status(200)
+			.json({ message: 'Signed in' });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
 	}
-
-	const validPassword = await new Argon2id().verify(user.password, password);
-
-	if (!validPassword) {
-		return res.status(400).json({ error: 'Invalid data' });
-	}
-
-	const session = await lucia.createSession(user.id, {});
-
-	res
-		.appendHeader(
-			'Set-Cookie',
-			lucia.createSessionCookie(session.id).serialize()
-		)
-		.status(200)
-		.json({ message: 'Signed in' });
 };
 
 const codeVerifier = generateCodeVerifier();
 
-export const handleGoogleSignIn = async (_: Request, res: Response) => {
+export const googleSignIn = async (_: Request, res: Response) => {
 	const state = generateState();
 	const url = await google.createAuthorizationURL(state, codeVerifier, {
 		scopes: ['profile', 'email'],
@@ -89,7 +91,7 @@ export const handleGoogleSignIn = async (_: Request, res: Response) => {
 		.redirect(url.toString());
 };
 
-export const handleGoogleCallback = async (req: Request, res: Response) => {
+export const googleCallback = async (req: Request, res: Response) => {
 	const code = req.query.code?.toString() ?? null;
 	const state = req.query.state?.toString() ?? null;
 	const storedState =
@@ -112,9 +114,7 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
 		);
 		const googleUser: GoogleUser = await googleUserResponse.json();
 
-		const existingUser = await db.query.users.findFirst({
-			where: eq(users.email, googleUser.email),
-		});
+		const existingUser = await userService.findUserByEmail(googleUser.email);
 
 		if (existingUser) {
 			const session = await lucia.createSession(existingUser.id, {});
@@ -125,15 +125,12 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
 				)
 				.redirect('http://localhost:5173');
 		}
-		const [user] = await db
-			.insert(users)
-			.values({
-				firstName: googleUser.given_name,
-				lastName: googleUser.family_name,
-				email: googleUser.email,
-				avatar: googleUser.picture,
-			})
-			.returning();
+		const user = await userService.createUser({
+			firstName: googleUser.given_name,
+			lastName: googleUser.family_name,
+			email: googleUser.email,
+			avatar: googleUser.picture,
+		});
 		const session = await lucia.createSession(user.id, {});
 
 		return res
@@ -156,7 +153,7 @@ export const handleGoogleCallback = async (req: Request, res: Response) => {
 	}
 };
 
-export const handleGithubSignIn = async (_: Request, res: Response) => {
+export const githubSignIn = async (_: Request, res: Response) => {
 	const state = generateState();
 	const url = await github.createAuthorizationURL(state);
 	res
@@ -173,7 +170,7 @@ export const handleGithubSignIn = async (_: Request, res: Response) => {
 		.redirect(url.toString());
 };
 
-export const handleGithubCallback = async (req: Request, res: Response) => {
+export const githubCallback = async (req: Request, res: Response) => {
 	const code = req.query.code?.toString() ?? null;
 	const state = req.query.state?.toString() ?? null;
 	const storedState =
@@ -194,9 +191,7 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 		});
 		const githubUser: GitHubUser = await githubUserResponse.json();
 
-		const existingUser = await db.query.users.findFirst({
-			where: eq(users.githubId, githubUser.id),
-		});
+		const existingUser = await userService.findUserByGithubId(githubUser.id);
 
 		if (existingUser) {
 			const session = await lucia.createSession(existingUser.id, {});
@@ -207,14 +202,11 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 				)
 				.redirect('http://localhost:5173');
 		}
-		const [user] = await db
-			.insert(users)
-			.values({
-				username: githubUser.login,
-				githubId: githubUser.id,
-				avatar: githubUser.avatar_url,
-			})
-			.returning();
+		const user = await userService.createUser({
+			username: githubUser.login,
+			githubId: githubUser.id,
+			avatar: githubUser.avatar_url,
+		});
 		const session = await lucia.createSession(user.id, {});
 
 		return res
@@ -237,29 +229,24 @@ export const handleGithubCallback = async (req: Request, res: Response) => {
 	}
 };
 
-export const handleSession = async (req: Request, res: Response) => {
+export const getSession = async (req: Request, res: Response) => {
 	if (!res.locals.user) {
 		res.status(200).json({});
 		return;
 	}
 
-	const user = (
-		await db
-			.select({
-				id: users.id,
-				firstName: users.firstName,
-				lastName: users.lastName,
-				username: users.username,
-				avatar: users.avatar,
-			})
-			.from(users)
-			.where(eq(users.id, res.locals.user.id))
-	)[0];
+	const user = await userService.findUserById(res.locals.user.id);
 
-	res.status(200).json({ user });
+	if (!user) {
+		return res.status(404).json({ message: 'User not found' });
+	}
+
+	const { password, ...rest } = user;
+
+	res.status(200).json({ user: rest });
 };
 
-export const handleLogout = async (_: Request, res: Response) => {
+export const logout = async (_: Request, res: Response) => {
 	if (!res.locals.session) {
 		return res.status(401).end();
 	}

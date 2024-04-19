@@ -1,35 +1,28 @@
 import { Router } from 'express';
 import {
-	handleCredentialsSignIn,
-	handleCredentialsSignUp,
-	handleGithubCallback,
-	handleGithubSignIn,
-	handleGoogleCallback,
-	handleGoogleSignIn,
-	handleLogout,
-	handleSession,
+	credentialsSignIn,
+	getSession,
+	githubCallback,
+	githubSignIn,
+	googleCallback,
+	googleSignIn,
+	logout,
+	signUp,
 } from '../controllers/auth.controller';
 import { validate } from '../middleware/validate';
-import {
-	credentialsSignInSchema,
-	credentialsSignUpSchema,
-} from '../validators/auth';
+import { credentialsSignInSchema, signUpSchema } from '../validators/auth';
 
 export const authRouter = Router();
 
-authRouter.post(
-	'/signup',
-	validate(credentialsSignUpSchema),
-	handleCredentialsSignUp
-);
+authRouter.post('/signup', validate(signUpSchema), signUp);
 authRouter.post(
 	'/login/credentials',
 	validate(credentialsSignInSchema),
-	handleCredentialsSignIn
+	credentialsSignIn
 );
-authRouter.get('/login/github', handleGithubSignIn);
-authRouter.get('/login/github/callback', handleGithubCallback);
-authRouter.get('/login/google', handleGoogleSignIn);
-authRouter.get('/login/google/callback', handleGoogleCallback);
-authRouter.get('/session', handleSession);
-authRouter.get('/logout', handleLogout);
+authRouter.get('/login/github', githubSignIn);
+authRouter.get('/login/github/callback', githubCallback);
+authRouter.get('/login/google', googleSignIn);
+authRouter.get('/login/google/callback', googleCallback);
+authRouter.get('/session', getSession);
+authRouter.get('/logout', logout);
