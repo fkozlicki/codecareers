@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm';
 import { db } from '../db';
 import { technologies } from '../db/schema';
 import { CreateJobOfferSchema } from '../validators/companies';
@@ -7,8 +8,14 @@ export const createTechnologies = async (
 ) => {
 	const newTechnologies = await db
 		.insert(technologies)
-		.values(body.map(({ value }) => ({ name: value })))
+		.values(body.map(({ value }) => ({ name: value, public: false })))
 		.returning();
 
 	return newTechnologies;
+};
+
+export const findTechnologies = async () => {
+	return await db.query.technologies.findMany({
+		where: eq(technologies.public, false),
+	});
 };

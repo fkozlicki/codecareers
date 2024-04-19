@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { db } from '../db';
+import * as technologyService from '../services/technology.service';
 
 export const getTechnologies = async (req: Request, res: Response) => {
-	const technologies = await db.query.technologies.findMany();
+	const technologies = await technologyService.findTechnologies();
 
 	res.status(200).json({ technologies });
 };
