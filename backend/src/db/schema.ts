@@ -80,6 +80,7 @@ export const currency = pgEnum('currency', ['pln', 'gbp', 'eur', 'usd']);
 export const technologies = pgTable('technology', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
+	public: boolean('public').notNull(),
 });
 
 export const technologiesRelations = relations(technologies, ({ many }) => ({
@@ -89,6 +90,7 @@ export const technologiesRelations = relations(technologies, ({ many }) => ({
 export const skills = pgTable('skill', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	name: text('name').notNull(),
+	public: boolean('public').notNull(),
 });
 
 export const skillsRelations = relations(skills, ({ many }) => ({
