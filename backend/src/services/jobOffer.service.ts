@@ -1,12 +1,21 @@
-import { and, eq } from 'drizzle-orm';
+import { and, count, eq, gt, ilike } from 'drizzle-orm';
 import { db } from '../db';
-import { jobOfferSkills, jobOfferTechnologies, jobOffers } from '../db/schema';
+import {
+	jobOfferSkills,
+	jobOfferTechnologies,
+	jobOffers,
+	users,
+} from '../db/schema';
 import {
 	CreateJobOfferSchema,
 	GetCompanyJobOffersSchema,
 } from '../validators/companies';
 import * as skillService from './skill.service';
 import * as technologyService from './technology.service';
+import {
+	GetJobOffersSchema,
+	UpdateJobOfferSchema,
+} from '../validators/jobOffers';
 
 export const createJobOffer = async (
 	companyId: string,
@@ -20,7 +29,7 @@ export const createJobOffer = async (
 	return newJobOffer;
 };
 
-export const getJobOffersByCompanyId = async (
+export const findJobOffersByCompanyId = async (
 	companyId: string,
 	sort: GetCompanyJobOffersSchema['query']['sort']
 ) => {
@@ -33,6 +42,71 @@ export const getJobOffersByCompanyId = async (
 			company: true,
 		},
 	});
+};
+
+export const findJobOfferById = async (id: string) => {
+	return await db.query.jobOffers.findFirst({
+		where: eq(jobOffers.id, id),
+		with: {
+			company: true,
+			jobOfferSkills: {
+				with: {
+					skill: true,
+				},
+			},
+			jobOfferTechnologies: {
+				with: {
+					technology: true,
+				},
+			},
+		},
+	});
+};
+
+export const updateJobOffer = async (
+	id: string,
+	body: UpdateJobOfferSchema['body']
+) => {
+	const [updatedJobOffer] = await db
+		.update(jobOffers)
+		.set(body)
+		.where(eq(jobOffers.id, id))
+		.returning();
+
+	return updatedJobOffer;
+};
+
+export const findJobOffers = async (query: GetJobOffersSchema['query']) => {
+	const { cursor, pageSize, position } = query;
+
+	const result = await db.query.jobOffers.findMany({
+		where: and(
+			eq(jobOffers.published, true),
+			position ? ilike(jobOffers.position, `%${position}%`) : undefined,
+			cursor ? gt(jobOffers.id, cursor) : undefined
+		),
+		limit: pageSize ?? 10,
+		orderBy: users.id,
+		with: {
+			company: true,
+		},
+	});
+
+	const nextCursor = result.at(-1)?.id;
+	let hasNextPage = false;
+
+	if (nextCursor) {
+		const [result] = await db
+			.select({ count: count() })
+			.from(jobOffers)
+			.where(gt(jobOffers.id, nextCursor))
+			.limit(1);
+		if (result.count > 0) {
+			hasNextPage = true;
+		}
+	}
+
+	return { jobOffers: result, cursor: nextCursor, hasNextPage };
 };
 
 export const createJobOfferSkills = async (
