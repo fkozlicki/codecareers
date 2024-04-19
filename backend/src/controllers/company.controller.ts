@@ -1,18 +1,7 @@
-import { and, eq } from 'drizzle-orm';
 import { Request, Response } from 'express';
-import { db } from '../db';
-import {
-	applications,
-	companies,
-	jobOfferSkills,
-	jobOfferTechnologies,
-	jobOffers,
-	recruitments,
-	skills,
-	technologies,
-	users,
-} from '../db/schema';
 import * as companyService from '../services/company.service';
+import * as jobOfferService from '../services/jobOffer.service';
+import * as recruitmentService from '../services/recruitment.service';
 import {
 	CreateCompanySchema,
 	CreateJobOfferSchema,
@@ -163,95 +152,21 @@ export const createJobOffer = async (
 ) => {
 	const { id } = req.params;
 
-	const { technologies: _technologies, skills: _skills, ...rest } = req.body;
+	const { technologies, skills, ...rest } = req.body;
 
-	const [result] = await db
-		.insert(jobOffers)
-		.values({ companyId: id, ...rest })
-		.returning();
+	try {
+		const newJobOffer = await jobOfferService.createJobOffer(id, rest);
 
-	const newTechnologies = _technologies.filter(
-		(technology) => technology.__isNew__
-	);
-	const existingTechnologies = _technologies.filter(
-		(technology) => !technology.__isNew__
-	);
+		await jobOfferService.createJobOfferTechnologies(
+			newJobOffer.id,
+			technologies
+		);
+		await jobOfferService.createJobOfferSkills(newJobOffer.id, skills);
 
-	const createdTechnologies =
-		newTechnologies.length > 0
-			? await db
-					.insert(technologies)
-					.values(newTechnologies.map((tech) => ({ name: tech.value })))
-					.returning()
-			: [];
-
-	await db.insert(jobOfferTechnologies).values(
-		existingTechnologies
-			.map((tech) => ({
-				jobOfferId: result.id,
-				technologyId: tech.value,
-			}))
-			.concat(
-				createdTechnologies.map((tech) => ({
-					jobOfferId: result.id,
-					technologyId: tech.id,
-				}))
-			)
-	);
-
-	const newSkills = _skills.filter((skill) => skill.__isNew__);
-	const existingSkills = _skills.filter((skill) => !skill.__isNew__);
-
-	const createdSkills =
-		newSkills.length > 0
-			? await db
-					.insert(skills)
-					.values(newSkills.map((skill) => ({ name: skill.value })))
-					.returning()
-			: [];
-
-	await db.insert(jobOfferSkills).values(
-		existingSkills
-			.map((skill) => ({
-				jobOfferId: result.id,
-				skillId: skill.value,
-			}))
-			.concat(
-				createdSkills.map((skill) => ({
-					jobOfferId: result.id,
-					skillId: skill.id,
-				}))
-			)
-	);
-
-	const createdJobOffer = await db.query.jobOffers.findFirst({
-		where: eq(jobOffers.id, result.id),
-		columns: {
-			companyId: false,
-		},
-		with: {
-			jobOfferSkills: {
-				with: {
-					skill: true,
-				},
-				columns: {
-					jobOfferId: false,
-					skillId: false,
-				},
-			},
-			jobOfferTechnologies: {
-				with: {
-					technology: true,
-				},
-				columns: {
-					jobOfferId: false,
-					technologyId: false,
-				},
-			},
-		},
-	});
-
-	res.status(201).json({ jobOffer: createdJobOffer });
+		res.status(201).json({ jobOffer: newJobOffer });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
 };
 
 export const getCompanyJobOffers = async (
@@ -264,19 +179,15 @@ export const getCompanyJobOffers = async (
 	res: Response
 ) => {
 	const { id } = req.params;
-	const sort = req.query.sort;
+	const { sort } = req.query;
 
-	const result = await db.query.jobOffers.findMany({
-		where: and(
-			eq(jobOffers.companyId, id),
-			sort ? eq(jobOffers.published, sort === 'public') : undefined
-		),
-		with: {
-			company: true,
-		},
-	});
+	try {
+		const result = await jobOfferService.getJobOffersByCompanyId(id, sort);
 
-	res.status(200).json({ jobOffers: result });
+		res.status(200).json({ jobOffers: result });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
 };
 
 export const getCompanyRecruitments = async (
@@ -285,26 +196,11 @@ export const getCompanyRecruitments = async (
 ) => {
 	const { id } = req.params;
 
-	const result = await db
-		.select({
-			id: recruitments.id,
-			jobOffer: {
-				position: jobOffers.position,
-			},
-			user: {
-				id: users.id,
-				firstName: users.firstName,
-				lastName: users.lastName,
-				username: users.username,
-				avatar: users.avatar,
-			},
-		})
-		.from(recruitments)
-		.leftJoin(applications, eq(recruitments.applicationId, applications.id))
-		.leftJoin(jobOffers, eq(applications.jobOfferId, jobOffers.id))
-		.leftJoin(companies, eq(jobOffers.companyId, companies.id))
-		.leftJoin(users, eq(applications.userId, users.id))
-		.where(eq(companies.id, id));
+	try {
+		const result = await recruitmentService.getRecruitmentsByCompanyId(id);
 
-	res.status(200).json({ recruitments: result });
+		res.status(200).json({ recruitments: result });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
 };
