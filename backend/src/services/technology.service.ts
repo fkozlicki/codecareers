@@ -16,6 +16,6 @@ export const createTechnologies = async (
 
 export const findTechnologies = async () => {
 	return await db.query.technologies.findMany({
-		where: eq(technologies.public, false),
+		where: eq(technologies.public, true),
 	});
 };

@@ -16,6 +16,6 @@ export const createSkills = async (
 
 export const findSkills = async () => {
 	return await db.query.skills.findMany({
-		where: eq(skills.public, false),
+		where: eq(skills.public, true),
 	});
 };
