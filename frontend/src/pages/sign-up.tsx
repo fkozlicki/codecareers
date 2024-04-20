@@ -64,13 +64,17 @@ const SignUp = () => {
 				</h1>
 				<div>
 					<div className="flex flex-col gap-2">
-						<Button>Sign In with Github</Button>
-						<Button>Sign In with Google</Button>
+						<a href="http://localhost:3000/login/github">
+							<Button className="w-full">Sign In with Github</Button>
+						</a>
+						<a href="http://localhost:3000/login/google">
+							<Button className="w-full">Sign In with Google</Button>
+						</a>
 					</div>
 					<div className="flex items-center gap-4 my-4">
-						<div className="flex-1 h-px bg-gray-200"></div>
-						<span>OR</span>
-						<div className="flex-1 h-px bg-gray-200"></div>
+						<div className="flex-1 h-px bg-secondary"></div>
+						<span className="text-sm text-muted-foreground">OR</span>
+						<div className="flex-1 h-px bg-secondary"></div>
 					</div>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

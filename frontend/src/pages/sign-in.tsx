@@ -68,9 +68,9 @@ const SignIn = () => {
 						</a>
 					</div>
 					<div className="flex items-center gap-4 my-4">
-						<div className="flex-1 h-px bg-gray-200"></div>
-						<span>OR</span>
-						<div className="flex-1 h-px bg-gray-200"></div>
+						<div className="flex-1 h-px bg-secondary"></div>
+						<span className="text-sm text-muted-foreground">OR</span>
+						<div className="flex-1 h-px bg-secondary"></div>
 					</div>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
