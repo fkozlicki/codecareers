@@ -16,7 +16,7 @@ export const getMessagesSchema = z.object({
 		id: z.string(),
 	}),
 	query: z.object({
-		pageSize: z.number().optional(),
+		pageSize: z.string().optional(),
 		cursor: z.string().optional(),
 	}),
 });

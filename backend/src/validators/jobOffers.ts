@@ -28,7 +28,7 @@ export const getJobOfferSchema = z.object({
 export const getJobOffersSchema = z.object({
 	query: z.object({
 		cursor: z.string().optional(),
-		pageSize: z.number().optional(),
+		pageSize: z.string().optional(),
 		position: z.string().optional(),
 	}),
 });

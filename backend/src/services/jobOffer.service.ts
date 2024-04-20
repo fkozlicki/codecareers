@@ -85,7 +85,7 @@ export const findJobOffers = async (query: GetJobOffersSchema['query']) => {
 			position ? ilike(jobOffers.position, `%${position}%`) : undefined,
 			cursor ? gt(jobOffers.id, cursor) : undefined
 		),
-		limit: pageSize ?? 10,
+		limit: pageSize ? +pageSize : 10,
 		orderBy: users.id,
 		with: {
 			company: true,

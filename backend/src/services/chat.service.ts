@@ -41,7 +41,7 @@ export const createMessage = async (
 export const findMessagesByChatId = async (
 	chatId: string,
 	cursor?: string,
-	pageSize?: number
+	pageSize?: string
 ) => {
 	let cursorMessage;
 
@@ -64,7 +64,7 @@ export const findMessagesByChatId = async (
 				  )
 				: undefined
 		),
-		limit: pageSize,
+		limit: pageSize ? +pageSize : 10,
 		orderBy: desc(messages.createdAt),
 		with: {
 			user: true,
