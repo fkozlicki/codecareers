@@ -64,7 +64,6 @@ export const chatsApi = api.injectEndpoints({
 				method: 'POST',
 				body: { content },
 			}),
-			invalidatesTags: [{ type: 'Messages', id: 'LIST' }],
 		}),
 	}),
 });
