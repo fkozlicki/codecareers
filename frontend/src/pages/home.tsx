@@ -23,7 +23,7 @@ const Home = () => {
 					<Empty message="There are no job offers you are looking for" />
 				) : (
 					<>
-						<div className="flex-1 p-4 flex flex-col gap-4 min-h-[calc(100vh-53px)]">
+						<div className="flex-1 flex flex-col gap-4 min-h-[calc(100vh-53px)]">
 							<JobOffersList />
 						</div>
 						<div className="flex-1 hidden md:block">

@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import { Link, useSearchParams } from 'react-router-dom';
 import JobOfferCard from './job-offer-card';
 import JobOfferSkeleton from './job-offer-skeleton';
+import Empty from './ui/empty';
 
 const JobOffersList = () => {
 	const [searchParams] = useSearchParams();
@@ -42,7 +43,7 @@ const JobOffersList = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 p-4">
 			{data.jobOffers.map((jobOffer) => (
 				<Link key={jobOffer.id} to={`/?joid=${jobOffer.id}`}>
 					<JobOfferCard
@@ -59,6 +60,11 @@ const JobOffersList = () => {
 				</>
 			)}
 			<div ref={ref}></div>
+			{!data.hasNextPage && (
+				<div className="grid place-items-center flex-1">
+					<Empty message="No more job offers" />
+				</div>
+			)}
 		</div>
 	);
 };
