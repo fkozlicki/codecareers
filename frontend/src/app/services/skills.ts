@@ -5,6 +5,10 @@ export const skillsApi = api.injectEndpoints({
 	endpoints: (build) => ({
 		getSkills: build.query<{ skills: SkillItem[] }, void>({
 			query: () => 'skills',
+			providesTags: (result = { skills: [] }) => [
+				...result.skills.map(({ id }) => ({ type: 'Skills', id } as const)),
+				{ type: 'Skills', id: 'LIST' },
+			],
 		}),
 	}),
 });

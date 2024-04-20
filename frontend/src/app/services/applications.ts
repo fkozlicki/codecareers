@@ -19,33 +19,28 @@ export const applicationsApi = api.injectEndpoints({
 			string | null
 		>({
 			query: (sort) => `applications${sort ? `?sort=${sort}` : ''}`,
-			providesTags: ['Application'],
+			providesTags: (result = { applications: [] }) => [
+				...result.applications.map(
+					({ id }) => ({ type: 'Applications', id } as const)
+				),
+				{ type: 'Applications' as const, id: 'LIST' },
+			],
 		}),
 		acceptApplication: build.mutation<{ application: Application }, string>({
 			query: (id) => {
 				return { url: `applications/${id}/accept`, method: 'POST' };
 			},
-			onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
-				try {
-					await queryFulfilled;
-					dispatch(applicationsApi.util.invalidateTags(['Application']));
-				} catch (e) {
-					console.error(e);
-				}
-			},
+			invalidatesTags: (result) => [
+				{ type: 'Applications', id: result?.application.id },
+			],
 		}),
 		rejectApplication: build.mutation<{ application: Application }, string>({
 			query: (id) => {
 				return { url: `applications/${id}/reject`, method: 'POST' };
 			},
-			onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
-				try {
-					await queryFulfilled;
-					dispatch(applicationsApi.util.invalidateTags(['Application']));
-				} catch (e) {
-					console.error(e);
-				}
-			},
+			invalidatesTags: (result) => [
+				{ type: 'Applications', id: result?.application.id },
+			],
 		}),
 	}),
 });

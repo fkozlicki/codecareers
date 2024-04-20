@@ -19,6 +19,10 @@ export const chatsApi = api.injectEndpoints({
 				`chats/${id}/messages?pageSize=${pageSize}${
 					cursor ? `&cursor=${cursor}` : ''
 				}`,
+			providesTags: (result = { messages: [], hasNextPage: false }) => [
+				...result.messages.map(({ id }) => ({ type: 'Messages', id } as const)),
+				{ type: 'Messages' as const, id: 'LIST' },
+			],
 			serializeQueryArgs: ({ endpointName }) => {
 				return endpointName;
 			},
@@ -34,7 +38,7 @@ export const chatsApi = api.injectEndpoints({
 				return currentArg !== previousArg;
 			},
 			async onCacheEntryAdded(
-				arg,
+				_arg,
 				{ cacheDataLoaded, cacheEntryRemoved, updateCachedData }
 			) {
 				try {
@@ -60,6 +64,7 @@ export const chatsApi = api.injectEndpoints({
 				method: 'POST',
 				body: { content },
 			}),
+			invalidatesTags: [{ type: 'Messages', id: 'LIST' }],
 		}),
 	}),
 });

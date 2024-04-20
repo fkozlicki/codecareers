@@ -11,5 +11,14 @@ export const api = createApi({
 	reducerPath: 'splitApi',
 	baseQuery: baseQueryWithRetry,
 	endpoints: () => ({}),
-	tagTypes: ['Company', 'JobOffer', 'Application', 'Recruitment'],
+	tagTypes: [
+		'Companies',
+		'JobOffers',
+		'Applications',
+		'Recruitments',
+		'Messages',
+		'Skills',
+		'Technologies',
+		'Users',
+	],
 });

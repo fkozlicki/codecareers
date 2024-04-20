@@ -57,11 +57,16 @@ export const companiesApi = api.injectEndpoints({
 	endpoints: (builder) => ({
 		getCompanies: builder.query<{ companies: Company[] }, string | undefined>({
 			query: (id) => `companies${id ? `?userId=${id}` : ''}`,
-			providesTags: [{ type: 'Company', id: 'LIST' }],
+			providesTags: (result = { companies: [] }) => [
+				...result.companies.map(
+					({ id }) => ({ type: 'Companies', id } as const)
+				),
+				{ type: 'Companies' as const, id: 'LIST' },
+			],
 		}),
 		getCompany: builder.query<{ company: Company }, string>({
 			query: (id) => `companies/${id}`,
-			providesTags: (_result, _err, id) => [{ type: 'Company', id }],
+			providesTags: (_result, _err, id) => [{ type: 'Companies', id }],
 		}),
 		createCompany: builder.mutation<{ company: Company }, CompanyValues>({
 			query: (data) => {
@@ -78,7 +83,7 @@ export const companiesApi = api.injectEndpoints({
 					body: formData,
 				};
 			},
-			invalidatesTags: ['Company'],
+			invalidatesTags: [{ type: 'Companies', id: 'LIST' }],
 		}),
 		updateCompany: builder.mutation<
 			{ company: Company },
@@ -98,24 +103,18 @@ export const companiesApi = api.injectEndpoints({
 					body: formData,
 				};
 			},
-			async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-				const result = dispatch(
-					companiesApi.util.updateQueryData('getCompany', id, (draft) => {
-						Object.assign(draft.company, patch);
-					})
-				);
-				try {
-					await queryFulfilled;
-				} catch {
-					result.undo();
-				}
-			},
+			invalidatesTags: (result) => [
+				{ type: 'Companies', id: result?.company.id },
+			],
 		}),
-		deleteCompany: builder.mutation<void, string>({
+		deleteCompany: builder.mutation<{ company: Company }, string>({
 			query: (id) => ({
 				url: `companies/${id}`,
 				method: 'DELETE',
 			}),
+			invalidatesTags: (result) => [
+				{ type: 'Companies', id: result?.company.id },
+			],
 		}),
 		createJobOffer: builder.mutation<
 			JobOffer,
@@ -129,7 +128,7 @@ export const companiesApi = api.injectEndpoints({
 					body,
 				};
 			},
-			invalidatesTags: [{ type: 'JobOffer', id: 'LIST' }],
+			invalidatesTags: [{ type: 'JobOffers', id: 'LIST' }],
 		}),
 		getCompanyJobOffers: builder.query<
 			{ jobOffers: JobOffer[] },
@@ -137,13 +136,28 @@ export const companiesApi = api.injectEndpoints({
 		>({
 			query: ({ id, sort }) =>
 				`companies/${id}/job-offers${sort ? `?sort=${sort}` : ''}`,
-			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
+			providesTags: (result = { jobOffers: [] }) => [
+				...result.jobOffers.map(
+					({ id }) => ({ type: 'JobOffers', id } as const)
+				),
+				{ type: 'JobOffers', id: 'LIST' },
+			],
 		}),
 		getCompanyRecruitments: builder.query<
 			{ recruitments: Recruitment[] },
 			string
 		>({
 			query: (id) => `companies/${id}/recruitments`,
+			providesTags: (result = { recruitments: [] }) => [
+				...result.recruitments.map(
+					({ id }) =>
+						({
+							type: 'Recruitments',
+							id,
+						} as const)
+				),
+				{ type: 'Recruitments', id: 'LIST' },
+			],
 		}),
 	}),
 });

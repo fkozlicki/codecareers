@@ -41,7 +41,7 @@ export const jobOffersApi = api.injectEndpoints({
 	endpoints: (builder) => ({
 		getJobOffer: builder.query<{ jobOffer: JobOfferDetailed }, string>({
 			query: (id) => `job-offers/${id}`,
-			providesTags: (_result, _err, id) => [{ type: 'JobOffer', id }],
+			providesTags: (_result, _err, id) => [{ type: 'JobOffers', id }],
 		}),
 		getJobOffers: builder.query<
 			{ jobOffers: JobOffer[]; cursor?: string; hasNextPage: boolean },
@@ -52,7 +52,12 @@ export const jobOffersApi = api.injectEndpoints({
 					cursor ? `&cursor=${cursor}` : ''
 				}${position ? `&position=${position}` : ''}`;
 			},
-			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
+			providesTags: (result = { jobOffers: [], hasNextPage: false }) => [
+				...result.jobOffers.map(
+					({ id }) => ({ type: 'JobOffers', id } as const)
+				),
+				{ type: 'JobOffers', id: 'LIST' },
+			],
 			serializeQueryArgs: ({ endpointName }) => {
 				return endpointName;
 			},
@@ -71,7 +76,7 @@ export const jobOffersApi = api.injectEndpoints({
 			},
 		}),
 		updateJobOffer: builder.mutation<
-			JobOffer,
+			{ jobOffer: JobOffer },
 			Partial<JobOffer> & { id: string }
 		>({
 			query: (data) => {
@@ -94,13 +99,18 @@ export const jobOffersApi = api.injectEndpoints({
 					result.undo();
 				}
 			},
-			invalidatesTags: [{ type: 'JobOffer', id: 'LIST' }],
+			invalidatesTags: (result) => [
+				{ type: 'JobOffers', id: result?.jobOffer.id },
+			],
 		}),
-		deleteJobOffer: builder.mutation<void, string>({
+		deleteJobOffer: builder.mutation<{ jobOffer: JobOffer }, string>({
 			query: (id) => ({
 				url: `job-offers/${id}`,
 				method: 'DELETE',
 			}),
+			invalidatesTags: (result) => [
+				{ type: 'JobOffers', id: result?.jobOffer.id },
+			],
 		}),
 		createApplication: builder.mutation<
 			void,
@@ -119,7 +129,7 @@ export const jobOffersApi = api.injectEndpoints({
 					body: formData,
 				};
 			},
-			invalidatesTags: [{ type: 'Application', id: 'LIST' }],
+			invalidatesTags: [{ type: 'Applications', id: 'LIST' }],
 		}),
 		getJobOfferApplications: builder.query<
 			{ applications: Application[] },
@@ -128,7 +138,12 @@ export const jobOffersApi = api.injectEndpoints({
 			query: ({ id, sort }) => ({
 				url: `job-offers/${id}/applications${sort ? `?sort=${sort}` : ''}`,
 			}),
-			providesTags: [{ type: 'Application', id: 'LIST' }],
+			providesTags: (result = { applications: [] }) => [
+				...result.applications.map(
+					({ id }) => ({ type: 'Applications', id } as const)
+				),
+				{ type: 'Applications', id: 'LIST' },
+			],
 		}),
 	}),
 });
