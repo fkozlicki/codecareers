@@ -45,12 +45,12 @@ export const jobOffersApi = api.injectEndpoints({
 		}),
 		getJobOffers: builder.query<
 			{ jobOffers: JobOffer[]; cursor?: string; hasNextPage: boolean },
-			{ pageSize: number; cursor?: string; name: string | null }
+			{ pageSize: number; cursor?: string; position: string | null }
 		>({
-			query: ({ name, pageSize, cursor }) => {
+			query: ({ position, pageSize, cursor }) => {
 				return `job-offers?pageSize=${pageSize}${
 					cursor ? `&cursor=${cursor}` : ''
-				}${name ? `&name=${name}` : ''}`;
+				}${position ? `&position=${position}` : ''}`;
 			},
 			providesTags: [{ type: 'JobOffer', id: 'LIST' }],
 			serializeQueryArgs: ({ endpointName }) => {

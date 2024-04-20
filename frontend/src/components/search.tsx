@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 
 const searchSchema = z.object({
-	name: z.string(),
+	position: z.string(),
 });
 
 type SearchValues = z.infer<typeof searchSchema>;
@@ -16,13 +16,13 @@ const Search = () => {
 	const form = useForm<SearchValues>({
 		resolver: zodResolver(searchSchema),
 		defaultValues: {
-			name: '',
+			position: '',
 		},
 	});
 	const [, setSearchParams] = useSearchParams();
 
 	function onSubmit(values: SearchValues) {
-		if (values.name) {
+		if (values.position) {
 			setSearchParams(values);
 		} else {
 			setSearchParams();
@@ -37,7 +37,7 @@ const Search = () => {
 			>
 				<FormField
 					control={form.control}
-					name="name"
+					name="position"
 					render={({ field }) => (
 						<FormItem className="flex-1">
 							<FormControl>

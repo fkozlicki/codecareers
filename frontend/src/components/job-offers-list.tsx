@@ -10,9 +10,9 @@ import JobOfferSkeleton from './job-offer-skeleton';
 
 const JobOffersList = () => {
 	const [searchParams] = useSearchParams();
-	const name = searchParams.get('name');
+	const position = searchParams.get('position');
 	const { data, isLoading, isFetching, isUninitialized, isError } =
-		useGetJobOffersQuery({ pageSize: 10, name });
+		useGetJobOffersQuery({ pageSize: 10, position });
 	const [fetchJobOffers] = useLazyGetJobOffersQuery();
 	const [ref, inView] = useInView();
 	const joid = searchParams.get('joid');
@@ -21,7 +21,7 @@ const JobOffersList = () => {
 
 	useEffect(() => {
 		if (inView && !isLoading && hasNextPage) {
-			fetchJobOffers({ pageSize: 10, cursor, name });
+			fetchJobOffers({ pageSize: 10, cursor, position });
 		}
 	}, [inView]);
 

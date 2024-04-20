@@ -8,8 +8,8 @@ import { useSearchParams } from 'react-router-dom';
 
 const Home = () => {
 	const [searchParams] = useSearchParams();
-	const name = searchParams.get('name');
-	const { data } = useGetJobOffersQuery({ pageSize: 10, name });
+	const position = searchParams.get('position');
+	const { data } = useGetJobOffersQuery({ pageSize: 10, position });
 
 	const empty = data && data.jobOffers.length === 0;
 
