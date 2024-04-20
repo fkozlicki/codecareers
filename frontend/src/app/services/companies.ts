@@ -43,7 +43,9 @@ export const createJobOfferSchema = z.object({
 	workType: z.string().min(1, 'Work type is required'),
 });
 
-export type JobOfferValues = z.infer<typeof createJobOfferSchema>;
+export type CreateJobOfferValues = z.infer<typeof createJobOfferSchema>;
+
+export type UpdateJobOfferValues = CreateJobOfferValues & { id: string };
 
 export interface Recruitment {
 	id: string;
@@ -117,7 +119,7 @@ export const companiesApi = api.injectEndpoints({
 		}),
 		createJobOffer: builder.mutation<
 			JobOffer,
-			JobOfferValues & { companyId: string }
+			CreateJobOfferValues & { companyId: string }
 		>({
 			query: (data) => {
 				const { companyId, ...body } = data;

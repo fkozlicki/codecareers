@@ -1,8 +1,10 @@
 import {
-	JobOfferValues,
+	CreateJobOfferValues,
+	UpdateJobOfferValues,
 	createJobOfferSchema,
 	useCreateJobOfferMutation,
 } from '@/app/services/companies';
+import { useUpdateJobOfferMutation } from '@/app/services/jobOffers';
 import { useGetSkillsQuery } from '@/app/services/skills';
 import { useGetTechnologiesQuery } from '@/app/services/technologies';
 import { Button } from '@/components/ui/button';
@@ -34,10 +36,10 @@ import { toast } from 'sonner';
 const JobOfferForm = ({
 	defaultValues,
 }: {
-	defaultValues?: JobOfferValues;
+	defaultValues?: UpdateJobOfferValues;
 }) => {
 	const { companyId } = useParams();
-	const form = useForm<JobOfferValues>({
+	const form = useForm<CreateJobOfferValues>({
 		resolver: zodResolver(createJobOfferSchema),
 		defaultValues: defaultValues ?? {
 			position: '',
@@ -52,10 +54,42 @@ const JobOfferForm = ({
 			salaryCurrency: '',
 		},
 	});
-	const [createJobOffer, { isLoading }] = useCreateJobOfferMutation();
+	const [createJobOffer, { isLoading: isLoadingCreate }] =
+		useCreateJobOfferMutation();
+	const [updateJobOffer, { isLoading: isLoadingUpdate }] =
+		useUpdateJobOfferMutation();
 	const { data: skillsData } = useGetSkillsQuery();
 	const { data: techonologiesData } = useGetTechnologiesQuery();
 	const navigate = useNavigate();
+
+	const onSubmit = (values: CreateJobOfferValues) => {
+		if (!companyId) {
+			return;
+		}
+		if (defaultValues) {
+			updateJobOffer({ id: defaultValues.id, ...values })
+				.unwrap()
+				.then(() => {
+					toast.success('Successfuly updated job offer');
+				})
+				.catch(() => {
+					toast.error("Couldn't update job offer");
+				});
+		} else {
+			createJobOffer({ ...values, companyId })
+				.unwrap()
+				.then(() => {
+					form.reset();
+					toast.success('Successfuly created job offer');
+					navigate(`/my-companies/${companyId}/job-offers`);
+				})
+				.catch(() => {
+					toast.error("Couldn't create job offer");
+				});
+		}
+	};
+
+	const isLoading = isLoadingCreate || isLoadingUpdate;
 
 	const skills =
 		skillsData?.skills?.map((skill) => ({
@@ -68,27 +102,6 @@ const JobOfferForm = ({
 			label: technology.name,
 			value: technology.id,
 		})) ?? [];
-
-	const onSubmit = (values: JobOfferValues) => {
-		if (!companyId) {
-			return;
-		}
-		createJobOffer({ ...values, companyId })
-			.unwrap()
-			.then(() => {
-				if (!defaultValues) {
-					navigate(`/my-companies/${companyId}/job-offers`);
-				}
-				toast.success(
-					`Successfuly ${defaultValues ? 'updated' : 'created'} company`
-				);
-			})
-			.catch(() => {
-				toast.success(
-					`Couldn't ${defaultValues ? 'update' : 'create'} company`
-				);
-			});
-	};
 
 	return (
 		<Form {...form}>
