@@ -167,3 +167,15 @@ export const createJobOfferTechnologies = async (
 
 	await db.insert(jobOfferTechnologies).values(technologiesBody);
 };
+
+export const deleteJobOfferSkills = async (jobOfferId: string) => {
+	await db
+		.delete(jobOfferSkills)
+		.where(eq(jobOfferSkills.jobOfferId, jobOfferId));
+};
+
+export const deleteJobOfferTechnologies = async (jobOfferId: string) => {
+	await db
+		.delete(jobOfferTechnologies)
+		.where(eq(jobOfferTechnologies.jobOfferId, jobOfferId));
+};

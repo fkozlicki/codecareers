@@ -41,10 +41,18 @@ export const getJobOffer = async (req: Request, res: Response) => {
 export const updateJobOffer = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
+	const { technologies, skills, ...rest } = req.body;
+
 	try {
 		// TODO: check if jobOffer->company belongs to user
 
-		const updatedJobOffer = await jobOfferService.updateJobOffer(id, req.body);
+		const updatedJobOffer = await jobOfferService.updateJobOffer(id, rest);
+
+		await jobOfferService.deleteJobOfferSkills(id);
+		await jobOfferService.deleteJobOfferTechnologies(id);
+
+		await jobOfferService.createJobOfferTechnologies(id, technologies);
+		await jobOfferService.createJobOfferSkills(id, skills);
 
 		res.status(200).json({ jobOffer: updatedJobOffer });
 	} catch (error) {
