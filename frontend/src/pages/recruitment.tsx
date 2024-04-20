@@ -40,7 +40,7 @@ const Recruitment = () => {
 						/>
 					</TabsContent>
 					<TabsContent value="chat">
-						<div className="h-[calc(100vh-129px)] max-w-2xl m-auto">
+						<div className="h-[calc(100vh-153px)] max-w-2xl m-auto">
 							<RecruitmentChat id={data.recruitment.chatId} />
 						</div>
 					</TabsContent>

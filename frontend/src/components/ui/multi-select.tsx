@@ -36,6 +36,7 @@ const MultiSelect = <
 				indicatorSeparator: () => '!bg-input',
 				multiValue: () => '!bg-secondary text-primary',
 				multiValueLabel: () => '!text-primary',
+				input: () => '!text-primary',
 			}}
 		/>
 	);

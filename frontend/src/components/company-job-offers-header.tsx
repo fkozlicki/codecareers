@@ -22,7 +22,7 @@ const CompanyJobOffersHeader = () => {
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="outline">
-						Show
+						<span className="capitalize">{sort}</span>
 						<ChevronDownIcon className="ml-4 w-4 h-4" />
 					</Button>
 				</DropdownMenuTrigger>
