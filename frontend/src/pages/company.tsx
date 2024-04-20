@@ -5,18 +5,16 @@ import CompanyFormSkeleton from './company-form-skeleton';
 
 const Company = () => {
 	const { companyId } = useParams();
-	const { data, isLoading, isError } = useGetCompanyQuery(companyId!);
+	const { data, isLoading, isError, isUninitialized } = useGetCompanyQuery(
+		companyId!
+	);
 
-	if (isLoading) {
+	if (isLoading || isUninitialized) {
 		return <CompanyFormSkeleton />;
 	}
 
 	if (isError) {
 		return <div>Unexpected error</div>;
-	}
-
-	if (!data) {
-		return <div>Coudln't load data</div>;
 	}
 
 	return <CompanyForm initialData={data.company} />;

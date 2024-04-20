@@ -57,17 +57,24 @@ const CompanyForm = ({ initialData }: CompanyFormProps) => {
 
 	function onSubmit(values: CompanyValues) {
 		if (initialData) {
-			updateCompany({ id: initialData.id, ...values });
+			updateCompany({ id: initialData.id, ...values })
+				.unwrap()
+				.then(() => {
+					toast.success('Successfully updated company');
+				})
+				.catch(() => {
+					toast.error("Couldn't update company");
+				});
 		} else {
 			createCompany(values)
 				.unwrap()
 				.then(() => {
 					form.reset();
-					toast.success('Successfully created a company');
+					toast.success('Successfully created company');
 					navigate('/my-companies');
 				})
 				.catch(() => {
-					toast.error('Could not create company');
+					toast.error("Couldn't create company");
 				});
 		}
 	}
