@@ -15,9 +15,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { readFile } from '@/lib/cropImage';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Image } from 'lucide-react';
+import { Image, Loader } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -35,13 +36,18 @@ const Settings = () => {
 			lastName: user?.lastName ?? '',
 		},
 	});
-	const [updateUser] = useUpdateUserMutation();
+	const [updateUser, { isLoading }] = useUpdateUserMutation();
 	const [preview, setPreview] = useState<string | null>(null);
 
 	const onSubmit = (values: z.infer<typeof formSchema>) => {
 		updateUser({ id: user!.id, ...values })
 			.unwrap()
-			.then(() => {});
+			.then(() => {
+				toast.success('Updated successfully');
+			})
+			.catch(() => {
+				toast.error("Couldn't update");
+			});
 	};
 
 	return (
@@ -118,8 +124,12 @@ const Settings = () => {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" className="w-full">
-							Save
+						<Button disabled={isLoading} type="submit" className="w-full">
+							{isLoading ? (
+								<Loader size={16} className="animate-spin" />
+							) : (
+								'Save'
+							)}
 						</Button>
 					</form>
 				</Form>
