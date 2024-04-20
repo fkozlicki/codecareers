@@ -101,8 +101,8 @@ const JobOfferDetails = () => {
 					</AvatarFallback>
 				</Avatar>
 				<div className="px-4 border-b">
-					<div className="flex justify-between items-center mb-2">
-						<div className="flex gap-4 items-baseline">
+					<div className="flex justify-between items-center mb-2 flex-wrap">
+						<div className="flex items-baseline flex-wrap gap-x-4">
 							<h2 className="text-3xl font-semibold tracking-tight">
 								{position}
 							</h2>
