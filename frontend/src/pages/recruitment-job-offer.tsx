@@ -14,7 +14,9 @@ const RecruitmentJobOffer = ({ jobOffer }: { jobOffer: JobOffer }) => {
 			<h2>{position}</h2>
 			<div dangerouslySetInnerHTML={{ __html: description }} />
 			<Separator className="my-4" />
-			<InlineWidget url="https://calendly.com/filip-kozlickii" />
+			<div className="relative">
+				<InlineWidget url="https://calendly.com/filip-kozlickii" />
+			</div>
 		</div>
 	);
 };
