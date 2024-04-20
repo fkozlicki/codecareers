@@ -19,9 +19,11 @@ import JobOfferSkeleton from './job-offer-skeleton';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
-	const name = searchParams.get('name');
 	const joid = searchParams.get('joid');
-	const { data: jobOffersData } = useGetJobOffersQuery({ pageSize: 10, name });
+	const { data: jobOffersData } = useGetJobOffersQuery({
+		pageSize: 10,
+		position: searchParams.get('position'),
+	});
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
 	const jobOfferId = joid ?? jobOffersData!.jobOffers[0].id;
@@ -70,7 +72,7 @@ const JobOfferDetails = () => {
 	return (
 		<div
 			ref={ref}
-			className="p-4 sticky top-[53px] min-h-[calc(100vh-254px)] "
+			className="sticky top-[53px] min-h-[calc(100vh-254px)] p-4"
 			style={{
 				height,
 			}}
