@@ -112,7 +112,7 @@ export const googleCallback = async (req: Request, res: Response) => {
 				},
 			}
 		);
-		const googleUser: GoogleUser = await googleUserResponse.json();
+		const googleUser = (await googleUserResponse.json()) as GoogleUser;
 
 		const existingUser = await userService.findUserByEmail(googleUser.email);
 
@@ -189,7 +189,7 @@ export const githubCallback = async (req: Request, res: Response) => {
 				Authorization: `Bearer ${tokens.accessToken}`,
 			},
 		});
-		const githubUser: GitHubUser = await githubUserResponse.json();
+		const githubUser = (await githubUserResponse.json()) as GitHubUser;
 
 		const existingUser = await userService.findUserByGithubId(githubUser.id);
 
