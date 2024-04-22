@@ -12,8 +12,7 @@
 		"push": "drizzle-kit push:pg",
 		"push:test": "NODE_ENV=test drizzle-kit push:pg",
 		"studio": "drizzle-kit studio",
-		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest",
-		"vercel-build": "yarn build && yarn start"
+		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.533.0",
