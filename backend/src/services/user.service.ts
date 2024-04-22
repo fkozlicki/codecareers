@@ -50,7 +50,7 @@ export const updateUser = async (
 	if (file) {
 		const filename = generateId(15);
 		await uploadFileToS3(`avatars/${filename}`, file.buffer);
-		avatar = `http://localhost:3000/avatars/${filename}`;
+		avatar = `${process.env.API_URI}/avatars/${filename}`;
 	}
 
 	const [updatedUser] = await db

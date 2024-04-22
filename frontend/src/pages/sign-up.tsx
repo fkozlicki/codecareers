@@ -64,10 +64,10 @@ const SignUp = () => {
 				</h1>
 				<div>
 					<div className="flex flex-col gap-2">
-						<a href="http://localhost:3000/login/github">
+						<a href={`${import.meta.env.VITE_API_URI}/login/github`}>
 							<Button className="w-full">Sign In with Github</Button>
 						</a>
-						<a href="http://localhost:3000/login/google">
+						<a href={`${import.meta.env.VITE_API_URI}/login/google`}>
 							<Button className="w-full">Sign In with Google</Button>
 						</a>
 					</div>

@@ -49,7 +49,7 @@ const HeaderDropdown = ({ user }: { user: User }) => {
 						Settings
 					</DropdownMenuItem>
 				</Link>
-				<a href="http://localhost:3000/logout">
+				<a href={`${import.meta.env.VITE_API_URI}/logout`}>
 					<DropdownMenuItem className="cursor-pointer">
 						<LogOut size={16} className="mr-2" />
 						Logout

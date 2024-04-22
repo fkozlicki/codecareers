@@ -40,7 +40,7 @@ const RecruitmentOverview = () => {
 				<span>{user.username}</span>
 			</div>
 			<span>Applying for {jobOffer.position}</span>
-			<PDFViewer href={`http://localhost:3000/cv/${cv}`} />
+			<PDFViewer href={`${import.meta.env.VITE_API_URI}/cv/${cv}`} />
 		</div>
 	);
 };

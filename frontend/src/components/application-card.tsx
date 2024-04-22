@@ -102,7 +102,7 @@ const ApplicationCard = ({ application }: { application: Application }) => {
 						</div>
 					</TabsContent>
 					<TabsContent value="cv">
-						<PDFViewer href={`http://localhost:3000/cv/${cv}`} />
+						<PDFViewer href={`${import.meta.env.VITE_API_URI}/cv/${cv}`} />
 					</TabsContent>
 				</Tabs>
 				{accepted === null && (

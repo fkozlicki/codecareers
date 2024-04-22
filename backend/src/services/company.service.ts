@@ -59,8 +59,8 @@ export const createCompany = async (
 
 	if (files) {
 		const { avatarFilename, bannerFilename } = await uploadCompanyFiles(files);
-		avatarUrl = `http://localhost:3000/avatars/${avatarFilename}`;
-		backgroundUrl = `http://localhost:3000/avatars/${bannerFilename}`;
+		avatarUrl = `${process.env.API_URI}/avatars/${avatarFilename}`;
+		backgroundUrl = `${process.env.API_URI}/avatars/${bannerFilename}`;
 	}
 
 	const [newCompany] = await db
@@ -95,10 +95,10 @@ export const updateCompany = async (
 		.set({
 			...body,
 			...(avatar
-				? { avatarUrl: `http://localhost:3000/avatars/${avatar}` }
+				? { avatarUrl: `${process.env.API_URI}/avatars/${avatar}` }
 				: {}),
 			...(banner
-				? { backgroundUrl: `http://localhost:3000/avatars/${banner}` }
+				? { backgroundUrl: `${process.env.API_URI}/avatars/${banner}` }
 				: {}),
 		})
 		.where(eq(companies.id, id))

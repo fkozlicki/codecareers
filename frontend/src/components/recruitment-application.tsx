@@ -16,7 +16,7 @@ const RecruitmentApplication = ({
 			{cv && (
 				<>
 					<span className="inline-block">Your cv</span>
-					<PDFViewer href={`http://localhost:3000/cv/${cv}`} />
+					<PDFViewer href={`${import.meta.env.VITE_API_URI}/cv/${cv}`} />
 				</>
 			)}
 		</div>

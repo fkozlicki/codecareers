@@ -123,7 +123,7 @@ export const googleCallback = async (req: Request, res: Response) => {
 					'Set-Cookie',
 					lucia.createSessionCookie(session.id).serialize()
 				)
-				.redirect('http://localhost:5173');
+				.redirect(process.env.CLIENT_URI ?? 'http://localhost:5173');
 		}
 		const user = await userService.createUser({
 			firstName: googleUser.given_name,
@@ -138,7 +138,7 @@ export const googleCallback = async (req: Request, res: Response) => {
 				'Set-Cookie',
 				lucia.createSessionCookie(session.id).serialize()
 			)
-			.redirect('http://localhost:5173');
+			.redirect(process.env.CLIENT_URI ?? 'http://localhost:5173');
 	} catch (e) {
 		console.error(e);
 		if (
@@ -200,7 +200,7 @@ export const githubCallback = async (req: Request, res: Response) => {
 					'Set-Cookie',
 					lucia.createSessionCookie(session.id).serialize()
 				)
-				.redirect('http://localhost:5173');
+				.redirect(process.env.CLIENT_URI ?? 'http://localhost:5173');
 		}
 		const user = await userService.createUser({
 			username: githubUser.login,
@@ -214,7 +214,7 @@ export const githubCallback = async (req: Request, res: Response) => {
 				'Set-Cookie',
 				lucia.createSessionCookie(session.id).serialize()
 			)
-			.redirect('http://localhost:5173');
+			.redirect(process.env.CLIENT_URI ?? 'http://localhost:5173');
 	} catch (e) {
 		console.error(e);
 		if (
@@ -253,7 +253,7 @@ export const logout = async (_: Request, res: Response) => {
 	await lucia.invalidateSession(res.locals.session.id);
 	return res
 		.setHeader('Set-Cookie', lucia.createBlankSessionCookie().serialize())
-		.redirect('http://localhost:5173');
+		.redirect(process.env.CLIENT_URI ?? 'http://localhost:5173');
 };
 
 interface GitHubUser {
