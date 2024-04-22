@@ -85,7 +85,7 @@ export const googleSignIn = async (_: Request, res: Response) => {
 				secure: process.env.NODE_ENV === 'production',
 				httpOnly: true,
 				maxAge: 60 * 10,
-				sameSite: 'none',
+				sameSite: 'lax',
 			})
 		)
 		.redirect(url.toString());
@@ -164,7 +164,7 @@ export const githubSignIn = async (_: Request, res: Response) => {
 				secure: process.env.NODE_ENV === 'production',
 				httpOnly: true,
 				maxAge: 60 * 10,
-				sameSite: 'none',
+				sameSite: 'lax',
 			})
 		)
 		.redirect(url.toString());
