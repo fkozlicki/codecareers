@@ -1,4 +1,4 @@
 export const allowedOrigins = [
-	'https://codecarrers.vercel.app/',
-	'http://localhost:3000',
+	'https://codecarrers.vercel.app',
+	'http://localhost:5173',
 ];
