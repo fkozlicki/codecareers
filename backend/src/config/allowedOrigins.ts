@@ -1,1 +1,4 @@
-export const allowedOrigins = [process.env.CLIENT_URI];
+export const allowedOrigins = [
+	'https://codecarrers.vercel.app/',
+	'http://localhost:3000',
+];
