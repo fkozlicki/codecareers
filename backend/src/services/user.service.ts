@@ -1,10 +1,10 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db';
-import { users } from '../db/schema';
-import { UpdateUserSchema } from '../validators/users';
+import { db } from '../db/index.js';
+import { users } from '../db/schema.js';
+import { UpdateUserSchema } from '../validators/users.js';
 import { generateId } from 'lucia';
-import { uploadFileToS3 } from '../lib/s3';
-import { SignUpSchema } from '../validators/auth';
+import { uploadFileToS3 } from '../lib/s3.js';
+import { SignUpSchema } from '../validators/auth.js';
 
 export const findUserById = async (id: string) => {
 	return await db.query.users.findFirst({ where: eq(users.id, id) });

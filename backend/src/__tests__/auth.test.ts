@@ -1,9 +1,9 @@
 import { Argon2id } from 'oslo/password';
 import supertest from 'supertest';
-import { app } from '..';
-import { db } from '../db';
-import { users } from '../db/schema';
-import { clearDb } from '../db/helpers';
+import { app } from '../index.js';
+import { db } from '../db/index.js';
+import { users } from '../db/schema.js';
+import { clearDb } from '../db/helpers.js';
 
 beforeEach(async () => {
 	await clearDb();

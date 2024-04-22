@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "es2018",
-		"module": "commonjs",
+		"target": "ESNext",
+		"module": "NodeNext",
 		"lib": ["esnext"],
 		"sourceMap": true,
 		"rootDir": "./src",
@@ -9,7 +9,7 @@
 		"esModuleInterop": true,
 		"strict": true,
 		"noImplicitAny": true,
-		"moduleResolution": "node",
+		"moduleResolution": "NodeNext",
 		"skipLibCheck": true
 	},
 	"include": ["./src/**/*"],

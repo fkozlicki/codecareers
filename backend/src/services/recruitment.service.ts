@@ -1,12 +1,12 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import {
 	applications,
 	companies,
 	jobOffers,
 	recruitments,
 	users,
-} from '../db/schema';
+} from '../db/schema.js';
 
 export const createRecruitment = async (
 	applicationId: string,

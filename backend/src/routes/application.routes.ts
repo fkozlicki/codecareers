@@ -3,10 +3,10 @@ import {
 	acceptApplication,
 	getApplications,
 	rejectApplication,
-} from '../controllers/application.controller';
-import { requireSession } from '../middleware/session';
-import { validate } from '../middleware/validate';
-import { getApplicationsSchema } from '../validators/applications';
+} from '../controllers/application.controller.js';
+import { requireSession } from '../middleware/session.js';
+import { validate } from '../middleware/validate.js';
+import { getApplicationsSchema } from '../validators/applications.js';
 
 export const applicationsRouter = Router();
 

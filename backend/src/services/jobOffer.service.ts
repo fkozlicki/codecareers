@@ -1,21 +1,21 @@
 import { and, count, eq, gt, ilike } from 'drizzle-orm';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import {
 	jobOfferSkills,
 	jobOfferTechnologies,
 	jobOffers,
 	users,
-} from '../db/schema';
+} from '../db/schema.js';
 import {
 	CreateJobOfferSchema,
 	GetCompanyJobOffersSchema,
-} from '../validators/companies';
-import * as skillService from './skill.service';
-import * as technologyService from './technology.service';
+} from '../validators/companies.js';
+import * as skillService from './skill.service.js';
+import * as technologyService from './technology.service.js';
 import {
 	GetJobOffersSchema,
 	UpdateJobOfferSchema,
-} from '../validators/jobOffers';
+} from '../validators/jobOffers.js';
 
 export const createJobOffer = async (
 	companyId: string,

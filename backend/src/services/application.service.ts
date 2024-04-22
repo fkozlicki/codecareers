@@ -2,18 +2,18 @@ import { generateId } from 'lucia';
 import {
 	CreateApplicationSchema,
 	GetJobOfferApplications,
-} from '../validators/jobOffers';
-import { uploadFileToS3 } from '../lib/s3';
-import { db } from '../db';
+} from '../validators/jobOffers.js';
+import { uploadFileToS3 } from '../lib/s3.js';
+import { db } from '../db/index.js';
 import {
 	Application,
 	Company,
 	JobOffer,
 	User,
 	applications,
-} from '../db/schema';
+} from '../db/schema.js';
 import { and, eq, isNull } from 'drizzle-orm';
-import { GetApplicationsSchema } from '../validators/applications';
+import { GetApplicationsSchema } from '../validators/applications.js';
 
 export const createApplication = async (
 	jobOfferId: string,

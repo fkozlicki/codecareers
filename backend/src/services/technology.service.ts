@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db';
-import { technologies } from '../db/schema';
-import { CreateJobOfferSchema } from '../validators/companies';
+import { db } from '../db/index.js';
+import { technologies } from '../db/schema.js';
+import { CreateJobOfferSchema } from '../validators/companies.js';
 
 export const createTechnologies = async (
 	body: CreateJobOfferSchema['body']['technologies']

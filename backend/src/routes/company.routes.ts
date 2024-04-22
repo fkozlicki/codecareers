@@ -8,10 +8,10 @@ import {
 	getCompanyJobOffers,
 	getCompanyRecruitments,
 	updateCompany,
-} from '../controllers/company.controller';
-import { upload } from '../lib/multer';
-import { requireSession } from '../middleware/session';
-import { validate } from '../middleware/validate';
+} from '../controllers/company.controller.js';
+import { upload } from '../lib/multer.js';
+import { requireSession } from '../middleware/session.js';
+import { validate } from '../middleware/validate.js';
 import {
 	createCompanySchema,
 	createJobOfferSchema,
@@ -20,7 +20,7 @@ import {
 	getCompanyRecruitmentsSchema,
 	getCompanySchema,
 	updateCompanySchema,
-} from '../validators/companies';
+} from '../validators/companies.js';
 
 export const companiesRouter = Router();
 

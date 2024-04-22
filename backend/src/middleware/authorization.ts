@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { db } from '../db';
+import { db } from '../db/index.js';
 import { eq } from 'drizzle-orm';
-import { applications } from '../db/schema';
+import { applications } from '../db/schema.js';
 
 export const authorizeCv = async (
 	req: Request,

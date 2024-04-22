@@ -1,15 +1,15 @@
 import { Argon2id } from 'oslo/password';
 import supertest from 'supertest';
-import { app } from '..';
-import { db } from '../db';
-import { clearDb } from '../db/helpers';
+import { app } from '../index.js';
+import { db } from '../db/index.js';
+import { clearDb } from '../db/helpers.js';
 import {
 	companies,
 	jobOffers,
 	skills,
 	technologies,
 	users,
-} from '../db/schema';
+} from '../db/schema.js';
 
 const password = 'S3cReT123';
 

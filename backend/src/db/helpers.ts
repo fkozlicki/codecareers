@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { db } from '.';
+import { db } from './index.js';
 
 export const clearDb = async () => {
 	const query = sql<string>`SELECT table_name 

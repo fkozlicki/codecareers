@@ -6,9 +6,9 @@ import {
 import { Request, Response } from 'express';
 import { parseCookies, serializeCookie } from 'oslo/cookie';
 import { Argon2id } from 'oslo/password';
-import { github, google, lucia } from '../lib/lucia';
-import * as userService from '../services/user.service';
-import { SignUpSchema } from '../validators/auth';
+import { github, google, lucia } from '../lib/lucia.js';
+import * as userService from '../services/user.service.js';
+import { SignUpSchema } from '../validators/auth.js';
 
 export const signUp = async (
 	req: Request<{}, {}, SignUpSchema['body']>,
