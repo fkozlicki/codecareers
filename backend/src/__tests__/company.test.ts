@@ -86,9 +86,14 @@ beforeEach(async () => {
 			.returning()
 	)[0];
 
-	skillAi = (await db.insert(skills).values({ name: 'AI' }).returning())[0];
+	skillAi = (
+		await db.insert(skills).values({ name: 'AI', public: true }).returning()
+	)[0];
 	technologyPython = (
-		await db.insert(technologies).values({ name: 'Python' }).returning()
+		await db
+			.insert(technologies)
+			.values({ name: 'Python', public: true })
+			.returning()
 	)[0];
 
 	// sign in
@@ -267,6 +272,7 @@ describe('Company service', () => {
 			expect(body.jobOffer).toMatchSnapshot({
 				id: expect.any(String),
 				createdAt: expect.any(String),
+				companyId: expect.any(String),
 			});
 		});
 	});
@@ -282,6 +288,11 @@ describe('Company service', () => {
 				expect(jobOffer).toMatchSnapshot({
 					id: expect.any(String),
 					createdAt: expect.any(String),
+					companyId: expect.any(String),
+					company: {
+						id: expect.any(String),
+						ownerId: expect.any(String),
+					},
 				});
 			}
 		});
