@@ -65,7 +65,7 @@ export const findJobOfferById = async (id: string) => {
 
 export const updateJobOffer = async (
 	id: string,
-	body: UpdateJobOfferSchema['body']
+	body: Omit<UpdateJobOfferSchema['body'], 'skills' | 'technologies'>
 ) => {
 	const [updatedJobOffer] = await db
 		.update(jobOffers)

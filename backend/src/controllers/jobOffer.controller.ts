@@ -5,6 +5,7 @@ import {
 	CreateApplicationSchema,
 	GetJobOfferApplications,
 	GetJobOffersSchema,
+	UpdateJobOfferSchema,
 } from '../validators/jobOffers.js';
 
 export const getJobOffers = async (
@@ -38,7 +39,14 @@ export const getJobOffer = async (req: Request, res: Response) => {
 	}
 };
 
-export const updateJobOffer = async (req: Request, res: Response) => {
+export const updateJobOffer = async (
+	req: Request<
+		UpdateJobOfferSchema['params'],
+		{},
+		UpdateJobOfferSchema['body']
+	>,
+	res: Response
+) => {
 	const { id } = req.params;
 
 	const { technologies, skills, ...rest } = req.body;
@@ -48,11 +56,15 @@ export const updateJobOffer = async (req: Request, res: Response) => {
 
 		const updatedJobOffer = await jobOfferService.updateJobOffer(id, rest);
 
-		await jobOfferService.deleteJobOfferSkills(id);
-		await jobOfferService.deleteJobOfferTechnologies(id);
+		if (skills) {
+			await jobOfferService.deleteJobOfferSkills(id);
+			await jobOfferService.createJobOfferSkills(id, skills);
+		}
 
-		await jobOfferService.createJobOfferTechnologies(id, technologies);
-		await jobOfferService.createJobOfferSkills(id, skills);
+		if (technologies) {
+			await jobOfferService.deleteJobOfferTechnologies(id);
+			await jobOfferService.createJobOfferTechnologies(id, technologies);
+		}
 
 		res.status(200).json({ jobOffer: updatedJobOffer });
 	} catch (error) {
