@@ -1,7 +1,7 @@
-# CodeCareers
+# CodeCareers - [DEMO](https://codecarrers.vercel.app/)
 
 ## Description
-Repo of CodeCareers application, built with Express and React. <br> DEMO: [https://redditv2.vercel.app/](https://codecarrers.vercel.app/)
+Repo of CodeCareers application, built with Express and React
 
 ## Features
 - Next.js 13 App router
