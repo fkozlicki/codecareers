@@ -1,4 +1,5 @@
-import { useAppSelector } from '@/app/hooks';
+import { setUser } from '@/app/authSlice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useUpdateUserMutation } from '@/app/services/users';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ const formSchema = z.object({
 });
 
 const Settings = () => {
+	const dispatch = useAppDispatch();
 	const { user } = useAppSelector((state) => state.auth);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -42,7 +44,8 @@ const Settings = () => {
 	const onSubmit = (values: z.infer<typeof formSchema>) => {
 		updateUser({ id: user!.id, ...values })
 			.unwrap()
-			.then(() => {
+			.then(({ user }) => {
+				dispatch(setUser(user));
 				toast.success('Updated successfully');
 			})
 			.catch(() => {
