@@ -1,4 +1,4 @@
-# CodeCareers - [DEMO](https://codecarrers.vercel.app/)
+# CodeCareers - <a href="https://codecarrers.vercel.app/" target="_blank">DEMO</a>
 
 ## Description
 Repo of CodeCareers application, built with Express and React
