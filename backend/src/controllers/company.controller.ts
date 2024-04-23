@@ -58,8 +58,6 @@ export const createCompany = async (
 	req: Request<{}, {}, CreateCompanySchema['body']>,
 	res: Response
 ) => {
-	type A = typeof req.files;
-
 	try {
 		const newCompany = await companyService.createCompany(
 			res.locals.user.id,

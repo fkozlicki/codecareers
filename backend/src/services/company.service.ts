@@ -50,7 +50,7 @@ const uploadCompanyFiles = async (files: MulterFiles) => {
 export const createCompany = async (
 	ownerId: string,
 	body: CreateCompanySchema['body'],
-	files?: {
+	files: {
 		[fieldname: string]: Express.Multer.File[] | undefined;
 	}
 ) => {
@@ -59,8 +59,12 @@ export const createCompany = async (
 
 	if (files) {
 		const { avatarFilename, bannerFilename } = await uploadCompanyFiles(files);
-		avatarUrl = `${process.env.API_URI}/avatars/${avatarFilename}`;
-		backgroundUrl = `${process.env.API_URI}/avatars/${bannerFilename}`;
+		if (avatarFilename) {
+			avatarUrl = `${process.env.API_URI}/avatars/${avatarFilename}`;
+		}
+		if (bannerFilename) {
+			backgroundUrl = `${process.env.API_URI}/avatars/${bannerFilename}`;
+		}
 	}
 
 	const [newCompany] = await db
