@@ -15,7 +15,7 @@ import { Building2, FileText, History, Image, Star } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ApplyDialog from './apply-dialog';
-import JobOfferSkeleton from './job-offer-skeleton';
+import JobOfferDetailsSkeleton from './job-offer-details-skeleton';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
@@ -46,7 +46,7 @@ const JobOfferDetails = () => {
 	}, []);
 
 	if (isLoading || isFetching || isUninitialized) {
-		return <JobOfferSkeleton />;
+		return <JobOfferDetailsSkeleton />;
 	}
 
 	if (isError) {
