@@ -1,4 +1,4 @@
-import { User, session } from '@/app/services/auth';
+import { User, session, signIn } from '@/app/services/auth';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface AuthState {
@@ -32,6 +32,16 @@ const { reducer, actions } = createSlice({
 				} else {
 					state.status = 'unauthenticated';
 				}
+			})
+			.addMatcher(signIn.matchPending, (state) => {
+				state.status = 'loading';
+			})
+			.addMatcher(signIn.matchFulfilled, (state, action) => {
+				state.user = action.payload.user;
+				state.status = 'authenticated';
+			})
+			.addMatcher(signIn.matchRejected, (state) => {
+				state.status = 'unauthenticated';
 			});
 	},
 });

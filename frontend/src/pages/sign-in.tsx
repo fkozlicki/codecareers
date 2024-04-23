@@ -1,5 +1,4 @@
-import { setUser } from '@/app/authSlice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppSelector } from '@/app/hooks';
 import { useSignInMutation } from '@/app/services/auth';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,15 +32,13 @@ const SignIn = () => {
 		},
 	});
 	const { status } = useAppSelector((state) => state.auth);
-	const dispatch = useAppDispatch();
 	const [signIn] = useSignInMutation();
 	const navigate = useNavigate();
 
 	const onSubmit = (values: SignInValues) => {
 		signIn(values)
 			.unwrap()
-			.then(({ user }) => {
-				dispatch(setUser(user));
+			.then(() => {
 				toast.success('Successfully signed in');
 				form.reset();
 				navigate('/');

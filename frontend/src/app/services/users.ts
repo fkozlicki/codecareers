@@ -13,7 +13,7 @@ type UpdateUserValues = z.infer<typeof updateUserSchema>;
 
 export const usersApi = api.injectEndpoints({
 	endpoints: (build) => ({
-		updateUser: build.mutation<User, UpdateUserValues>({
+		updateUser: build.mutation<{ user: User }, UpdateUserValues>({
 			query: (data) => {
 				const { id, ...body } = data;
 				const formData = new FormData();
