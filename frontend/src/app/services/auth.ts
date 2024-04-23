@@ -29,7 +29,7 @@ export const authApi = api.injectEndpoints({
 				body: credentials,
 			}),
 		}),
-		signIn: builder.mutation<void, SignInCredentials>({
+		signIn: builder.mutation<{ user: User }, SignInCredentials>({
 			query: (credentials) => ({
 				url: 'login/credentials',
 				method: 'POST',

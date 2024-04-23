@@ -64,7 +64,7 @@ export const credentialsSignIn = async (req: Request, res: Response) => {
 				lucia.createSessionCookie(session.id).serialize()
 			)
 			.status(200)
-			.json({ message: 'Signed in' });
+			.json({ user });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error' });
 	}

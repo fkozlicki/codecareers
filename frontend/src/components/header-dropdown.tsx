@@ -8,7 +8,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Building2, FilePen, LogOut, Settings, Users } from 'lucide-react';
+import {
+	Building2,
+	FilePen,
+	LogOut,
+	Settings,
+	UserIcon,
+	Users,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeaderDropdown = ({ user }: { user: User }) => {
@@ -17,7 +24,9 @@ const HeaderDropdown = ({ user }: { user: User }) => {
 			<DropdownMenuTrigger className="outline-none">
 				<Avatar className="w-9 h-9">
 					{user.avatar && <AvatarImage src={user.avatar} alt="avatar" />}
-					<AvatarFallback>{user.username?.substring(0, 2)}</AvatarFallback>
+					<AvatarFallback>
+						<UserIcon size={16} className="text-muted-foreground" />
+					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
