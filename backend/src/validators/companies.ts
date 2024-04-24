@@ -3,7 +3,7 @@ import { jobOfferBody } from './jobOffers.js';
 
 const companyBody = z.object({
 	name: z.string(),
-	description: z.string(),
+	description: z.string().optional(),
 	phoneNumber: z.string(),
 });
 
