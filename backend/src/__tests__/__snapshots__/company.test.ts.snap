@@ -1,6 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Company service [GET] /comapnies/:id/job-offers Should return company job offers 1`] = `
+exports[`Company service [DELETE] /companies/:id Should delete job offer 1`] = `
+{
+  "avatarUrl": null,
+  "backgroundUrl": null,
+  "description": null,
+  "id": Any<String>,
+  "name": "Google",
+  "ownerId": Any<String>,
+  "phoneNumber": "222 222 2222",
+}
+`;
+
+exports[`Company service [GET] /comapnies/:id/job-offers Should return list of company's job offers 1`] = `
 {
   "company": {
     "avatarUrl": null,
@@ -18,7 +30,7 @@ exports[`Company service [GET] /comapnies/:id/job-offers Should return company j
   "id": Any<String>,
   "level": "senior",
   "position": "Senior Web Developer",
-  "published": false,
+  "published": true,
   "salaryCurrency": "pln",
   "salaryFrom": 25000,
   "salaryTo": 30000,
@@ -45,6 +57,22 @@ exports[`Company service [GET] /companies/:id Return company, when user have acc
   "id": Any<String>,
   "name": "Google",
   "phoneNumber": "222 222 2222",
+}
+`;
+
+exports[`Company service [GET] /companies/:id/recruitments Should return list of company's recruitments 1`] = `
+{
+  "id": Any<String>,
+  "jobOffer": {
+    "position": "Senior Web Developer",
+  },
+  "user": {
+    "avatar": null,
+    "firstName": "Jon",
+    "id": Any<String>,
+    "lastName": "Snow",
+    "username": null,
+  },
 }
 `;
 

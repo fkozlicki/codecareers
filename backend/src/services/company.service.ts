@@ -112,5 +112,7 @@ export const updateCompany = async (
 };
 
 export const deleteCompanyById = async (id: string) => {
-	return await db.delete(companies).where(eq(companies.id, id)).returning();
+	return (
+		await db.delete(companies).where(eq(companies.id, id)).returning()
+	)[0];
 };

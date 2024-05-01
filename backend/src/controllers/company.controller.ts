@@ -175,6 +175,20 @@ export const getCompanyJobOffers = async (
 	const { sort } = req.query;
 
 	try {
+		const company = await companyService.findCompanyById(id);
+
+		if (!company) {
+			return res
+				.status(404)
+				.json({ message: `Company with id ${id} not found` });
+		}
+
+		if (company.ownerId !== res.locals.user.id) {
+			return res
+				.status(403)
+				.json({ message: "You don't have permission to access this data" });
+		}
+
 		const result = await jobOfferService.findJobOffersByCompanyId(id, sort);
 
 		res.status(200).json({ jobOffers: result });
@@ -190,6 +204,20 @@ export const getCompanyRecruitments = async (
 	const { id } = req.params;
 
 	try {
+		const company = await companyService.findCompanyById(id);
+
+		if (!company) {
+			return res
+				.status(404)
+				.json({ message: `Company with id ${id} not found` });
+		}
+
+		if (company.ownerId !== res.locals.user.id) {
+			return res
+				.status(403)
+				.json({ message: "You don't have permission to access this data" });
+		}
+
 		const result = await recruitmentService.findRecruitmentsByCompanyId(id);
 
 		res.status(200).json({ recruitments: result });

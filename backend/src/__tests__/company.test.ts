@@ -176,6 +176,20 @@ describe('Company service', () => {
 		});
 	});
 
+	describe('[DELETE] /companies/:id', () => {
+		it('Should delete job offer', async () => {
+			const { statusCode, body } = await supertest(app)
+				.delete(`/companies/${db.google.id}`)
+				.set('cookie', adamSession);
+
+			expect(statusCode).toBe(200);
+			expect(body.company).toMatchSnapshot({
+				id: expect.any(String),
+				ownerId: expect.any(String),
+			});
+		});
+	});
+
 	describe('[POST] /comapnies/:id/job-offers', () => {
 		it('Should create new job offer', async () => {
 			const { statusCode, body } = await supertest(app)
@@ -218,6 +232,56 @@ describe('Company service', () => {
 					company: {
 						id: expect.any(String),
 						ownerId: expect.any(String),
+					},
+				});
+			}
+		});
+	});
+
+	describe('[GET] /companies/:id/recruitments', () => {
+		it('Throw 401, when user is not signed in', async () => {
+			const { statusCode, body } = await supertest(app).get(
+				`/companies/${db.google.id}/recruitments`
+			);
+
+			expect(statusCode).toBe(401);
+			expect(body).toEqual({ message: 'Auth required' });
+		});
+
+		it('Throw 403, when user is trying to get others comapny recruitments', async () => {
+			const { statusCode, body } = await supertest(app)
+				.get(`/companies/${db.google.id}/recruitments`)
+				.set('cookie', jonSession);
+
+			expect(statusCode).toBe(403);
+			expect(body.message).toBe(
+				"You don't have permission to access this data"
+			);
+		});
+
+		it('Throw 404, when user is trying to get recruitments of company that does not exists', async () => {
+			const id = randomUUID();
+
+			const { statusCode, body } = await supertest(app)
+				.get(`/companies/${id}/recruitments`)
+				.set('cookie', jonSession);
+
+			expect(statusCode).toBe(404);
+			expect(body).toEqual({ message: `Company with id ${id} not found` });
+		});
+
+		it("Should return list of company's recruitments", async () => {
+			const { statusCode, body } = await supertest(app)
+				.get(`/companies/${db.google.id}/recruitments`)
+				.set('cookie', adamSession);
+
+			expect(statusCode).toBe(200);
+
+			for (const recruitment of body.recruitments) {
+				expect(recruitment).toMatchSnapshot({
+					id: expect.any(String),
+					user: {
+						id: expect.any(String),
 					},
 				});
 			}
