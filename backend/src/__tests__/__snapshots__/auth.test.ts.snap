@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Auth Service [POST] /login/credentials Sign in, when credentials are valid 1`] = `
+{
+  "avatar": null,
+  "email": "jon.snow@gmail.com",
+  "firstName": "Jon",
+  "githubId": null,
+  "id": Any<String>,
+  "lastName": "Snow",
+  "username": null,
+}
+`;

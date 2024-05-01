@@ -9,6 +9,7 @@ import { Argon2id } from 'oslo/password';
 import { github, google, lucia } from '../lib/lucia.js';
 import * as userService from '../services/user.service.js';
 import { SignUpSchema } from '../validators/auth.js';
+import { User } from '../db/schema.js';
 
 export const signUp = async (
 	req: Request<{}, {}, SignUpSchema['body']>,
@@ -57,6 +58,8 @@ export const credentialsSignIn = async (req: Request, res: Response) => {
 		}
 
 		const session = await lucia.createSession(user.id, {});
+
+		delete (user as Partial<User>).password;
 
 		res
 			.appendHeader(
