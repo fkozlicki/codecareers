@@ -1,28 +1,16 @@
-import { Argon2id } from 'oslo/password';
 import supertest from 'supertest';
 import { app } from '../index.js';
-import { db } from '../db/index.js';
-import { users } from '../db/schema.js';
-import { clearDb } from '../db/helpers.js';
+import { cleanupDB, initializeDB, password } from './data.js';
 
 beforeEach(async () => {
-	await clearDb();
+	await initializeDB();
+});
+
+afterEach(async () => {
+	await cleanupDB();
 });
 
 describe('Auth Service', () => {
-	const password = 'S3cReT123';
-
-	beforeEach(async () => {
-		const hashedPassword = await new Argon2id().hash(password);
-
-		await db.insert(users).values({
-			firstName: 'Jon',
-			lastName: 'Snow',
-			email: 'jon.snow@gmail.com',
-			password: hashedPassword,
-		});
-	});
-
 	describe('[POST] /signup', () => {
 		it('Create new user, when credentials are valid and no user with the same email exists', async () => {
 			const { statusCode, body } = await supertest(app).post('/signup').send({
@@ -97,7 +85,9 @@ describe('Auth Service', () => {
 				});
 
 			expect(statusCode).toBe(200);
-			expect(body).toEqual({ message: 'Signed in' });
+			expect(body.user).toMatchSnapshot({
+				id: expect.any(String),
+			});
 		});
 
 		it('Throw 400, when credentials are invalid', async () => {

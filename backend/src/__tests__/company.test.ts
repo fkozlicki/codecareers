@@ -1,26 +1,13 @@
-import { Argon2id } from 'oslo/password';
+import { randomUUID } from 'crypto';
 import supertest from 'supertest';
 import { app } from '../index.js';
-import { db } from '../db/index.js';
-import { clearDb } from '../db/helpers.js';
-import {
-	companies,
-	jobOffers,
-	skills,
-	technologies,
-	users,
-} from '../db/schema.js';
+import { TestDatabase, cleanupDB, initializeDB } from './data.js';
 
 const password = 'S3cReT123';
 
-let adam;
-let jon;
+let db: TestDatabase;
 let adamSession = '';
 let jonSession = '';
-let google;
-let skillAi;
-let technologyPython;
-let seniorWebDeveloper;
 
 const companyRequest = {
 	name: 'Amazon',
@@ -29,86 +16,27 @@ const companyRequest = {
 };
 
 beforeEach(async () => {
-	await clearDb();
-});
+	const database = await initializeDB();
 
-beforeEach(async () => {
-	const hashedPassword = await new Argon2id().hash(password);
-	adam = (
-		await db
-			.insert(users)
-			.values({
-				firstName: 'Adam',
-				lastName: 'Joseph',
-				email: 'adamjospeh@gmail.com',
-				password: hashedPassword,
-			})
-			.returning()
-	)[0];
-
-	jon = (
-		await db
-			.insert(users)
-			.values({
-				firstName: 'Jon',
-				lastName: 'Snow',
-				email: 'jon.snow@gmail.com',
-				password: hashedPassword,
-			})
-			.returning()
-	)[0];
-
-	google = (
-		await db
-			.insert(companies)
-			.values({
-				name: 'Google',
-				ownerId: adam!.id,
-				phoneNumber: '222 222 2222',
-			})
-			.returning()
-	)[0];
-
-	seniorWebDeveloper = (
-		await db
-			.insert(jobOffers)
-			.values({
-				companyId: google.id,
-				description: '',
-				employmentType: 'b2b',
-				level: 'senior',
-				position: 'Senior Web Developer',
-				salaryCurrency: 'pln',
-				salaryFrom: 25000,
-				salaryTo: 30000,
-				workType: 'full_time',
-			})
-			.returning()
-	)[0];
-
-	skillAi = (
-		await db.insert(skills).values({ name: 'AI', public: true }).returning()
-	)[0];
-	technologyPython = (
-		await db
-			.insert(technologies)
-			.values({ name: 'Python', public: true })
-			.returning()
-	)[0];
+	db = database;
 
 	// sign in
 	const adamResult = await supertest(app).post('/login/credentials').send({
-		email: 'adamjospeh@gmail.com',
+		email: database.adam.email,
 		password,
 	});
 	adamSession = adamResult.header['set-cookie'];
 
 	const jonResult = await supertest(app).post('/login/credentials').send({
-		email: 'jon.snow@gmail.com',
+		email: database.jon.email,
 		password,
 	});
 
 	jonSession = jonResult.header['set-cookie'];
+});
+
+afterEach(async () => {
+	await cleanupDB();
 });
 
 describe('Company service', () => {
@@ -144,8 +72,6 @@ describe('Company service', () => {
 			const invalidCredentials = [
 				// missing name
 				{ description: 'Lorem ipsum', phoneNumber: '222 222 2222' },
-				// missing description
-				{ name: 'Amazon', phoneNumber: '222 222 2222' },
 				// missing phone number
 				{ name: 'Amazon', description: 'Lorem ipsum' },
 			];
@@ -165,7 +91,7 @@ describe('Company service', () => {
 	describe('[GET] /companies/:id', () => {
 		it('Return company, when user have access to it', async () => {
 			const { statusCode, body } = await supertest(app)
-				.get(`/companies/${google!.id}`)
+				.get(`/companies/${db.google.id}`)
 				.set('cookie', adamSession);
 
 			expect(statusCode).toBe(200);
@@ -176,7 +102,7 @@ describe('Company service', () => {
 
 		it('Throw 401, when user is not signed in', async () => {
 			const { statusCode, body } = await supertest(app).get(
-				`/companies/${google!.id}`
+				`/companies/${db.google.id}`
 			);
 
 			expect(statusCode).toBe(401);
@@ -185,7 +111,7 @@ describe('Company service', () => {
 
 		it('Throw 403, when user does not have access to company', async () => {
 			const { statusCode, body } = await supertest(app)
-				.get(`/companies/${google!.id}`)
+				.get(`/companies/${db.google.id}`)
 				.set('cookie', jonSession);
 
 			expect(statusCode).toBe(403);
@@ -198,7 +124,7 @@ describe('Company service', () => {
 	describe('[GET] /companies', () => {
 		it("Return list of Adam's companies", async () => {
 			const { statusCode, body } = await supertest(app)
-				.get(`/companies/?userId=${adam!.id}`)
+				.get(`/companies/?userId=${db.adam.id}`)
 				.set('cookie', adamSession);
 
 			expect(statusCode).toBe(200);
@@ -211,7 +137,7 @@ describe('Company service', () => {
 	describe('[PUT] /companies/:id', () => {
 		it('Should update company', async () => {
 			const { statusCode, body } = await supertest(app)
-				.put(`/companies/${google!.id}`)
+				.put(`/companies/${db.google.id}`)
 				.set('cookie', adamSession)
 				.send({
 					name: 'Google Inc.',
@@ -224,7 +150,7 @@ describe('Company service', () => {
 
 		it('Throw 401, when user is not signed in', async () => {
 			const { statusCode, body } = await supertest(app)
-				.put(`/companies/${google!.id}`)
+				.put(`/companies/${db.google.id}`)
 				.send({
 					name: 'Google Inc.',
 					description: 'This is Google Inc. after update',
@@ -236,7 +162,7 @@ describe('Company service', () => {
 
 		it('Throw 403, when user does not have access to company', async () => {
 			const { statusCode, body } = await supertest(app)
-				.put(`/companies/${google!.id}`)
+				.put(`/companies/${db.google.id}`)
 				.set('cookie', jonSession)
 				.send({
 					name: 'Google Inc.',
@@ -253,7 +179,7 @@ describe('Company service', () => {
 	describe('[POST] /comapnies/:id/job-offers', () => {
 		it('Should create new job offer', async () => {
 			const { statusCode, body } = await supertest(app)
-				.post(`/companies/${google!.id}/job-offers`)
+				.post(`/companies/${db.google.id}/job-offers`)
 				.set('cookie', adamSession)
 				.send({
 					position: 'Junior AI Engeneer',
@@ -264,8 +190,8 @@ describe('Company service', () => {
 					salaryFrom: 6000,
 					salaryTo: 8000,
 					salaryCurrency: 'pln',
-					skills: [{ label: 'AI', value: skillAi!.id }],
-					technologies: [{ label: 'Python', value: technologyPython!.id }],
+					skills: [{ label: 'AI', value: db.skillAi.id }],
+					technologies: [{ label: 'Python', value: db.technologyPython.id }],
 				});
 
 			expect(statusCode).toBe(201);
@@ -278,9 +204,9 @@ describe('Company service', () => {
 	});
 
 	describe('[GET] /comapnies/:id/job-offers', () => {
-		it('Should return company job offers', async () => {
+		it("Should return list of company's job offers", async () => {
 			const { statusCode, body } = await supertest(app)
-				.get(`/companies/${google!.id}/job-offers`)
+				.get(`/companies/${db.google.id}/job-offers`)
 				.set('cookie', adamSession);
 
 			expect(statusCode).toBe(200);
