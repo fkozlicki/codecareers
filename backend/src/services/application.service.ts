@@ -113,7 +113,14 @@ export const findApplicationsByJobOfferId = async (
 				: isNull(applications.accepted)
 		),
 		with: {
-			user: true,
+			user: {
+				columns: {
+					password: false,
+				},
+			},
+		},
+		columns: {
+			userId: false,
 		},
 	});
 };

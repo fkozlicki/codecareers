@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JobOffer service [GET] /job-offers Should return list of public job-offers 1`] = `
+{
+  "company": {
+    "avatarUrl": null,
+    "backgroundUrl": null,
+    "description": null,
+    "id": Any<String>,
+    "name": "Google",
+    "ownerId": Any<String>,
+    "phoneNumber": "222 222 2222",
+  },
+  "companyId": Any<String>,
+  "createdAt": Any<String>,
+  "description": "",
+  "employmentType": "b2b",
+  "id": Any<String>,
+  "level": "senior",
+  "position": "Senior Web Developer",
+  "published": true,
+  "salaryCurrency": "pln",
+  "salaryFrom": 25000,
+  "salaryTo": 30000,
+  "workType": "full_time",
+}
+`;
+
+exports[`JobOffer service [GET] /job-offers/:id Should return job offer 1`] = `
+{
+  "company": {
+    "avatarUrl": null,
+    "backgroundUrl": null,
+    "description": null,
+    "id": Any<String>,
+    "name": "Google",
+    "ownerId": Any<String>,
+    "phoneNumber": "222 222 2222",
+  },
+  "companyId": Any<String>,
+  "createdAt": Any<String>,
+  "description": "",
+  "employmentType": "b2b",
+  "id": Any<String>,
+  "jobOfferSkills": [],
+  "jobOfferTechnologies": [],
+  "level": "senior",
+  "position": "Senior Web Developer",
+  "published": true,
+  "salaryCurrency": "pln",
+  "salaryFrom": 25000,
+  "salaryTo": 30000,
+  "workType": "full_time",
+}
+`;
+
+exports[`JobOffer service [GET] /job-offers/:id/applications Should return list of applications for job offer 1`] = `
+{
+  "accepted": null,
+  "createdAt": Any<String>,
+  "cv": null,
+  "id": Any<String>,
+  "introduction": "Hello Google, I want to work for you",
+  "jobOfferId": Any<String>,
+  "user": {
+    "avatar": null,
+    "email": "jon.snow@gmail.com",
+    "firstName": "Jon",
+    "githubId": null,
+    "id": Any<String>,
+    "lastName": "Snow",
+    "username": null,
+  },
+}
+`;
+
+exports[`JobOffer service [POST] /job-offers/:id/applications Should create application for job offer 1`] = `
+{
+  "accepted": null,
+  "createdAt": Any<String>,
+  "cv": null,
+  "id": Any<String>,
+  "introduction": "Hello Google, I would love to work for you as Senior Web Developer",
+  "jobOfferId": Any<String>,
+  "userId": Any<String>,
+}
+`;
+
+exports[`JobOffer service [PUT] /job-offers/:id Should update job offer 1`] = `
+{
+  "companyId": Any<String>,
+  "createdAt": Any<String>,
+  "description": "Looking for passionate junior web developer",
+  "employmentType": "b2b",
+  "id": Any<String>,
+  "level": "junior",
+  "position": "Junior Web Developer",
+  "published": true,
+  "salaryCurrency": "pln",
+  "salaryFrom": 25000,
+  "salaryTo": 30000,
+  "workType": "full_time",
+}
+`;
