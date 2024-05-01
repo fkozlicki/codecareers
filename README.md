@@ -4,7 +4,6 @@
 Repo of CodeCareers application, built with Express and React
 
 ## Features
-- Next.js 13 App router
 - Email-Password/Google/Github authentication
 - Infinite scrolls using cursor pagination
 - Light/Dark mode
