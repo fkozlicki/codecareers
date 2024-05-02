@@ -43,7 +43,7 @@ export const acceptApplication = async (req: Request, res: Response) => {
 		true
 	);
 
-	res.status(201).json({ application: updatedApplication });
+	res.status(200).json({ application: updatedApplication });
 };
 
 export const rejectApplication = async (req: Request, res: Response) => {

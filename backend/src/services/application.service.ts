@@ -54,9 +54,20 @@ export const findApplicationsByUserId = async (
 		with: {
 			jobOffer: {
 				with: {
-					company: true,
+					company: {
+						columns: {
+							ownerId: false,
+						},
+					},
+				},
+				columns: {
+					companyId: false,
 				},
 			},
+		},
+		columns: {
+			userId: false,
+			jobOfferId: false,
 		},
 	});
 };

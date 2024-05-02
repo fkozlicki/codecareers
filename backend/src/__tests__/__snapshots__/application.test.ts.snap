@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Aplication service [GET] /applications Should return list of user's applications 1`] = `
+{
+  "accepted": null,
+  "createdAt": Any<String>,
+  "cv": null,
+  "id": Any<String>,
+  "introduction": "Hello Google, I want to work for you",
+  "jobOffer": {
+    "company": {
+      "avatarUrl": null,
+      "backgroundUrl": null,
+      "description": null,
+      "id": Any<String>,
+      "name": "Google",
+      "phoneNumber": "222 222 2222",
+    },
+    "createdAt": Any<String>,
+    "description": "",
+    "employmentType": "b2b",
+    "id": Any<String>,
+    "level": "senior",
+    "position": "Senior Web Developer",
+    "published": true,
+    "salaryCurrency": "pln",
+    "salaryFrom": 25000,
+    "salaryTo": 30000,
+    "workType": "full_time",
+  },
+}
+`;
