@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { SQL, eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import {
 	applications,
@@ -24,13 +24,38 @@ export const createRecruitment = async (
 export const findRecruitmentById = async (id: string) => {
 	return await db.query.recruitments.findFirst({
 		where: eq(recruitments.id, id),
+		columns: {
+			applicationId: false,
+		},
 		with: {
 			application: {
+				columns: {
+					jobOfferId: false,
+					userId: false,
+					id: false,
+					accepted: false,
+				},
 				with: {
-					user: true,
+					user: {
+						columns: {
+							id: false,
+							password: false,
+							githubId: false,
+						},
+					},
 					jobOffer: {
+						columns: {
+							companyId: false,
+							id: false,
+							published: false,
+						},
 						with: {
-							company: true,
+							company: {
+								columns: {
+									id: false,
+									ownerId: false,
+								},
+							},
 						},
 					},
 				},
@@ -44,8 +69,17 @@ export const findRecruitmentsByUserId = async (userId: string) => {
 		.select({
 			id: recruitments.id,
 			jobOffer: {
-				...jobOffers,
-				company: companies,
+				position: jobOffers.position,
+				level: jobOffers.level,
+				workType: jobOffers.workType,
+				salaryFrom: jobOffers.salaryFrom,
+				salaryTo: jobOffers.salaryTo,
+				salaryCurrency: jobOffers.salaryCurrency,
+				employmentType: jobOffers.employmentType,
+				createdAt: jobOffers.createdAt,
+				company: {
+					name: companies.name,
+				} as unknown as SQL<unknown>,
 			},
 		})
 		.from(recruitments)

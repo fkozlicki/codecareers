@@ -82,10 +82,13 @@ export const initializeDB = async () => {
 
 	const [chat] = await db.insert(chats).values({}).returning();
 
-	await db.insert(recruitments).values({
-		applicationId: googleApplication.id,
-		chatId: chat.id,
-	});
+	const [googleRecruitment] = await db
+		.insert(recruitments)
+		.values({
+			applicationId: googleApplication.id,
+			chatId: chat.id,
+		})
+		.returning();
 
 	return {
 		adam,
@@ -95,6 +98,7 @@ export const initializeDB = async () => {
 		skillAi,
 		technologyPython,
 		googleApplication,
+		googleRecruitment,
 	};
 };
 
