@@ -31,9 +31,14 @@ export const createMessage = async (
 			userId,
 			...body,
 		})
-		.returning();
+		.returning({
+			id: messages.id,
+			content: messages.content,
+			createdAt: messages.createdAt,
+		});
 
-	const { password, ...user } = (await userService.findUserById(userId))!;
+	const { password, githubId, email, id, ...user } =
+		(await userService.findUserById(userId))!;
 
 	return { ...newMessage, user };
 };
@@ -67,7 +72,18 @@ export const findMessagesByChatId = async (
 		limit: pageSize ? +pageSize : 10,
 		orderBy: desc(messages.createdAt),
 		with: {
-			user: true,
+			user: {
+				columns: {
+					password: false,
+					id: false,
+					githubId: false,
+					email: false,
+				},
+			},
+		},
+		columns: {
+			chatId: false,
+			userId: false,
 		},
 	});
 

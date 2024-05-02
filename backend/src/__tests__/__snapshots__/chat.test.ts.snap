@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User service [GET] /chats/:id/messages Should list chat's messages 1`] = `
+{
+  "content": "Hello Adam, thank you very much!!",
+  "createdAt": Any<String>,
+  "id": Any<String>,
+  "user": {
+    "avatar": null,
+    "firstName": "Jon",
+    "lastName": "Snow",
+    "username": null,
+  },
+}
+`;
+
+exports[`User service [GET] /chats/:id/messages Should list chat's messages 2`] = `
+{
+  "content": "Hello Jon, I am inviting you on the first stage of our recruitment process",
+  "createdAt": Any<String>,
+  "id": Any<String>,
+  "user": {
+    "avatar": null,
+    "firstName": "Adam",
+    "lastName": "Joseph",
+    "username": null,
+  },
+}
+`;
+
+exports[`User service [POST] /chats/:id/messages Should create a message 1`] = `
+{
+  "content": "Here is my schedule, pick the date that fits you :)",
+  "createdAt": Any<String>,
+  "id": Any<String>,
+  "user": {
+    "avatar": null,
+    "firstName": "Adam",
+    "lastName": "Joseph",
+    "username": null,
+  },
+}
+`;

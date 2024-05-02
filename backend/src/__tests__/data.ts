@@ -3,9 +3,11 @@ import { db } from '../db/index.js';
 import { Argon2id } from 'oslo/password';
 import {
 	applications,
+	chatUsers,
 	chats,
 	companies,
 	jobOffers,
+	messages,
 	recruitments,
 	skills,
 	technologies,
@@ -80,13 +82,27 @@ export const initializeDB = async () => {
 		})
 		.returning();
 
-	const [chat] = await db.insert(chats).values({}).returning();
+	const [googleChat] = await db.insert(chats).values({}).returning();
+	await db.insert(chatUsers).values({ chatId: googleChat.id, userId: adam.id });
+	await db.insert(chatUsers).values({ chatId: googleChat.id, userId: jon.id });
+
+	await db.insert(messages).values({
+		chatId: googleChat.id,
+		userId: adam.id,
+		content:
+			'Hello Jon, I am inviting you on the first stage of our recruitment process',
+	});
+	await db.insert(messages).values({
+		chatId: googleChat.id,
+		userId: jon.id,
+		content: 'Hello Adam, thank you very much!!',
+	});
 
 	const [googleRecruitment] = await db
 		.insert(recruitments)
 		.values({
 			applicationId: googleApplication.id,
-			chatId: chat.id,
+			chatId: googleChat.id,
 		})
 		.returning();
 
@@ -99,6 +115,7 @@ export const initializeDB = async () => {
 		technologyPython,
 		googleApplication,
 		googleRecruitment,
+		googleChat,
 	};
 };
 
