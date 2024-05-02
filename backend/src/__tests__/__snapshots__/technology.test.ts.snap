@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Technology service [GET] /technologies Should return list of public technologies 1`] = `
+{
+  "id": Any<String>,
+  "name": "Python",
+  "public": true,
+}
+`;

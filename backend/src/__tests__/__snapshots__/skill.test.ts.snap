@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Skill service [GET] /skills Should return list of public skills 1`] = `
+{
+  "id": Any<String>,
+  "name": "AI",
+  "public": true,
+}
+`;
