@@ -85,7 +85,7 @@ export const googleSignIn = async (_: Request, res: Response) => {
 			'Set-Cookie',
 			serializeCookie('google_oauth_state', state, {
 				path: '/',
-				secure: process.env.NODE_ENV === 'production',
+				secure: true,
 				httpOnly: true,
 				maxAge: 60 * 10,
 				sameSite: 'none',
@@ -164,7 +164,7 @@ export const githubSignIn = async (_: Request, res: Response) => {
 			'Set-Cookie',
 			serializeCookie('github_oauth_state', state, {
 				path: '/',
-				secure: process.env.NODE_ENV === 'production',
+				secure: true,
 				httpOnly: true,
 				maxAge: 60 * 10,
 				sameSite: 'none',
