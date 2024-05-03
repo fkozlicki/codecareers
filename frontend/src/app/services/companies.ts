@@ -51,6 +51,8 @@ export interface Recruitment {
 	id: string;
 	jobOffer: JobOffer;
 	user: User;
+	createdAt: string;
+	open: boolean;
 }
 
 export const companiesApi = api.injectEndpoints({
