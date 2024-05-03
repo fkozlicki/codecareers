@@ -28,7 +28,7 @@ const CompanyRecruitments = () => {
 	}
 
 	return (
-		<div>
+		<div className="flex flex-col gap-4">
 			{data.recruitments.map((recruitment) => (
 				<RecruitmentCard key={recruitment.id} recruitment={recruitment} />
 			))}
