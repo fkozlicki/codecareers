@@ -32,8 +32,8 @@ export const acceptApplication = async (req: Request, res: Response) => {
 	}
 
 	const newChat = await chatService.createChat(
-		res.locals.user.id,
-		application.jobOffer.company.ownerId
+		application.userId,
+		res.locals.user.id
 	);
 
 	await recruitmentService.createRecruitment(application.id, newChat.id);
