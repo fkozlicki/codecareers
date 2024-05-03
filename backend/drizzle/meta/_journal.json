@@ -22,6 +22,13 @@
       "when": 1713544565810,
       "tag": "0002_far_gambit",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714732139930,
+      "tag": "0003_late_black_queen",
+      "breakpoints": true
     }
   ]
 }

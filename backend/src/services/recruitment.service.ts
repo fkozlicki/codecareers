@@ -56,6 +56,16 @@ export const findRecruitmentById = async (id: string) => {
 									ownerId: false,
 								},
 							},
+							jobOfferSkills: {
+								with: {
+									skill: true,
+								},
+							},
+							jobOfferTechnologies: {
+								with: {
+									technology: true,
+								},
+							},
 						},
 					},
 				},
