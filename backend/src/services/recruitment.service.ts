@@ -26,6 +26,7 @@ export const findRecruitmentById = async (id: string) => {
 		where: eq(recruitments.id, id),
 		columns: {
 			applicationId: false,
+			chatId: false,
 		},
 		with: {
 			application: {
@@ -64,6 +65,21 @@ export const findRecruitmentById = async (id: string) => {
 							jobOfferTechnologies: {
 								with: {
 									technology: true,
+								},
+							},
+						},
+					},
+				},
+			},
+			chat: {
+				with: {
+					chatUsers: {
+						with: {
+							user: {
+								columns: {
+									password: false,
+									githubId: false,
+									email: false,
 								},
 							},
 						},
