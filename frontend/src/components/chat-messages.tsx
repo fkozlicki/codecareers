@@ -50,7 +50,7 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
 			{isFetching && <MessagesSkeleton />}
 			<div ref={ref}></div>
 			{!data.hasNextPage && (
-				<div className="flex-1 grid place-items-center">
+				<div className="flex-1 grid place-items-center py-3">
 					<Empty message="No more messages" />
 				</div>
 			)}

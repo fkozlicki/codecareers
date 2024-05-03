@@ -37,7 +37,7 @@ const ChatForm = ({ id }: { id: string }) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex items-center w-full"
+				className="flex items-center w-full mt-4"
 			>
 				<FormField
 					control={form.control}

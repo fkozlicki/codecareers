@@ -31,7 +31,7 @@ const CompanyRecruitment = () => {
 			</TabsContent>
 			<TabsContent value="chat">
 				<div className="h-[calc(100vh-282px)]">
-					{data && <RecruitmentChat id={data.recruitment.chatId} />}
+					{data && <RecruitmentChat chat={data.recruitment.chat} />}
 				</div>
 			</TabsContent>
 		</Tabs>

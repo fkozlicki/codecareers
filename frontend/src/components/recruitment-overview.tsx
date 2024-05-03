@@ -30,8 +30,9 @@ const RecruitmentOverview = () => {
 		return <div>Couldn't load data</div>;
 	}
 
-	const { createdAt, open } = data.recruitment;
-	const { user, jobOffer, cv, introduction } = data.recruitment.application;
+	const { createdAt, open, application } = data.recruitment;
+	const { user, jobOffer, cv, introduction } = application;
+	const { username, firstName, lastName } = user;
 
 	return (
 		<div>
@@ -59,7 +60,7 @@ const RecruitmentOverview = () => {
 					</AvatarFallback>
 					<AvatarImage src={user.avatar ?? undefined} alt="user avatar" />
 				</Avatar>
-				<span>{user.username}</span>
+				<span>{username || `${firstName} ${lastName}`}</span>
 			</div>
 			<Separator className="my-4" />
 			<h2 className="inline-flex items-center text-xl mb-4">
