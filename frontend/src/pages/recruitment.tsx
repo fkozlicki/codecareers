@@ -3,7 +3,7 @@ import RecruitmentApplication from '@/components/recruitment-application';
 import RecruitmentChat from '@/components/recruitment-chat';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import RecruitmentJobOffer from './recruitment-job-offer';
+import RecruitmentDetails from './recruitment-details';
 
 const Recruitment = () => {
 	const { recruitmentId } = useParams();
@@ -30,7 +30,9 @@ const Recruitment = () => {
 			{data && (
 				<>
 					<TabsContent value="job-offer">
-						<RecruitmentJobOffer
+						<RecruitmentDetails
+							open={data.recruitment.open}
+							createdAt={data.recruitment.createdAt}
 							jobOffer={data.recruitment.application.jobOffer}
 						/>
 					</TabsContent>
