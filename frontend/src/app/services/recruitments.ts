@@ -1,11 +1,16 @@
 import { api } from './api';
 import { Application } from './applications';
 import { Recruitment } from './companies';
+import { JobOfferDetailed } from './jobOffers';
 
 interface RecruitmentDetails {
 	id: string;
-	application: Application;
+	application: Application & {
+		jobOffer: JobOfferDetailed;
+	};
 	chatId: string;
+	createdAt: string;
+	open: boolean;
 }
 
 export const recruitmentsApi = api.injectEndpoints({
