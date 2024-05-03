@@ -78,6 +78,8 @@ export const findRecruitmentsByUserId = async (userId: string) => {
 	return await db
 		.select({
 			id: recruitments.id,
+			createdAt: recruitments.createdAt,
+			open: recruitments.open,
 			jobOffer: {
 				position: jobOffers.position,
 				level: jobOffers.level,
@@ -103,6 +105,8 @@ export const findRecruitmentsByCompanyId = async (companyId: string) => {
 	return await db
 		.select({
 			id: recruitments.id,
+			createdAt: recruitments.createdAt,
+			open: recruitments.open,
 			jobOffer: {
 				position: jobOffers.position,
 			},
