@@ -1,56 +1,33 @@
-import { useUpdateJobOfferMutation } from '@/app/services/jobOffers';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { formatCurrency } from '@/lib/format';
+import dayjs from 'dayjs';
 
 interface JobOfferHeaderProps {
 	position: string;
-	published: boolean;
+	salaryFrom: number;
+	salaryTo: number;
+	salaryCurrency: string;
+	createdAt: string;
 }
 
-const JobOfferHeader = ({ position, published }: JobOfferHeaderProps) => {
-	const { companyId, jobOfferId } = useParams();
-	const [updateJobOffer] = useUpdateJobOfferMutation();
-
-	const handleChangePublic = () => {
-		if (!jobOfferId) {
-			return;
-		}
-
-		updateJobOffer({
-			id: jobOfferId,
-			published: !published,
-		})
-			.unwrap()
-			.then(() => {
-				toast.success('Published successfully');
-			});
-	};
-
+const JobOfferHeader = ({
+	position,
+	createdAt,
+	salaryCurrency,
+	salaryFrom,
+	salaryTo,
+}: JobOfferHeaderProps) => {
 	return (
-		<div className="flex justify-between items-center mb-8">
-			<div className="flex items-center gap-4">
+		<div className="flex justify-between items-center mb-2 flex-wrap">
+			<div className="flex items-baseline flex-wrap gap-x-4">
 				<h2 className="text-3xl font-semibold tracking-tight">{position}</h2>
-				<Badge
-					variant="outline"
-					className={cn({
-						'border-green-300 text-green-600': published,
-						'border-blue-300 text-blue-600': !published,
-					})}
-				>
-					{published ? 'Public' : 'Draft'}
-				</Badge>
+				<span className="text-xl font-medium text-muted-foreground">
+					{formatCurrency(salaryFrom)} - {formatCurrency(salaryTo)}{' '}
+					{salaryCurrency.toUpperCase()}
+				</span>
 			</div>
-			<div className="flex gap-2">
-				<Link to={`/my-companies/${companyId}/job-offers/${jobOfferId}/edit`}>
-					<Button>Edit</Button>
-				</Link>
-				<Button onClick={handleChangePublic}>
-					{published ? 'Unpublish' : 'Publish'}
-				</Button>
-			</div>
+			<span className="text-sm text-muted-foreground">
+				{dayjs(createdAt).fromNow()}
+			</span>
 		</div>
 	);
 };
