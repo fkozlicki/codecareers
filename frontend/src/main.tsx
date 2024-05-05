@@ -26,6 +26,7 @@ import Recruitments from './pages/recruitments.tsx';
 import Settings from './pages/settings.tsx';
 import SignIn from './pages/sign-in.tsx';
 import SignUp from './pages/sign-up.tsx';
+import { Toaster } from 'sonner';
 
 const router = createBrowserRouter([
 	{
@@ -177,6 +178,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 					enableSystem
 					disableTransitionOnChange
 				>
+					<Toaster />
 					<RouterProvider router={router} />
 				</ThemeProvider>
 			</SessionProvider>
