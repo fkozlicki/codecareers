@@ -1,13 +1,23 @@
 import { useGetJobOfferQuery } from '@/app/services/jobOffers';
 import JobOfferForm from '@/components/job-offer-form';
-import { useParams } from 'react-router-dom';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { Navigate, useParams } from 'react-router-dom';
 
 const EditJobOffer = () => {
 	const { jobOfferId } = useParams();
-	const { data } = useGetJobOfferQuery(jobOfferId!);
+	const { data, isLoading, isUninitialized, isError, error } =
+		useGetJobOfferQuery(jobOfferId!);
 
-	if (!data) {
-		return null;
+	if (isLoading || isUninitialized) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		if ((error as FetchBaseQueryError).status === 404) {
+			return <Navigate to="/404" />;
+		}
+
+		return <div>Couldn't load data</div>;
 	}
 
 	return (

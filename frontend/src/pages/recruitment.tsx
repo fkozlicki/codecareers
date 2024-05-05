@@ -2,15 +2,28 @@ import { useGetRecruitmentQuery } from '@/app/services/recruitments';
 import RecruitmentApplication from '@/components/recruitment-application';
 import RecruitmentChat from '@/components/recruitment-chat';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import RecruitmentDetails from './recruitment-details';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import RecruitmentDetails from '../components/recruitment-details';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 const Recruitment = () => {
 	const { recruitmentId } = useParams();
 	const [searchParams] = useSearchParams();
-	const { data } = useGetRecruitmentQuery(recruitmentId!);
-
+	const { data, isLoading, isUninitialized, isError, error } =
+		useGetRecruitmentQuery(recruitmentId!);
 	const view = searchParams.get('view');
+
+	if (isLoading || isUninitialized) {
+		return <div>Loading</div>;
+	}
+
+	if (isError) {
+		if ((error as FetchBaseQueryError).status === 404) {
+			return <Navigate to="/404" />;
+		}
+
+		return <div>Couldn't load data</div>;
+	}
 
 	return (
 		<Tabs defaultValue="job-offer" value={view ?? undefined} className="p-4">

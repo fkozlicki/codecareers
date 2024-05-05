@@ -2,14 +2,16 @@ import { useGetJobOfferQuery } from '@/app/services/jobOffers';
 import JobOfferApplicationsList from '@/components/job-offer-applications-list';
 import JobOfferCTA from '@/components/job-offer-cta';
 import JobOfferTabs from '@/components/job-offer-tabs';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { Loader } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 const CompanyJobOffer = () => {
 	const { jobOfferId } = useParams();
-	const { data, isLoading } = useGetJobOfferQuery(jobOfferId!);
+	const { data, isLoading, isError, isUninitialized, error } =
+		useGetJobOfferQuery(jobOfferId!);
 
-	if (isLoading) {
+	if (isLoading || isUninitialized) {
 		return (
 			<div className="grid place-items-center h-full">
 				<Loader className="animate-spin w-8 h-8" />
@@ -17,7 +19,11 @@ const CompanyJobOffer = () => {
 		);
 	}
 
-	if (!data) {
+	if (isError) {
+		if ((error as FetchBaseQueryError).status === 404) {
+			return <Navigate to="/404" />;
+		}
+
 		return <div>Couldn't load data</div>;
 	}
 

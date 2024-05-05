@@ -2,12 +2,26 @@ import { useGetCompanyQuery } from '@/app/services/companies';
 import CompanyHeader from '@/components/company-header';
 import CompanyMobileNavigation from '@/components/company-mobile-navigation';
 import CompanyNavigation from '@/components/company-navigation';
-import { Outlet, useParams } from 'react-router-dom';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 const CompanyLayout = () => {
 	const { companyId } = useParams();
 
-	const { data } = useGetCompanyQuery(companyId!);
+	const { data, error, isLoading, isUninitialized, isError } =
+		useGetCompanyQuery(companyId!);
+
+	if (isLoading || isUninitialized) {
+		return <div>Loading</div>;
+	}
+
+	if (isError) {
+		if ((error as FetchBaseQueryError).status === 404) {
+			return <Navigate to="/404" />;
+		}
+
+		return <div>Couldn't load data</div>;
+	}
 
 	return (
 		<>
