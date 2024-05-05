@@ -32,6 +32,7 @@ describe('Recruitment service', () => {
 				expect(recruitment).toMatchSnapshot({
 					id: expect.any(String),
 					jobOffer: { createdAt: expect.any(String) },
+					createdAt: expect.any(String),
 				});
 			}
 		});
@@ -46,7 +47,6 @@ describe('Recruitment service', () => {
 			expect(statusCode).toBe(200);
 			expect(body.recruitment).toMatchSnapshot({
 				id: expect.any(String),
-				chatId: expect.any(String),
 				application: {
 					createdAt: expect.any(String),
 					jobOffer: {

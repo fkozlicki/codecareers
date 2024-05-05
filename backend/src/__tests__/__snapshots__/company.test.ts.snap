@@ -62,10 +62,12 @@ exports[`Company service [GET] /companies/:id Return company, when user have acc
 
 exports[`Company service [GET] /companies/:id/recruitments Should return list of company's recruitments 1`] = `
 {
+  "createdAt": "2024-05-05T10:48:16.458Z",
   "id": Any<String>,
   "jobOffer": {
     "position": "Senior Web Developer",
   },
+  "open": true,
   "user": {
     "avatar": null,
     "firstName": "Jon",

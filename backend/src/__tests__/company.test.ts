@@ -83,7 +83,7 @@ describe('Company service', () => {
 					.send(credentials);
 
 				expect(statusCode).toBe(400);
-				expect(body).toEqual({ error: 'Invalid data' });
+				expect(body.message).toEqual('Invalid data');
 			}
 		});
 	});

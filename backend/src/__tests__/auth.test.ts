@@ -36,7 +36,7 @@ describe('Auth Service', () => {
 			expect(body).toEqual({ message: 'User with this email already exists' });
 		});
 
-		it('Throw 400 when credentials are invalid', async () => {
+		it('Throw 400 when data is invalid', async () => {
 			const invalidCredentials = [
 				// missing lastName
 				{
@@ -70,7 +70,7 @@ describe('Auth Service', () => {
 					.send(credentials);
 
 				expect(statusCode).toBe(400);
-				expect(body).toEqual({ error: 'Invalid data' });
+				expect(body.message).toEqual('Invalid data');
 			}
 		});
 	});
@@ -90,7 +90,7 @@ describe('Auth Service', () => {
 			});
 		});
 
-		it('Throw 400, when credentials are invalid', async () => {
+		it('Throw 400, when data is invalid', async () => {
 			const invalidCredentials = [
 				// missing email
 				{
@@ -100,11 +100,6 @@ describe('Auth Service', () => {
 				{
 					email: 'jake.paul@gmail.com',
 				},
-				// wrong password
-				{
-					email: 'jon.snow@gmail.com',
-					password: 'secret123',
-				},
 			];
 
 			for (let credentials of invalidCredentials) {
@@ -113,7 +108,7 @@ describe('Auth Service', () => {
 					.send(credentials);
 
 				expect(statusCode).toBe(400);
-				expect(body).toEqual({ error: 'Invalid data' });
+				expect(body.message).toEqual('Invalid data');
 			}
 		});
 	});

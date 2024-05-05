@@ -2,6 +2,7 @@
 
 exports[`Recruitment service [GET] /recruitments Should return list of user's recruitments 1`] = `
 {
+  "createdAt": Any<String>,
   "id": Any<String>,
   "jobOffer": {
     "company": {
@@ -16,6 +17,7 @@ exports[`Recruitment service [GET] /recruitments Should return list of user's re
     "salaryTo": 30000,
     "workType": "full_time",
   },
+  "open": true,
 }
 `;
 
@@ -36,6 +38,8 @@ exports[`Recruitment service [GET] /recruitments/:id Should return recruitment 1
       "createdAt": Any<String>,
       "description": "",
       "employmentType": "b2b",
+      "jobOfferSkills": [],
+      "jobOfferTechnologies": [],
       "level": "senior",
       "position": "Senior Web Developer",
       "salaryCurrency": "pln",
@@ -51,7 +55,35 @@ exports[`Recruitment service [GET] /recruitments/:id Should return recruitment 1
       "username": null,
     },
   },
-  "chatId": Any<String>,
+  "chat": {
+    "chatUsers": [
+      {
+        "chatId": "49cdffc1-7d82-49f6-a344-e1ee509f32aa",
+        "user": {
+          "avatar": null,
+          "firstName": "Adam",
+          "id": "5be58ac3-f7aa-493c-b0c4-3dd57981145e",
+          "lastName": "Joseph",
+          "username": null,
+        },
+        "userId": "5be58ac3-f7aa-493c-b0c4-3dd57981145e",
+      },
+      {
+        "chatId": "49cdffc1-7d82-49f6-a344-e1ee509f32aa",
+        "user": {
+          "avatar": null,
+          "firstName": "Jon",
+          "id": "611bfc24-1a73-4e0b-bb5b-46544cc8e388",
+          "lastName": "Snow",
+          "username": null,
+        },
+        "userId": "611bfc24-1a73-4e0b-bb5b-46544cc8e388",
+      },
+    ],
+    "id": "49cdffc1-7d82-49f6-a344-e1ee509f32aa",
+  },
+  "createdAt": "2024-05-05T10:48:13.045Z",
   "id": Any<String>,
+  "open": true,
 }
 `;
