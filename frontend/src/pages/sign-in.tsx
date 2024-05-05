@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -32,7 +33,7 @@ const SignIn = () => {
 		},
 	});
 	const { status } = useAppSelector((state) => state.auth);
-	const [signIn] = useSignInMutation();
+	const [signIn, { isLoading }] = useSignInMutation();
 	const navigate = useNavigate();
 
 	const onSubmit = (values: SignInValues) => {
@@ -43,8 +44,9 @@ const SignIn = () => {
 				form.reset();
 				navigate('/');
 			})
-			.catch(() => {
-				toast.error("Couldn't sign in");
+			.catch((error) => {
+				console.log(error);
+				toast.error(`Couldn't sign in. Error: ${error.data.message}`);
 			});
 	};
 
@@ -61,10 +63,14 @@ const SignIn = () => {
 				<div>
 					<div className="flex flex-col gap-2">
 						<a href={`${import.meta.env.VITE_API_URI}/login/github`}>
-							<Button className="w-full">Sign In with Github</Button>
+							<Button className="w-full" disabled={isLoading}>
+								Sign In with Github
+							</Button>
 						</a>
 						<a href={`${import.meta.env.VITE_API_URI}/login/google`}>
-							<Button className="w-full">Sign In with Google</Button>
+							<Button className="w-full" disabled={isLoading}>
+								Sign In with Google
+							</Button>
 						</a>
 					</div>
 					<div className="flex items-center gap-4 my-4">
@@ -85,6 +91,7 @@ const SignIn = () => {
 												placeholder="example@email.com"
 												type="email"
 												{...field}
+												disabled={isLoading}
 											/>
 										</FormControl>
 										<FormMessage />
@@ -98,14 +105,23 @@ const SignIn = () => {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input placeholder="•••••" type="password" {...field} />
+											<Input
+												placeholder="•••••"
+												type="password"
+												{...field}
+												disabled={isLoading}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							<Button type="submit" className="w-full">
-								Sign In
+							<Button type="submit" className="w-full" disabled={isLoading}>
+								{isLoading ? (
+									<LoaderIcon size={20} className="animate-spin" />
+								) : (
+									'Sign In'
+								)}
 							</Button>
 						</form>
 					</Form>

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -151,7 +152,11 @@ const SignUp = () => {
 								)}
 							/>
 							<Button type="submit" disabled={isLoading} className="w-full">
-								Sign Up
+								{isLoading ? (
+									<LoaderIcon size={20} className="animate-spin" />
+								) : (
+									'Sign Up'
+								)}
 							</Button>
 						</form>
 					</Form>
