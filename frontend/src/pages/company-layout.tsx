@@ -1,37 +1,39 @@
-import { useGetCompanyQuery } from '@/app/services/companies';
+import { Company, companiesApi } from '@/app/services/companies';
+import { store } from '@/app/store';
 import CompanyHeader from '@/components/company-header';
 import CompanyMobileNavigation from '@/components/company-mobile-navigation';
 import CompanyNavigation from '@/components/company-navigation';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { Navigate, Outlet, useParams } from 'react-router-dom';
+import { LoaderFunctionArgs, Outlet, useLoaderData } from 'react-router-dom';
+
+type CompanyParams = { companyId: string };
+
+export const companyLoader = async ({ params }: LoaderFunctionArgs) => {
+	const p = store.dispatch(
+		companiesApi.endpoints.getCompany.initiate(
+			(params as CompanyParams).companyId
+		)
+	);
+
+	try {
+		const { company } = await p.unwrap();
+		return company;
+	} catch (error) {
+		throw new Response('', {
+			status: 404,
+			statusText: 'Not Found',
+		});
+	} finally {
+		p.unsubscribe();
+	}
+};
 
 const CompanyLayout = () => {
-	const { companyId } = useParams();
-
-	const { data, error, isLoading, isUninitialized, isError } =
-		useGetCompanyQuery(companyId!);
-
-	if (isLoading || isUninitialized) {
-		return <div>Loading</div>;
-	}
-
-	if (isError) {
-		if ((error as FetchBaseQueryError).status === 404) {
-			return <Navigate to="/404" />;
-		}
-
-		return <div>Couldn't load data</div>;
-	}
+	const { name, description } = useLoaderData() as Company;
 
 	return (
 		<>
 			<CompanyMobileNavigation />
-			{data && (
-				<CompanyHeader
-					name={data.company.name}
-					description={data.company.description}
-				/>
-			)}
+			<CompanyHeader name={name} description={description} />
 			<div className="flex max-w-4xl m-auto px-4 lg:px-0">
 				<CompanyNavigation />
 				<div className="flex-1 pb-4">

@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { store } from './app/store.ts';
 import ProtectedRoute from './components/protected-route.tsx';
 import SessionProvider from './components/session-provider.tsx';
@@ -12,7 +13,7 @@ import Applications from './pages/applications.tsx';
 import Companies from './pages/companies.tsx';
 import CompanyJobOffer from './pages/company-job-offer.tsx';
 import CompanyJobOffers from './pages/company-job-offers.tsx';
-import CompanyLayout from './pages/company-layout.tsx';
+import CompanyLayout, { companyLoader } from './pages/company-layout.tsx';
 import CompanyRecruitment from './pages/company-recruitment.tsx';
 import CompanyRecruitments from './pages/company-recruitments.tsx';
 import Company from './pages/company.tsx';
@@ -26,7 +27,6 @@ import Recruitments from './pages/recruitments.tsx';
 import Settings from './pages/settings.tsx';
 import SignIn from './pages/sign-in.tsx';
 import SignUp from './pages/sign-up.tsx';
-import { Toaster } from 'sonner';
 
 const router = createBrowserRouter([
 	{
@@ -94,6 +94,7 @@ const router = createBrowserRouter([
 			{
 				path: '/my-companies/:companyId',
 				element: <CompanyLayout />,
+				loader: companyLoader,
 				children: [
 					{
 						path: '',
