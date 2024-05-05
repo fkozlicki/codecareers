@@ -45,7 +45,6 @@ const SignIn = () => {
 				navigate('/');
 			})
 			.catch((error) => {
-				console.log(error);
 				toast.error(`Couldn't sign in. Error: ${error.data.message}`);
 			});
 	};
