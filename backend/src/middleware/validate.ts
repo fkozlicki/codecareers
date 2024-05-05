@@ -13,9 +13,9 @@ export const validate =
 			return next();
 		} catch (error) {
 			if (error instanceof ZodError) {
-				res.status(400).json({ error: 'Invalid data' });
+				res.status(400).json({ message: 'Invalid data' });
 			} else {
-				res.status(500).json({ error: 'Internal Server Error' });
+				res.status(500).json({ message: 'Internal Server Error' });
 			}
 		}
 	};

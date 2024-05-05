@@ -48,13 +48,13 @@ export const credentialsSignIn = async (req: Request, res: Response) => {
 		const user = await userService.findUserByEmail(email);
 
 		if (!user?.password) {
-			return res.status(400).json({ error: 'Invalid sign in method' });
+			return res.status(400).json({ message: 'Invalid credentials' });
 		}
 
 		const validPassword = await new Argon2id().verify(user.password, password);
 
 		if (!validPassword) {
-			return res.status(400).json({ error: 'Invalid data' });
+			return res.status(400).json({ message: 'Invalid credentials' });
 		}
 
 		const session = await lucia.createSession(user.id, {});
