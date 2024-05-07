@@ -5,15 +5,12 @@ import {
 } from '../validators/jobOffers.js';
 import { uploadFileToS3 } from '../lib/s3.js';
 import { db } from '../db/index.js';
-import {
-	Application,
-	Company,
-	JobOffer,
-	User,
-	applications,
-} from '../db/schema.js';
 import { and, eq, isNull } from 'drizzle-orm';
 import { GetApplicationsSchema } from '../validators/applications.js';
+import { Application, applications } from '../db/schema/application.js';
+import { JobOffer } from '../db/schema/jobOffer.js';
+import { Company } from '../db/schema/company.js';
+import { User } from '../db/schema/user.js';
 
 export const createApplication = async (
 	jobOfferId: string,
