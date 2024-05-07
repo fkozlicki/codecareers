@@ -9,7 +9,7 @@ import { Argon2id } from 'oslo/password';
 import { github, google, lucia } from '../lib/lucia.js';
 import * as userService from '../services/user.service.js';
 import { SignUpSchema } from '../validators/auth.js';
-import { User } from '../db/schema.js';
+import { User } from '../db/schema/user.js';
 
 export const signUp = async (
 	req: Request<{}, {}, SignUpSchema['body']>,

@@ -12,7 +12,7 @@ import {
 	skills,
 	technologies,
 	users,
-} from '../db/schema.js';
+} from '../db/schema/index.js';
 
 export const password = 'S3cReT123';
 
