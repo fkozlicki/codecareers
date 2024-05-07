@@ -5,7 +5,7 @@ const baseQuery = fetchBaseQuery({
 	credentials: 'include',
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 0 });
+const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
 export const api = createApi({
 	reducerPath: 'splitApi',
