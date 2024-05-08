@@ -2,8 +2,16 @@ import { useUpdateJobOfferMutation } from '@/app/services/jobOffers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { CloudIcon, CloudOffIcon, EditIcon } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import DeleteJobOfferDialog from './delete-job-offer-dialog';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from './ui/tooltip';
 
 interface JobOfferCTAProps {
 	position: string;
@@ -45,11 +53,40 @@ const JobOfferCTA = ({ position, published }: JobOfferCTAProps) => {
 			</div>
 			<div className="flex gap-2">
 				<Link to={`/my-companies/${companyId}/job-offers/${jobOfferId}/edit`}>
-					<Button>Edit</Button>
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button size="icon">
+									<EditIcon size={16} />
+									<span className="sr-only">Edit</span>
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								<span>Edit</span>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				</Link>
-				<Button onClick={handleChangePublic}>
-					{published ? 'Unpublish' : 'Publish'}
-				</Button>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button onClick={handleChangePublic} size="icon">
+								{published ? (
+									<CloudOffIcon size={16} />
+								) : (
+									<CloudIcon size={16} />
+								)}
+								<span className="sr-only">
+									{published ? 'Unpublish' : 'Publish'}
+								</span>
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<span>{published ? 'Unpublish' : 'Publish'}</span>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+				<DeleteJobOfferDialog />
 			</div>
 		</div>
 	);
