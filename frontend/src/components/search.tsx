@@ -33,24 +33,20 @@ const Search = () => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex items-center gap-4"
+				className="flex flex-col sm:flex-row items-center gap-4"
 			>
 				<FormField
 					control={form.control}
 					name="position"
 					render={({ field }) => (
-						<FormItem className="flex-1">
+						<FormItem className="flex-1 w-full">
 							<FormControl>
-								<Input
-									placeholder="Search for a job..."
-									className="h-12 px-4 py-2 text-base"
-									{...field}
-								/>
+								<Input placeholder="Search for a job..." {...field} />
 							</FormControl>
 						</FormItem>
 					)}
 				/>
-				<Button className="h-12 px-8 text-base" type="submit">
+				<Button className="w-full sm:w-auto" type="submit">
 					Search
 				</Button>
 			</form>

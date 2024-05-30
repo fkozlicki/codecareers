@@ -41,7 +41,7 @@ const JobOfferCard = ({
 				'border-gray-500 shadow-md': selected,
 			})}
 		>
-			<div className="flex items-center justify-between mb-2">
+			<div className="flex items-center justify-between mb-2 flex-wrap gap-2">
 				<div className="flex gap-2 items-center">
 					<CardTitle>{position}</CardTitle>
 					{admin && (
@@ -65,7 +65,7 @@ const JobOfferCard = ({
 				<Building2 className="w-4 h-4" />
 				{company.name}
 			</span>
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center flex-wrap gap-2">
 				<div className="flex gap-2">
 					<Badge variant="outline" className="capitalize">
 						{level}
