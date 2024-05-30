@@ -4,6 +4,7 @@ import { Code } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import HeaderDropdown from './header-dropdown';
 import ThemeDropdown from './theme-dropdown';
+import MobileMenu from './mobile-menu';
 
 const Header = () => {
 	const { user } = useAppSelector((state) => state.auth);
@@ -15,11 +16,12 @@ const Header = () => {
 					<Code className="w-6 h-6" />
 					CodeCareers
 				</Link>
-				<Link to="/">
+				<Link to="/" className="hidden sm:block">
 					<Button variant="link">Home</Button>
 				</Link>
 			</div>
-			<div className="flex items-center gap-4">
+			<MobileMenu />
+			<div className="hidden sm:flex items-center gap-4">
 				<ThemeDropdown />
 				<div className="flex gap-2">
 					{user ? (
