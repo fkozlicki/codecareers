@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getSkills } from '../controllers/skill.controller.js';
-import { requireSession } from '../middleware/session.js';
+import { getSkills } from '../controllers/skill.controller';
+import { requireSession } from '../middleware/session';
 
 export const skillsRouter = Router();
 

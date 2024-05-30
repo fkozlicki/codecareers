@@ -6,15 +6,15 @@ import {
 	getJobOffer,
 	getJobOffers,
 	updateJobOffer,
-} from '../controllers/jobOffer.controller.js';
-import { upload } from '../lib/multer.js';
-import { validate } from '../middleware/validate.js';
+} from '../controllers/jobOffer.controller';
+import { upload } from '../lib/multer';
+import { validate } from '../middleware/validate';
 import {
 	createApplicationSchema,
 	getJobOfferApplications,
 	getJobOfferSchema,
 	updateJobOfferSchema,
-} from '../validators/jobOffers.js';
+} from '../validators/jobOffers';
 
 export const jobOffersRouter = Router();
 

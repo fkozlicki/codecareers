@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import * as applicationService from '../services/application.service.js';
-import * as jobOfferService from '../services/jobOffer.service.js';
+import * as applicationService from '../services/application.service';
+import * as jobOfferService from '../services/jobOffer.service';
 import {
 	CreateApplicationSchema,
 	GetJobOfferApplications,
 	GetJobOffersSchema,
 	UpdateJobOfferSchema,
-} from '../validators/jobOffers.js';
+} from '../validators/jobOffers';
 
 export const getJobOffers = async (
 	req: Request<{}, {}, {}, GetJobOffersSchema['query']>,
@@ -67,6 +67,20 @@ export const updateJobOffer = async (
 		}
 
 		res.status(200).json({ jobOffer: updatedJobOffer });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error' });
+	}
+};
+
+export const deleteJobOffer = async (req: Request, res: Response) => {
+	const { id } = req.params;
+
+	console.log('Delete job offer');
+
+	try {
+		await jobOfferService.deleteJobOffer(id);
+
+		res.status(204).json({ message: 'Deleted job offer' });
 	} catch (error) {
 		res.status(500).json({ message: 'Server error' });
 	}

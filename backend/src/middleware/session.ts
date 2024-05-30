@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { lucia } from '../lib/lucia.js';
+import { lucia } from '../lib/lucia';
 
 export const requireSession = async (
 	req: Request,

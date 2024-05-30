@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { db } from '../db/index.js';
+import { db } from '../db/index';
 import { Argon2id } from 'oslo/password';
 import {
 	applications,
@@ -12,7 +12,7 @@ import {
 	skills,
 	technologies,
 	users,
-} from '../db/schema/index.js';
+} from '../db/schema/index';
 
 export const password = 'S3cReT123';
 

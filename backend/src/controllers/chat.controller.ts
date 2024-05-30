@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { io } from '../index.js';
-import * as chatService from '../services/chat.service.js';
-import { GetMessagesSchema } from '../validators/chat.js';
+import { io } from '../index';
+import * as chatService from '../services/chat.service';
+import { GetMessagesSchema } from '../validators/chat';
 
 export const getMessages = async (
 	req: Request<GetMessagesSchema['params'], {}, {}, GetMessagesSchema['query']>,

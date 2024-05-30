@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as recruitmentService from '../services/recruitment.service.js';
+import * as recruitmentService from '../services/recruitment.service';
 
 export const getRecruitments = async (req: Request, res: Response) => {
 	try {

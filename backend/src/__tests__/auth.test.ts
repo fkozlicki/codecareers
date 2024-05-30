@@ -1,6 +1,6 @@
 import supertest from 'supertest';
-import { app } from '../index.js';
-import { cleanupDB, initializeDB, password } from './data.js';
+import { app } from '../index';
+import { cleanupDB, initializeDB, password } from './data';
 
 beforeEach(async () => {
 	await initializeDB();

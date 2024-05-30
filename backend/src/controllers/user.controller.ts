@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as userService from '../services/user.service.js';
-import { UpdateUserSchema } from '../validators/users.js';
+import * as userService from '../services/user.service';
+import { UpdateUserSchema } from '../validators/users';
 
 export const updateUser = async (
 	req: Request<UpdateUserSchema['params'], {}, UpdateUserSchema['body']>,

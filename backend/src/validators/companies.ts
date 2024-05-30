@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { jobOfferBody } from './jobOffers.js';
+import { jobOfferBody } from './jobOffers';
 
 const companyBody = z.object({
 	name: z.string(),

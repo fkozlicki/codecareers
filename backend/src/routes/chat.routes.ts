@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { requireSession } from '../middleware/session.js';
-import { createMessage, getMessages } from '../controllers/chat.controller.js';
-import { validate } from '../middleware/validate.js';
-import { createMessageSchema, getMessagesSchema } from '../validators/chat.js';
+import { requireSession } from '../middleware/session';
+import { createMessage, getMessages } from '../controllers/chat.controller';
+import { validate } from '../middleware/validate';
+import { createMessageSchema, getMessagesSchema } from '../validators/chat';
 
 export const chatsRouter = Router();
 

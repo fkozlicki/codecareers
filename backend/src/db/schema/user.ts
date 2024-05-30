@@ -1,8 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { companies } from './company.js';
-import { applications } from './application.js';
-import { chatUsers } from './chatUser.js';
+import { companies } from './company';
+import { applications } from './application';
+import { chatUsers } from './chatUser';
 
 export const users = pgTable('user', {
 	id: uuid('id').primaryKey().defaultRandom(),

@@ -2,10 +2,10 @@ import { Router } from 'express';
 import {
 	getRecruitment,
 	getRecruitments,
-} from '../controllers/recruitment.controller.js';
-import { requireSession } from '../middleware/session.js';
-import { validate } from '../middleware/validate.js';
-import { getRecruitmentSchema } from '../validators/recruitment.js';
+} from '../controllers/recruitment.controller';
+import { requireSession } from '../middleware/session';
+import { validate } from '../middleware/validate';
+import { getRecruitmentSchema } from '../validators/recruitment';
 
 export const recruitmentsRouter = Router();
 
