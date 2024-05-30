@@ -1,4 +1,4 @@
-import { Trash2Icon } from 'lucide-react';
+import { LoaderIcon, Trash2Icon } from 'lucide-react';
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -16,8 +16,27 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from './ui/tooltip';
+import { useDeleteJobOfferMutation } from '@/app/services/jobOffers';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const DeleteJobOfferDialog = () => {
+	const { companyId, jobOfferId } = useParams();
+	const [deleteJobOffer, { isLoading }] = useDeleteJobOfferMutation();
+	const navigate = useNavigate();
+
+	const onDelete = () => {
+		deleteJobOffer(jobOfferId!)
+			.unwrap()
+			.then(() => {
+				toast.success('Successfully deleted job offer');
+				navigate(`/my-companies/${companyId}/job-offers`);
+			})
+			.catch(() => {
+				toast.error("Couldn't delete job offer");
+			});
+	};
+
 	return (
 		<AlertDialog>
 			<TooltipProvider>
@@ -45,9 +64,15 @@ const DeleteJobOfferDialog = () => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<Button variant="destructive">
-						<Trash2Icon size={16} className="mr-2" />
-						Delete
+					<Button variant="destructive" disabled={isLoading} onClick={onDelete}>
+						{isLoading ? (
+							<LoaderIcon size={16} className="animate-spin" />
+						) : (
+							<>
+								<Trash2Icon size={16} className="mr-2" />
+								Delete
+							</>
+						)}
 					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>

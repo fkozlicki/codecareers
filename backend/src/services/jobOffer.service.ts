@@ -33,6 +33,7 @@ export const findJobOffersByCompanyId = async (
 ) => {
 	return await db.query.jobOffers.findMany({
 		where: and(
+			eq(jobOffers.deleted, false),
 			eq(jobOffers.companyId, companyId),
 			sort ? eq(jobOffers.published, sort === 'public') : undefined
 		),
@@ -74,11 +75,16 @@ export const updateJobOffer = async (
 	return updatedJobOffer;
 };
 
+export const deleteJobOffer = async (id: string) => {
+	await db.update(jobOffers).set({ deleted: true }).where(eq(jobOffers.id, id));
+};
+
 export const findJobOffers = async (query: GetJobOffersSchema['query']) => {
 	const { cursor, pageSize, position } = query;
 
 	const result = await db.query.jobOffers.findMany({
 		where: and(
+			eq(jobOffers.deleted, false),
 			eq(jobOffers.published, true),
 			position ? ilike(jobOffers.position, `%${position}%`) : undefined,
 			cursor ? gt(jobOffers.id, cursor) : undefined

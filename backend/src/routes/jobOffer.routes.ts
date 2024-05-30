@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
 	createApplication,
+	deleteJobOffer,
 	getApplications,
 	getJobOffer,
 	getJobOffers,
@@ -21,7 +22,8 @@ jobOffersRouter.route('/').get(getJobOffers);
 jobOffersRouter
 	.route('/:id')
 	.get(validate(getJobOfferSchema), getJobOffer)
-	.put(validate(updateJobOfferSchema), updateJobOffer);
+	.put(validate(updateJobOfferSchema), updateJobOffer)
+	.delete(deleteJobOffer);
 jobOffersRouter
 	.route('/:id/applications')
 	.post(
