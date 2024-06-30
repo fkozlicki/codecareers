@@ -6,7 +6,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { store } from './app/store.ts';
 import ProtectedRoute from './components/protected-route.tsx';
-import SessionProvider from './components/session-provider.tsx';
 import './index.css';
 import NotFound from './pages/404.tsx';
 import Applications from './pages/applications.tsx';
@@ -172,17 +171,15 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<SessionProvider>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<Toaster />
-					<RouterProvider router={router} />
-				</ThemeProvider>
-			</SessionProvider>
+			<ThemeProvider
+				attribute="class"
+				defaultTheme="system"
+				enableSystem
+				disableTransitionOnChange
+			>
+				<Toaster />
+				<RouterProvider router={router} />
+			</ThemeProvider>
 		</Provider>
 	</React.StrictMode>
 );
