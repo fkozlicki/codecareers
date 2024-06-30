@@ -16,7 +16,7 @@ const JobOffersList = () => {
 		useGetJobOffersQuery({ pageSize: 10, position });
 	const [fetchJobOffers] = useLazyGetJobOffersQuery();
 	const [ref, inView] = useInView();
-	const joid = searchParams.get('joid');
+	const joid = searchParams.get('joid') ?? data?.jobOffers[0].id;
 	const cursor = data?.cursor;
 	const hasNextPage = data?.hasNextPage;
 
@@ -46,10 +46,7 @@ const JobOffersList = () => {
 		<div className="flex flex-col gap-4 p-4">
 			{data.jobOffers.map((jobOffer) => (
 				<Link key={jobOffer.id} to={`/?joid=${jobOffer.id}`}>
-					<JobOfferCard
-						jobOffer={jobOffer}
-						selected={jobOffer.id === (joid || data.jobOffers[0].id)}
-					/>
+					<JobOfferCard jobOffer={jobOffer} selected={jobOffer.id === joid} />
 				</Link>
 			))}
 			{isFetching && (
