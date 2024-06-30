@@ -14,16 +14,18 @@ import JobOfferTags from './job-offer-tags';
 
 const JobOfferDetails = () => {
 	const [searchParams] = useSearchParams();
-	const joid = searchParams.get('joid');
-	const { data: jobOffersData } = useGetJobOffersQuery({
-		pageSize: 10,
-		position: searchParams.get('position'),
-	});
+	const { data: jobOffersData, isLoading: isLoadingList } =
+		useGetJobOffersQuery({
+			pageSize: 10,
+			position: searchParams.get('position'),
+		});
+	const joid = searchParams.get('joid') ?? jobOffersData?.jobOffers[0].id;
+	const { data, isLoading, isFetching, isUninitialized, isError } =
+		useGetJobOfferQuery(joid!, {
+			skip: !joid,
+		});
 	const ref = useRef<HTMLDivElement>(null);
 	const [height, setHeight] = useState<number>(0);
-	const jobOfferId = joid ?? jobOffersData!.jobOffers[0].id;
-	const { data, isLoading, isFetching, isUninitialized, isError } =
-		useGetJobOfferQuery(jobOfferId);
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -40,12 +42,12 @@ const JobOfferDetails = () => {
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
-	if (isLoading || isFetching || isUninitialized) {
+	if (isLoading || isFetching || isUninitialized || isLoadingList) {
 		return <JobOfferDetailsSkeleton />;
 	}
 
 	if (isError) {
-		return <div className="p-4">Couldn't load data</div>;
+		return <div className="p-4">Couldn't load job offer</div>;
 	}
 
 	const {
