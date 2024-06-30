@@ -5,7 +5,10 @@ import { Building2, Image } from 'lucide-react';
 
 const JobOfferDetailsSkeleton = () => {
 	return (
-		<div className="min-h-[calc(100vh-254px)] p-4">
+		<div
+			className="min-h-[calc(100vh-254px)] p-4"
+			data-testid="job-offer-details-skeleton"
+		>
 			<div className="border rounded-md h-full flex flex-col overflow-hidden">
 				<AspectRatio ratio={6 / 1}>
 					<div className="w-full h-full bg-muted grid place-items-center">
