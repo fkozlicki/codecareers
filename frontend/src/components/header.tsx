@@ -20,23 +20,23 @@ const Header = () => {
 					<Button variant="link">Home</Button>
 				</Link>
 			</div>
-			<MobileMenu />
+			<div className="sm:hidden">
+				<MobileMenu />
+			</div>
 			<div className="hidden sm:flex items-center gap-4">
 				<ThemeDropdown />
-				<div className="flex gap-2">
-					{user ? (
-						<HeaderDropdown user={user} />
-					) : (
-						<>
-							<Link to="/signin">
-								<Button>Sign In</Button>
-							</Link>
-							<Link to="/signup">
-								<Button>Sign Up</Button>
-							</Link>
-						</>
-					)}
-				</div>
+				{user ? (
+					<HeaderDropdown user={user} />
+				) : (
+					<div className="flex gap-2">
+						<Link to="/signin">
+							<Button>Sign In</Button>
+						</Link>
+						<Link to="/signup">
+							<Button>Sign Up</Button>
+						</Link>
+					</div>
+				)}
 			</div>
 		</header>
 	);
