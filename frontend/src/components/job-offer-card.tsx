@@ -37,6 +37,7 @@ const JobOfferCard = ({
 
 	return (
 		<Card
+			data-testid="job-offer-card"
 			className={cn('p-4 hover:shadow-md', {
 				'border-gray-500 shadow-md': selected,
 			})}

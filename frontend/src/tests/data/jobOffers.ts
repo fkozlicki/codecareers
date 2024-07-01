@@ -22,7 +22,32 @@ const seniorReactDeveloper: JobOffer = {
 	workType: 'full_time',
 };
 
-export const jobOffers: JobOffer[] = [seniorReactDeveloper];
+const juniorBackendDeveloper: JobOffer = {
+	id: '243',
+	company: {
+		id: '222',
+		avatarUrl: '',
+		backgroundUrl: '',
+		description: '',
+		name: 'Google',
+		phoneNumber: '123123123',
+	},
+	createdAt: new Date().toISOString(),
+	description: 'Looking for Junior Backend Developer',
+	employmentType: 'b2b',
+	level: 'senior',
+	position: 'Junior Backend Developer',
+	published: true,
+	salaryCurrency: 'USD',
+	salaryFrom: 5000,
+	salaryTo: 10000,
+	workType: 'full_time',
+};
+
+export const jobOffers: JobOffer[] = [
+	seniorReactDeveloper,
+	juniorBackendDeveloper,
+];
 
 export const seniorReactDeveloperDetailed: JobOfferDetailed = {
 	...seniorReactDeveloper,
@@ -39,6 +64,26 @@ export const seniorReactDeveloperDetailed: JobOfferDetailed = {
 			technology: {
 				id: '214',
 				name: 'Typescript',
+			},
+		},
+	],
+};
+
+export const juniorBackendDeveloperDetailed: JobOfferDetailed = {
+	...juniorBackendDeveloper,
+	jobOfferSkills: [
+		{
+			skill: {
+				id: '123',
+				name: 'Problem Solving',
+			},
+		},
+	],
+	jobOfferTechnologies: [
+		{
+			technology: {
+				id: '1231',
+				name: 'Rust',
 			},
 		},
 	],

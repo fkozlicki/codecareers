@@ -68,6 +68,7 @@ const JobOfferDetails = () => {
 
 	return (
 		<div
+			data-testid="job-offer-details"
 			ref={ref}
 			className="sticky top-[53px] min-h-[calc(100vh-254px)] p-4"
 			style={{
