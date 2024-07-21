@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import supertest from 'supertest';
-import { app } from '../index';
+import app from '../app';
 import { TestDatabase, cleanupDB, initializeDB } from './data';
 
 const password = 'S3cReT123';

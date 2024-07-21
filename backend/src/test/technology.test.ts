@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import { app } from '../index';
+import app from '../app';
 import { cleanupDB, initializeDB, password } from './data';
 
 let adamSession = '';
@@ -19,17 +19,17 @@ afterEach(async () => {
 	await cleanupDB();
 });
 
-describe('Skill service', () => {
-	describe('[GET] /skills', () => {
-		it('Should return list of public skills', async () => {
+describe('Technology service', () => {
+	describe('[GET] /technologies', () => {
+		it('Should return list of public technologies', async () => {
 			const { statusCode, body } = await supertest(app)
-				.get('/skills')
+				.get('/technologies')
 				.set('Cookie', adamSession);
 
 			expect(statusCode).toBe(200);
-			for (const skill of body.skills) {
-				expect(skill.public).toBeTruthy();
-				expect(skill).toMatchSnapshot({
+			for (const technology of body.technologies) {
+				expect(technology.public).toBeTruthy();
+				expect(technology).toMatchSnapshot({
 					id: expect.any(String),
 				});
 			}

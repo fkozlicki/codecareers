@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import { app } from '../index';
+import app from '../app';
 import { TestDatabase, cleanupDB, initializeDB, password } from './data';
 
 let jonSession = '';
