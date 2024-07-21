@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import app from './app';
+import { keepAlive } from './utils/keepAlive';
 
 const port = process.env.PORT || 3000;
 const server = createServer(app);
@@ -22,3 +23,5 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+keepAlive();
