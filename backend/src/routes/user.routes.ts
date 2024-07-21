@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { requireSession } from '../middleware/session';
-import { updateUser } from '../controllers/user.controller';
-import { upload } from '../lib/multer';
-import { validate } from '../middleware/validate';
-import { updateUserSchema } from '../validators/users';
+import { requireSession } from '../middleware/session.js';
+import { updateUser } from '../controllers/user.controller.js';
+import { upload } from '../lib/multer.js';
+import { validate } from '../middleware/validate.js';
+import { updateUserSchema } from '../validators/users.js';
 
 export const usersRouter = Router();
 

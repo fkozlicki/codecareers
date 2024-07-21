@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { users } from './user';
-import { jobOffers } from './jobOffer';
+import { users } from './user.js';
+import { jobOffers } from './jobOffer.js';
 
 export const companies = pgTable('company', {
 	id: uuid('id').primaryKey().defaultRandom(),

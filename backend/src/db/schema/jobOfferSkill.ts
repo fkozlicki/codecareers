@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { jobOffers } from './jobOffer';
-import { skills } from './skill';
+import { jobOffers } from './jobOffer.js';
+import { skills } from './skill.js';
 
 export const jobOfferSkills = pgTable(
 	'job_offer_skill',

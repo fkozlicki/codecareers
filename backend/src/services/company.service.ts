@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db/index';
+import { db } from '../db/index.js';
 import {
 	CreateCompanySchema,
 	UpdateCompanySchema,
-} from '../validators/companies';
+} from '../validators/companies.js';
 import { generateId } from 'lucia';
-import { uploadFileToS3 } from '../lib/s3';
-import { MulterFiles } from '../lib/multer';
-import { companies } from '../db/schema/company';
+import { uploadFileToS3 } from '../lib/s3.js';
+import { MulterFiles } from '../lib/multer.js';
+import { companies } from '../db/schema/company.js';
 
 export const findCompanyById = async (id: string) => {
 	return await db.query.companies.findFirst({

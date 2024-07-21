@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { jobOfferTechnologies } from './jobOfferTechnology';
+import { jobOfferTechnologies } from './jobOfferTechnology.js';
 
 export const technologies = pgTable('technology', {
 	id: uuid('id').primaryKey().defaultRandom(),

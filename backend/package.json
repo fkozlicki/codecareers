@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"start": "tsx dist/index.js",
+		"start": "node dist/index.js",
 		"dev": "tsx watch src/index.ts",
 		"generate": "drizzle-kit generate:pg",
 		"push": "drizzle-kit push:pg",

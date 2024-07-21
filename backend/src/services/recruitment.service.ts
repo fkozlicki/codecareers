@@ -1,10 +1,10 @@
 import { SQL, eq } from 'drizzle-orm';
-import { db } from '../db/index';
-import { applications } from '../db/schema/application';
-import { companies } from '../db/schema/company';
-import { jobOffers } from '../db/schema/jobOffer';
-import { recruitments } from '../db/schema/recruitment';
-import { users } from '../db/schema/user';
+import { db } from '../db/index.js';
+import { applications } from '../db/schema/application.js';
+import { companies } from '../db/schema/company.js';
+import { jobOffers } from '../db/schema/jobOffer.js';
+import { recruitments } from '../db/schema/recruitment.js';
+import { users } from '../db/schema/user.js';
 
 export const createRecruitment = async (
 	applicationId: string,

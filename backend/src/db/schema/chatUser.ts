@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { chats } from './chat';
-import { users } from './user';
+import { chats } from './chat.js';
+import { users } from './user.js';
 
 export const chatUsers = pgTable(
 	'chat_user',

@@ -1,10 +1,10 @@
 import { and, desc, eq, lt, or } from 'drizzle-orm';
-import { db } from '../db/index';
-import * as userService from '../services/user.service';
-import { CreateMessageSchema } from '../validators/chat';
-import { chats } from '../db/schema/chat';
-import { chatUsers } from '../db/schema/chatUser';
-import { messages } from '../db/schema/message';
+import { db } from '../db/index.js';
+import * as userService from '../services/user.service.js';
+import { CreateMessageSchema } from '../validators/chat.js';
+import { chats } from '../db/schema/chat.js';
+import { chatUsers } from '../db/schema/chatUser.js';
+import { messages } from '../db/schema/message.js';
 
 export const createChat = async (userId: string, ownerId: string) => {
 	const [newChat] = await db.insert(chats).values({}).returning();

@@ -1,6 +1,6 @@
 import supertest from 'supertest';
-import app from '../app';
-import { TestDatabase, cleanupDB, initializeDB, password } from './data';
+import app from '../app.js';
+import { TestDatabase, cleanupDB, initializeDB, password } from './data.js';
 
 let jonSession = '';
 let db: TestDatabase;

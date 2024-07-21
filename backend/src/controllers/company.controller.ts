@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import * as companyService from '../services/company.service';
-import * as jobOfferService from '../services/jobOffer.service';
-import * as recruitmentService from '../services/recruitment.service';
+import * as companyService from '../services/company.service.js';
+import * as jobOfferService from '../services/jobOffer.service.js';
+import * as recruitmentService from '../services/recruitment.service.js';
 import {
 	CreateCompanySchema,
 	CreateJobOfferSchema,
@@ -10,8 +10,8 @@ import {
 	GetCompanyRecruitmentsSchema,
 	GetCompanySchema,
 	UpdateCompanySchema,
-} from '../validators/companies';
-import { MulterFiles } from '../lib/multer';
+} from '../validators/companies.js';
+import { MulterFiles } from '../lib/multer.js';
 
 export const getCompany = async (
 	req: Request<GetCompanySchema['params']>,

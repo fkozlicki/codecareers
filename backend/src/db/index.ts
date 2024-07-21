@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import dotnev from 'dotenv';
-import * as schema from './schema';
+import * as schema from './schema/index.js';
 
 dotnev.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` });
 
