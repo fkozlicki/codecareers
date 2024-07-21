@@ -10,6 +10,6 @@
 		"skipLibCheck": true,
 		"moduleResolution": "NodeNext"
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "api/*.ts"],
 	"exclude": ["node_modules"]
 }
