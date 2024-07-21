@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"main": "src/index.ts",
 	"license": "MIT",
+	"type": "module",
 	"scripts": {
 		"build": "tsc",
 		"start": "tsx dist/index.js",
