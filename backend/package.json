@@ -1,18 +1,18 @@
 {
 	"name": "codecarrers",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "src/index.ts",
 	"license": "MIT",
-	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"start": "node dist/index.js",
+		"start": "tsx dist/index.js",
 		"dev": "tsx watch src/index.ts",
 		"generate": "drizzle-kit generate:pg",
 		"push": "drizzle-kit push:pg",
 		"push:test": "NODE_ENV=test drizzle-kit push:pg",
 		"studio": "drizzle-kit studio",
-		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest"
+		"test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest",
+		"vercel-build": "echo hello"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.533.0",
@@ -24,7 +24,7 @@
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.29.4",
 		"express": "^4.18.3",
-		"lucia": "^3.0.1",
+		"lucia": "^3.2.0",
 		"multer": "^1.4.5-lts.1",
 		"nodemailer": "^6.9.11",
 		"oslo": "^1.1.3",
