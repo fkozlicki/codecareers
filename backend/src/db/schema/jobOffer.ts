@@ -9,10 +9,10 @@ import {
 	timestamp,
 	uuid,
 } from 'drizzle-orm/pg-core';
-import { jobOfferSkills } from './jobOfferSkill.js';
-import { jobOfferTechnologies } from './jobOfferTechnology.js';
-import { applications } from './application.js';
-import { companies } from './company.js';
+import { jobOfferSkills } from './jobOfferSkill';
+import { jobOfferTechnologies } from './jobOfferTechnology';
+import { applications } from './application';
+import { companies } from './company';
 
 export const levelEnum = pgEnum('level', ['junior', 'mid', 'senior']);
 export const employmentTypeEnum = pgEnum('employment_type', [

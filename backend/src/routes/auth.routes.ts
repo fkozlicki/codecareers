@@ -8,9 +8,9 @@ import {
 	googleSignIn,
 	logout,
 	signUp,
-} from '../controllers/auth.controller.js';
-import { validate } from '../middleware/validate.js';
-import { credentialsSignInSchema, signUpSchema } from '../validators/auth.js';
+} from '../controllers/auth.controller';
+import { validate } from '../middleware/validate';
+import { credentialsSignInSchema, signUpSchema } from '../validators/auth';
 
 export const authRouter = Router();
 

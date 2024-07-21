@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import * as applicationService from '../services/application.service.js';
-import * as jobOfferService from '../services/jobOffer.service.js';
+import * as applicationService from '../services/application.service';
+import * as jobOfferService from '../services/jobOffer.service';
 import {
 	CreateApplicationSchema,
 	GetJobOfferApplications,
 	GetJobOffersSchema,
 	UpdateJobOfferSchema,
-} from '../validators/jobOffers.js';
+} from '../validators/jobOffers';
 
 export const getJobOffers = async (
 	req: Request<{}, {}, {}, GetJobOffersSchema['query']>,

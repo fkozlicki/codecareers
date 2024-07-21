@@ -11,8 +11,8 @@ import {
 	skills,
 	technologies,
 	users,
-} from '../db/schema/index.js';
-import { db } from '../db/index.js';
+} from '../db/schema/index';
+import { db } from '../db';
 
 export const password = 'S3cReT123';
 

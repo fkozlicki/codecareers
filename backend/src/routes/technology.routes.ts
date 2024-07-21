@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getTechnologies } from '../controllers/technology.controller.js';
-import { requireSession } from '../middleware/session.js';
+import { getTechnologies } from '../controllers/technology.controller';
+import { requireSession } from '../middleware/session';
 
 export const technologiesRouter = Router();
 

@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, uuid } from 'drizzle-orm/pg-core';
-import { chatUsers } from './chatUser.js';
-import { messages } from './message.js';
+import { chatUsers } from './chatUser';
+import { messages } from './message';
 
 export const chats = pgTable('chat', {
 	id: uuid('id').notNull().primaryKey().defaultRandom(),
