@@ -16,6 +16,7 @@ import { recruitmentsRouter } from './routes/recruitment.routes.js';
 import { skillsRouter } from './routes/skill.routes.js';
 import { technologiesRouter } from './routes/technology.routes.js';
 import { usersRouter } from './routes/user.routes.js';
+import bodyParser from 'body-parser';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` });
 
@@ -37,8 +38,8 @@ io.on('connection', (socket) => {
 	});
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 app.use(verifySession);

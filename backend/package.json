@@ -19,6 +19,7 @@
 		"@lucia-auth/adapter-drizzle": "^1.0.2",
 		"arctic": "^1.2.1",
 		"aws-sdk": "^2.1577.0",
+		"body-parser": "^1.20.2",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.29.4",
