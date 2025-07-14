@@ -7,12 +7,12 @@ const MultiSelect = <
 	Option,
 	Group extends GroupBase<Option> = GroupBase<Option>
 >(
-	props: CreatableProps<Option, boolean, Group>
+	props: CreatableProps<Option, true, Group>
 ) => {
 	return (
 		<Select
+			isMulti
 			{...props}
-			isMulti={true}
 			components={{
 				DropdownIndicator: () => (
 					<CaretSortIcon className="h-4 w-4 opacity-50 ml-2" />
